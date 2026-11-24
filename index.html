@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" id="tc" content="#f5f5f7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="경범 보드">
+<meta name="description" content="&#xbe14;&#xb85c;&#xadf8; &#xae00;&#xac10;&#xb7;&#xcd08;&#xc548;&#xb7;&#xd0a4;&#xc6cc;&#xb4dc;&#xc640; &#xc77c;&#xc0c1; &#xd560; &#xc77c;&#xc744; &#xd55c; &#xacf3;&#xc5d0;&#xc11c; &#xad00;&#xb9ac;&#xd558;&#xb294; &#xac1c;&#xc778; &#xc77c; &#xbcf4;&#xb4dc;">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%230a84ff'/%3E%3Cpath d='M28 52l16 16 30-34' stroke='white' stroke-width='12' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>경범 보드</title>
+<style>
+:root{--bg:#f5f5f7;--card:#fff;--tx:#1d1d1f;--sub:#86868b;--ac:#0a84ff;--ln:#e5e5ea;--fill:#f0f0f5;--red:#ff453a;--sh:0 2px 14px rgba(0,0,0,.06);--r:20px}
+html[data-theme=dark]{--bg:#000;--card:#1c1c1e;--tx:#f5f5f7;--sub:#98989d;--ln:#2c2c2e;--fill:#2c2c2e;--sh:none}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;transition:background .3s,color .3s}
+main{max-width:560px;margin:0 auto;padding:28px 20px 130px}
+.in{animation:fi .35s ease}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hd{font-size:30px;font-weight:800;margin:6px 0 4px;letter-spacing:-.02em}
+.sub{color:var(--sub);margin:0 0 22px}
+h2{font-size:18px;margin:28px 4px 10px}
+h3{font-size:16px;margin:0 0 10px}
+.card{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:12px;box-shadow:var(--sh)}
+.dim{opacity:.55}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:var(--card);border-radius:var(--r);padding:18px;box-shadow:var(--sh)}
+.stat b{display:block;font-size:28px}.stat span{color:var(--sub);font-size:13px}
+.inp,select,textarea{width:100%;background:var(--fill);color:var(--tx);border:0;border-radius:14px;padding:13px 14px;font:inherit;font-size:16px;margin-bottom:10px;outline:none;-webkit-appearance:none;appearance:none}
+.inp:focus,select:focus,textarea:focus{box-shadow:0 0 0 2px var(--ac)}
+textarea{min-height:80px;resize:vertical}
+textarea.tall{min-height:260px}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--sub) 50%),linear-gradient(135deg,var(--sub) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px;background-repeat:no-repeat}
+.row{display:flex;gap:10px}.row>*{flex:1}.between{justify-content:space-between;align-items:center}
+.btn{background:var(--ac);color:#fff;border:0;border-radius:14px;padding:12px 16px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;min-height:44px;transition:transform .15s,opacity .15s}
+.btn:active,.chip:active,.seg button:active,.tb button:active{transform:scale(.97)}
+.btn.block{width:100%}
+.btn.ghost{background:var(--fill);color:var(--ac)}
+.btn.danger{background:transparent;color:var(--red);padding-left:6px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.tags{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:3px 9px;border-radius:99px;background:var(--fill);color:var(--sub);font-weight:600}
+.tag.blue{background:#0a84ff22;color:var(--ac)}.tag.warm{background:#ff9f0a22;color:#e08600}.tag.red{background:#ff453a22;color:var(--red)}.tag.green{background:#30d15822;color:#1f8a3b}
+.body{white-space:pre-wrap;word-break:break-word}
+.meta,.small{color:var(--sub);font-size:13px}
+.lbl{display:block;font-size:13px;color:var(--sub);margin:6px 2px}
+.empty{color:var(--sub);text-align:center;padding:26px 12px;background:var(--card);border-radius:var(--r);margin-bottom:12px}
+.empty.big{padding:40px 20px;font-size:15px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px}
+.chip{flex:0 0 auto;background:var(--card);color:var(--tx);border:0;border-radius:99px;padding:8px 14px;box-shadow:var(--sh);cursor:pointer;font:inherit;font-size:14px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip.on{background:var(--ac);color:#fff}.chip.plus{color:var(--ac)}
+.seg{display:flex;background:var(--fill);border-radius:12px;padding:3px;margin-bottom:14px}
+.seg button{flex:1;border:0;background:none;padding:9px;border-radius:10px;cursor:pointer;font:inherit;font-weight:600;color:var(--sub)}
+.seg button.on{background:var(--card);color:var(--tx);box-shadow:var(--sh)}
+.chk{display:flex;gap:10px;align-items:center;padding:11px 2px;font-size:16px;border-bottom:1px solid var(--ln)}
+.chk input{width:22px;height:22px;accent-color:var(--ac)}
+.link{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--ln);align-items:center}
+.link a{color:var(--ac);word-break:break-all;font-size:15px}
+.tw{overflow-x:auto;background:var(--card);border-radius:var(--r);padding:6px 12px;box-shadow:var(--sh);margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px 6px;border-bottom:1px solid var(--ln);text-align:left;vertical-align:top}
+th{color:var(--sub);font-weight:600}
+.tb{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--ln);padding:6px 4px calc(6px + env(safe-area-inset-bottom));z-index:5;transition:background .3s}
+.tb button{flex:1;border:0;background:none;color:var(--sub);font:inherit;font-size:11px;padding:6px 0;min-height:52px;cursor:pointer;transition:transform .15s}
+.tb button b{display:block;font-size:17px;line-height:1.2;margin-bottom:2px}
+.tb button.on{color:var(--ac);font-weight:700}
+.toast{position:fixed;left:50%;bottom:104px;transform:translate(-50%,16px);background:var(--tx);color:var(--bg);padding:12px 18px;border-radius:99px;opacity:0;transition:.3s;pointer-events:none;font-size:14px;max-width:90%;text-align:center;z-index:9}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.pre{white-space:pre-wrap}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.stats3{grid-template-columns:repeat(3,1fr)}
+.stats3 .stat{padding:14px 8px;text-align:center}
+.stats3 .stat b{font-size:24px}
+.stats3 .stat span{font-size:12px}
+.cap{color:var(--sub);font-size:13px;margin:0 4px 8px}
+.due{font-size:12px;padding:3px 9px;border-radius:99px;background:var(--fill);color:var(--sub);font-weight:700}
+.due.soon{background:#ff9f0a22;color:#e08600}
+.due.today,.due.over{background:#ff453a22;color:var(--red)}
+@media (max-width:640px){
+ .tw{background:none;box-shadow:none;padding:0;overflow:visible}
+ .tw table,.tw tbody,.tw tr,.tw td{display:block;width:auto}
+ .tw thead{display:none}
+ .tw tr{position:relative;background:var(--card);border-radius:var(--r);padding:14px 16px 8px;margin-bottom:10px;box-shadow:var(--sh)}
+ .tw td{border:0;padding:3px 0;font-size:14px;word-break:break-word}
+ .tw td.kwn{font-weight:700;font-size:17px;padding-right:64px}
+ .tw td[data-l]::before{content:attr(data-l);display:inline-block;min-width:66px;color:var(--sub);font-size:12px}
+ .tw td.kwdel{position:absolute;right:10px;top:8px;padding:0}
+ .tw td.kwdel .btn{padding:4px 8px;font-size:13px;min-height:32px}
+}
+</style>
+</head>
+<body>
+<main id="main"></main>
+<nav class="tb" aria-label="&#xc8fc;&#xc694; &#xba54;&#xb274;">
+ <button data-a="tab" data-v="home"><b>&#x2302;</b>&#xd648;</button>
+ <button data-a="tab" data-v="tasks"><b>&#x2713;</b>&#xd560; &#xc77c;</button>
+ <button data-a="tab" data-v="brief"><b>&#x2261;</b>&#xbe0c;&#xb9ac;&#xd551;</button>
+ <button data-a="tab" data-v="write"><b>&#x270e;</b>&#xae00;&#xc4f0;&#xae30;</button>
+ <button data-a="tab" data-v="kw"><b>#</b>&#xd0a4;&#xc6cc;&#xb4dc;</button>
+ <button data-a="tab" data-v="set"><b>&#x2699;</b>&#xc124;&#xc815;</button>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input id="imp" type="file" accept=".json,application/json" hidden>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const mem={};
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return mem[k]==null?null:mem[k]}},set(k,v){try{localStorage.setItem(k,v)}catch(e){mem[k]=v}}};
+const K='gb-board-v2';
+let S=null;
+try{S=JSON.parse(store.get(K)||'null')}catch(e){S=null}
+if(!S){try{S=JSON.parse(store.get('gb-board-v1')||'null')}catch(e){S=null}}
+S=Object.assign({tasks:[],brief:[],kw:[],ideas:[],drafts:[],memos:[]},S||{});
+let V='home',W='ideas',SEL=null,PEND=null,COPY='',BKP='',FL={st:'',cat:''};
+let THEME=store.get('gb-theme')||'auto';
+const CHK=['\uc81c\ubaa9','\ub3c4\uc785','\uc18c\uc81c\ubaa9','\uc774\ubbf8\uc9c0','\ub0b4\ubd80\ub9c1\ud06c','\uba54\ud0c0\uc124\uba85','\ubc1c\ud589 \uc804 \uc810\uac80'];
+const pad=n=>String(n).padStart(2,'0');
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+const now=()=>new Date().toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+const uid=()=>Date.now()*1000+Math.floor(Math.random()*999);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safe=u=>/^https?:\/\//.test(u||'')?esc(u):'#';
+const save=()=>store.set(K,JSON.stringify(S));
+const countOf=t=>{const b=(t||'').replace(/\s/g,'');return {chars:(t||'').length,nospace:b.length,min:Math.max(1,Math.ceil(b.length/500))}};
+const len=s=>[...(s||'')].length;
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),1900)}
+const mq=window.matchMedia?matchMedia('(prefers-color-scheme: dark)'):null;
+function applyTheme(){const dark=THEME==='dark'||(THEME==='auto'&&mq&&mq.matches);document.documentElement.setAttribute('data-theme',dark?'dark':'light');$('tc').setAttribute('content',dark?'#000000':'#f5f5f7')}
+if(mq&&mq.addEventListener)mq.addEventListener('change',applyTheme);
+const newDraft=t=>({id:uid(),title:t||'',cands:'',date:'',meta:'',body:'',checks:{},links:[],at:now()});
+const byId=(arr,id)=>arr.find(x=>String(x.id)===String(id));
+const curD=()=>byId(S.drafts,SEL)||S.drafts[0]||null;
+function del(key){return '<button class="btn danger" data-a="del" data-k="'+key+'">'+(PEND===key?'\ud55c \ubc88 \ub354 \ub204\ub974\uba74 \uc0ad\uc81c':'\uc0ad\uc81c')+'</button>'}
+function stat1(n,l){return '<div class="stat"><b>'+n+'</b><span>'+l+'</span></div>'}
+const CATS=['\ube14\ub85c\uadf8','\uccb4\ud5d8\ub2e8','\uc77c\uc0c1'];
+function catCls(c){return c==='\ube14\ub85c\uadf8'?'blue':c==='\uccb4\ud5d8\ub2e8'?'green':'warm'}
+function dueDate(s){const m=String(s||'').match(/^(\d{4})-(\d{2})-(\d{2})/);return m?new Date(+m[1],+m[2]-1,+m[3]):null}
+function dday(s){
+ const d=dueDate(s);if(!d||isNaN(d.getTime()))return null;
+ const t=new Date();const base=new Date(t.getFullYear(),t.getMonth(),t.getDate());
+ const n=Math.round((d-base)/864e5);
+ if(n<0)return {t:'\ub9c8\uac10 \uc9c0\ub0a8',c:'over'};
+ if(n===0)return {t:'D-Day',c:'today'};
+ return {t:'D-'+n,c:n<=3?'soon':''};
+}
+function dueTag(t){const b=dday(t&&t.due);return b?'<span class="due '+b.c+'">'+b.t+'</span>':''}
+const byDue=(a,b)=>{const x=dueDate(a.due),y=dueDate(b.due);if(!x&&!y)return 0;if(!x)return 1;if(!y)return -1;return x-y}
+function taskCard(t){
+ const done=t.st==='\uc644\ub8cc';
+ const nx=t.st==='\ub300\uae30'?'\uc9c4\ud589':t.st==='\uc9c4\ud589'?'\uc644\ub8cc':'\ub300\uae30\ub85c';
+ return '<div class="card '+(done?'dim':'')+'"><div class="tags"><span class="tag '+catCls(t.cat)+'">'+esc(t.cat)+'</span><span class="tag">'+esc(t.st)+'</span>'+(t.pri==='\uae09\ud568'?'<span class="tag red">\uae09\ud568</span>':'')+(done?'':dueTag(t))+'</div>'
+ +'<div class="body">'+esc(t.text)+'</div>'
+ +(t.res?'<div class="meta">\uacb0\uacfc: '+esc(t.res)+'</div>':'')
+ +'<div class="meta">'+esc(t.at)+(t.due?' \u00b7 \ub9c8\uac10 '+esc(t.due):'')+'</div>'
+ +(done?'':'<input class="inp" id="res-'+t.id+'" placeholder="\uacb0\uacfc \ud55c \uc904 (\uc644\ub8cc \uc2dc \ube0c\ub9ac\ud551\uc5d0 \uae30\ub85d)" style="margin-top:10px">')
+ +'<div class="acts"><button class="btn ghost" data-a="copy" data-id="'+t.id+'">\ubd80\uc774\uc5d0\uac8c \ubcf4\ub0bc \uae00 \ubcf5\uc0ac</button><button class="btn" data-a="tst" data-id="'+t.id+'">'+nx+'</button>'+del('task:'+t.id)+'</div></div>';
+}
+function homeV(){
+ const open=S.tasks.filter(t=>t.st!=='\uc644\ub8cc');
+ const bOpen=open.filter(t=>t.cat==='\ube14\ub85c\uadf8').length, cOpen=open.filter(t=>t.cat==='\uccb4\ud5d8\ub2e8').length, lOpen=open.filter(t=>t.cat==='\uc77c\uc0c1').length;
+ const ideas=S.ideas.filter(i=>i.st!=='\ubc1c\ud589').length;
+ const td=today();const w=new Date(Date.now()+7*864e5);const wk=w.getFullYear()+'-'+pad(w.getMonth()+1)+'-'+pad(w.getDate());
+ const up=S.drafts.filter(d=>d.date&&d.date>=td&&d.date<=wk).sort((a,b)=>a.date.localeCompare(b.date));
+ const good=S.kw.filter(k=>k.v>=30000).length;
+ const empty=!S.tasks.length&&!S.ideas.length&&!S.drafts.length&&!S.kw.length;
+ return '<h1 class="hd">\uc624\ub298</h1><p class="sub">'+new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'long'})+'</p>'
+ +'<p class="cap">\ub0a8\uc740 \ud560 \uc77c</p>'
+ +'<div class="stats stats3">'+stat1(bOpen,'\ube14\ub85c\uadf8')+stat1(cOpen,'\uccb4\ud5d8\ub2e8')+stat1(lOpen,'\uc77c\uc0c1')+'</div>'
+ +'<div class="stats" style="margin-top:12px">'+stat1(ideas,'\uad6c\uc0c1\u00b7\uc791\uc131 \uc911 \uae00\uac10')+stat1(good,'\ucc44\ud0dd \ud0a4\uc6cc\ub4dc')+'</div>'
+ +'<h2>7\uc77c \uc548\uc5d0 \ubc1c\ud589\ud560 \uae00</h2>'+(up.map(d=>'<div class="card"><div class="body"><b>'+esc(d.title||'(\uc81c\ubaa9 \uc5c6\uc74c)')+'</b></div><div class="meta">'+d.date+'</div></div>').join('')||'<div class="empty">\uc608\uc815\ub41c \ubc1c\ud589\uc774 \uc5c6\uc5b4\uc694. \uae00\uc4f0\uae30 \ud0ed \ucd08\uc548\uc5d0 \ubc1c\ud589 \uc608\uc815\uc77c\uc744 \ub123\uc5b4 \ubcf4\uc138\uc694.</div>')
+ +'<h2>\uc9c4\ud589 \uc911 \ud560 \uc77c</h2>'+(open.slice().sort(byDue).slice(0,4).map(taskCard).join('')||'<div class="empty">\ud560 \uc77c\uc774 \uc5c6\uc5b4\uc694. \ud560 \uc77c \ud0ed\uc5d0\uc11c \uc2dc\ud0ac \uc77c\uc744 \uc62c\ub824 \ubcf4\uc138\uc694.</div>')
+ +(empty?'<div class="empty big">\ucc98\uc74c\uc774\uc5d0\uc694. \ud560 \uc77c\u00b7\uae00\uac10\u00b7\ud0a4\uc6cc\ub4dc\ub97c \ud558\ub098\uc529 \ub123\uc73c\uba74 \uc5ec\uae30\uc5d0 \uc624\ub298 \uc694\uc57d\uc774 \ubaa8\uc5ec\uc694.</div>':'');
+}
+function tasksV(){
+ const list=S.tasks.filter(t=>(!FL.st||t.st===FL.st)&&(!FL.cat||t.cat===FL.cat));
+ return '<h1 class="hd">\ud560 \uc77c</h1>'
+ +(COPY?'<div class="card"><div class="small">\ubcf5\uc0ac\uac00 \uc548 \ub418\uba74 \uc544\ub798 \uae00\uc744 \uae38\uac8c \ub20c\ub7ec \ubcf5\uc0ac\ud558\uc138\uc694.</div><textarea readonly rows="3" onfocus="this.select()" style="margin:8px 0 0">'+esc(COPY)+'</textarea></div>':'')
+ +'<div class="card"><div class="row"><select id="tcat" aria-label="\uad6c\ubd84"><option>\ube14\ub85c\uadf8</option><option>\uccb4\ud5d8\ub2e8</option><option>\uc77c\uc0c1</option></select><select id="tpri"><option>\ubcf4\ud1b5</option><option>\uae09\ud568</option></select></div>'
+ +'<label class="lbl" for="tdate">\ub9c8\uac10\uc77c (\uc120\ud0dd)</label><input id="tdate" class="inp" type="date" style="margin:0 0 10px">'
+ +'<textarea id="ttext" placeholder="\uc2dc\ud0ac \uc77c\uc744 \uc801\uc5b4\uc694. \uc608) \uc774\ubc88 \uc8fc \uc4f8 IT \ube14\ub85c\uadf8 \uc18c\uc7ac 3\uac1c \ucc3e\uc544\uc918"></textarea>'
+ +'<button class="btn block" data-a="addTask">\uc62c\ub9ac\uae30</button></div>'
+ +'<div class="row" style="margin-bottom:12px"><select id="fst" data-filter="st"><option value="">\uc804\uccb4 \uc0c1\ud0dc</option><option'+(FL.st==='\ub300\uae30'?' selected':'')+'>\ub300\uae30</option><option'+(FL.st==='\uc9c4\ud589'?' selected':'')+'>\uc9c4\ud589</option><option'+(FL.st==='\uc644\ub8cc'?' selected':'')+'>\uc644\ub8cc</option></select>'
+ +'<select id="fcat" data-filter="cat"><option value="">\uc804\uccb4</option><option'+(FL.cat==='\ube14\ub85c\uadf8'?' selected':'')+'>\ube14\ub85c\uadf8</option><option'+(FL.cat==='\uccb4\ud5d8\ub2e8'?' selected':'')+'>\uccb4\ud5d8\ub2e8</option><option'+(FL.cat==='\uc77c\uc0c1'?' selected':'')+'>\uc77c\uc0c1</option></select></div>'
+ +(list.map(taskCard).join('')||'<div class="empty">\uc870\uac74\uc5d0 \ub9de\ub294 \ud560 \uc77c\uc774 \uc5c6\uc5b4\uc694.</div>')
+ +'<h2>\uc77c\uc0c1 \uba54\ubaa8</h2><div class="card"><textarea id="mtext" placeholder="\ub5a0\uc624\ub978 \uc0dd\uac01, \uc0b4 \uac83, \uae30\uc5b5\ud560 \uac83\uc744 \uc801\uc5b4\uc694"></textarea><button class="btn block" data-a="addMemo">\uba54\ubaa8 \ub0a8\uae30\uae30</button></div>'
+ +(S.memos.map(m=>'<div class="card"><div class="body">'+esc(m.text)+'</div><div class="acts"><span class="meta">'+esc(m.at)+'</span>'+del('memo:'+m.id)+'</div></div>').join('')||'<div class="empty">\uba54\ubaa8\uac00 \uc5c6\uc5b4\uc694.</div>');
+}
+function briefV(){
+ return '<h1 class="hd">\ube0c\ub9ac\ud551</h1><p class="sub">\ud588\ub2e4\uace0 \ubcf4\uace0\ubc1b\uc740 \ub0b4\uc6a9\uc744 \uae30\ub85d\ud574\uc694. \uc644\ub8cc\ud55c \ud560 \uc77c\uc740 \uc790\ub3d9\uc73c\ub85c \uc5ec\uae30 \ub4e4\uc5b4\uc640\uc694.</p>'
+ +'<div class="card"><select id="bcat"><option>\ube14\ub85c\uadf8</option><option>\uc77c\uc0c1</option></select><textarea id="btext" placeholder="\uc608) \ud0a4\uc6cc\ub4dc 5\uac1c \uc815\ub9ac \ub05d, 3\uac1c\ub294 3\ub9cc \uc774\uc0c1"></textarea><button class="btn block" data-a="addBrief">\uae30\ub85d \ucd94\uac00</button></div>'
+ +(S.brief.map(b=>'<div class="card"><div class="tags"><span class="tag '+(b.cat==='\ube14\ub85c\uadf8'?'blue':'warm')+'">'+esc(b.cat)+'</span></div><div class="body">'+esc(b.text)+'</div><div class="acts"><span class="meta">'+esc(b.at)+'</span>'+del('brief:'+b.id)+'</div></div>').join('')||'<div class="empty">\ube0c\ub9ac\ud551 \uae30\ub85d\uc774 \uc5c6\uc5b4\uc694.</div>');
+}
+function ideasV(){
+ return '<div class="card"><input id="ititle" class="inp" placeholder="\uae00\uac10 (\uc608: \uc544\uc774\ud328\ub4dc \uba54\ubaa8\uc571 \uc815\ub9ac\ubc95)"><input id="isrc" class="inp" placeholder="\ucd9c\ucc98 \ub9c1\ud06c (https://...)" inputmode="url"><textarea id="imemo" placeholder="\uba54\ubaa8 (\uac01\ub3c4, \ub3c5\uc790, \ud575\uc2ec \ud55c \uc904)"></textarea><button class="btn block" data-a="addIdea">\uae00\uac10 \ubcf4\uad00</button></div>'
+ +(S.ideas.map(i=>'<div class="card"><div class="row between"><div class="body"><b>'+esc(i.title)+'</b></div><button class="tag '+(i.st==='\ubc1c\ud589'?'green':i.st==='\uc791\uc131\uc911'?'blue':'')+'" style="border:0;cursor:pointer" data-a="ist" data-id="'+i.id+'">'+esc(i.st)+'</button></div>'
+  +(i.memo?'<div class="body small" style="margin-top:6px">'+esc(i.memo)+'</div>':'')
+  +(i.src?'<div class="link"><a href="'+safe(i.src)+'" target="_blank" rel="noopener">\ucd9c\ucc98 \uc5f4\uae30</a></div>':'')
+  +'<div class="acts"><button class="btn ghost" data-a="i2d" data-id="'+i.id+'">\ucd08\uc548 \ub9cc\ub4e4\uae30</button>'+del('idea:'+i.id)+'</div></div>').join('')||'<div class="empty">\ubcf4\uad00\ud55c \uae00\uac10\uc774 \uc5c6\uc5b4\uc694. \ub5a0\uc624\ub974\ub294 \uc8fc\uc81c\ub97c \ubc14\ub85c \uc801\uc5b4 \ub450\uc138\uc694.</div>');
+}
+function scheduleV(){
+ const ds=S.drafts.filter(d=>d.date).sort((a,b)=>a.date.localeCompare(b.date));
+ return '<h2>\ubc1c\ud589 \uc77c\uc815</h2>'+(ds.map(d=>'<div class="card"><div class="row between"><div class="body">'+esc(d.title||'(\uc81c\ubaa9 \uc5c6\uc74c)')+'</div><span class="tag">'+d.date+'</span></div></div>').join('')||'<div class="empty">\ubc1c\ud589 \uc608\uc815\uc77c\uc744 \ub123\uc740 \ucd08\uc548\uc774 \uc5c6\uc5b4\uc694.</div>');
+}
+function draftV(){
+ const D=curD();
+ let h='<div class="chips">'+S.drafts.map(d=>'<button class="chip '+(D&&d.id===D.id?'on':'')+'" data-a="dsel" data-id="'+d.id+'">'+esc(d.title||'\uc81c\ubaa9 \uc5c6\uc74c')+'</button>').join('')+'<button class="chip plus" data-a="dnew">+ \uc0c8 \ucd08\uc548</button></div>';
+ if(!D) return h+'<div class="empty">\ucd08\uc548\uc774 \uc5c6\uc5b4\uc694. \uae00\uac10\uc5d0\uc11c \ucd08\uc548 \ub9cc\ub4e4\uae30\ub97c \ub204\ub974\uac70\ub098 + \uc0c8 \ucd08\uc548\uc744 \ub20c\ub7ec \ubcf4\uc138\uc694.</div>'+scheduleV();
+ const C=D.checks||{};
+ const b=countOf(D.body);
+ const cands=(D.cands||'').split('\n').map(s=>s.trim()).filter(Boolean);
+ const longest=cands.reduce((m,s)=>Math.max(m,len(s)),0);
+ const done=CHK.filter(k=>C[k]).length;
+ return h+'<div class="card"><label class="lbl">\uc81c\ubaa9 (15~30\uc790 \uad8c\uc7a5)</label><input class="inp" data-f="title" value="'+esc(D.title)+'" placeholder="\uc81c\ubaa9">'
+ +'<div class="small" id="tstat">'+len(D.title)+'\uc790</div>'
+ +'<label class="lbl">\uc81c\ubaa9 \ud6c4\ubcf4 (\ud55c \uc904\uc5d0 \ud558\ub098)</label><textarea data-f="cands" placeholder="\ud6c4\ubcf4\ub97c \ud55c \uc904\uc529 \uc801\uc5b4\uc694">'+esc(D.cands)+'</textarea>'
+ +'<div class="small" id="cstat">\ud6c4\ubcf4 '+cands.length+'\uac1c \u00b7 \uac00\uc7a5 \uae34 \ud6c4\ubcf4 '+longest+'\uc790</div>'
+ +'<label class="lbl">\ubc1c\ud589 \uc608\uc815\uc77c</label><input type="date" class="inp" data-f="date" value="'+esc(D.date)+'">'
+ +'<label class="lbl">\uba54\ud0c0 \uc124\uba85 (120~160\uc790 \uad8c\uc7a5)</label><textarea data-f="meta" placeholder="\uac80\uc0c9 \uacb0\uacfc\uc5d0 \ubcf4\uc77c \uc124\uba85">'+esc(D.meta)+'</textarea>'
+ +'<div class="small" id="mstat">'+len(D.meta)+'\uc790</div>'
+ +'<label class="lbl">\ubcf8\ubb38 \ucd08\uc548</label><textarea class="tall" data-f="body" placeholder="\uc5ec\uae30\uc5d0 \ucd08\uc548\uc744 \uc368\uc694">'+esc(D.body)+'</textarea>'
+ +'<div class="small" id="bstat">'+b.nospace+'\uc790(\uacf5\ubc31 \uc81c\uc678) \u00b7 '+b.chars+'\uc790 \u00b7 \uc608\uc0c1 \uc77d\uae30 '+b.min+'\ubd84</div></div>'
+ +'<div class="card"><div class="row between"><h3>\ubc1c\ud589 \uc804 \uccb4\ud06c\ub9ac\uc2a4\ud2b8</h3><span class="small" id="prog">'+done+'/'+CHK.length+'</span></div>'
+ +CHK.map(k=>'<label class="chk"><input type="checkbox" data-chk="'+k+'"'+(C[k]?' checked':'')+'> '+k+'</label>').join('')+'</div>'
+ +'<div class="card"><h3>\ucd9c\ucc98 \ub9c1\ud06c</h3>'+((D.links||[]).map(l=>'<div class="link"><a href="'+safe(l.url)+'" target="_blank" rel="noopener">'+esc(l.label||l.url)+'</a>'+del('link:'+l.id+':'+D.id)+'</div>').join('')||'<div class="small">\uc544\uc9c1 \uc5c6\uc5b4\uc694.</div>')
+ +'<input id="lurl" class="inp" placeholder="https://..." inputmode="url" style="margin-top:10px"><input id="llabel" class="inp" placeholder="\uc124\uba85 (\uc120\ud0dd)"><button class="btn ghost block" data-a="addLink">\ub9c1\ud06c \ucd94\uac00</button></div>'
+ +'<div class="acts" style="margin-bottom:10px">'+del('draft:'+D.id)+'</div>'
+ +scheduleV();
+}
+function writeV(){
+ return '<h1 class="hd">\uae00\uc4f0\uae30</h1><div class="seg"><button data-a="wtab" data-id="ideas" class="'+(W==='ideas'?'on':'')+'">\uae00\uac10 \ubcf4\uad00\ud568</button><button data-a="wtab" data-id="draft" class="'+(W==='draft'?'on':'')+'">\ucd08\uc548\u00b7\uc77c\uc815</button></div>'+(W==='ideas'?ideasV():draftV());
+}
+function kwV(){
+ const ok=S.kw.filter(k=>k.v>=30000).length;
+ return '<h1 class="hd">\ube14\ub85c\uadf8 \ud0a4\uc6cc\ub4dc</h1><p class="sub">\uc6d4 \uac80\uc0c9\ub7c9 3\ub9cc \uc774\uc0c1\ub9cc \ucc44\ud0dd\uc73c\ub85c \ud45c\uc2dc\ub3fc\uc694. \ud0a4\uc6cc\ub4dc\ub9c8\ub2e4 \uc791\uc131 \uc694\ub839\uc744 \uac19\uc774 \uc801\uc5b4 \ub450\uc138\uc694.</p>'
+ +'<div class="card"><input id="kk" class="inp" placeholder="\ud0a4\uc6cc\ub4dc"><input id="kv" class="inp" type="number" inputmode="numeric" placeholder="\uc6d4 \uac80\uc0c9\ub7c9 (\uc22b\uc790)"><textarea id="kt" placeholder="\uae00 \uc791\uc131 \uc694\ub839 (\uc81c\ubaa9 \uad6c\uc131, \uaf2d \ub123\uc744 \ub0b4\uc6a9, \uc18c\uc81c\ubaa9 \ub4f1)"></textarea><button class="btn block" data-a="addKw">\ud0a4\uc6cc\ub4dc \ucd94\uac00</button></div>'
+ +'<div class="small" style="margin:0 4px 8px">\ucc44\ud0dd '+ok+'\uac1c \u00b7 \uc804\uccb4 '+S.kw.length+'\uac1c</div>'
+ +'<div class="tw"><table><thead><tr><th>\ud0a4\uc6cc\ub4dc</th><th>\uc6d4 \uac80\uc0c9\ub7c9</th><th>\ud310\uc815</th><th>\uc791\uc131 \uc694\ub839</th><th></th></tr></thead><tbody>'
+ +(S.kw.map(k=>'<tr><td class="kwn">'+esc(k.k)+'</td><td data-l="\uc6d4 \uac80\uc0c9\ub7c9">'+Number(k.v).toLocaleString('ko-KR')+'</td><td data-l="\ud310\uc815"><span class="tag '+(k.v>=30000?'green':'red')+'">'+(k.v>=30000?'\ucc44\ud0dd':'\ubbf8\ub2ec')+'</span></td><td class="pre" data-l="\uc694\ub839">'+esc(k.tip||'-')+'</td><td class="kwdel">'+del('kw:'+k.id)+'</td></tr>').join('')||'<tr><td colspan="5" class="small">\ud0a4\uc6cc\ub4dc\uac00 \uc5c6\uc5b4\uc694.</td></tr>')
+ +'</tbody></table></div>';
+}
+function setV(){
+ return '<h1 class="hd">\uc124\uc815</h1>'
+ +'<div class="card"><h3>\ud654\uba74 \ubaa8\ub4dc</h3><div class="seg">'+[['auto','\uc790\ub3d9'],['light','\ub77c\uc774\ud2b8'],['dark','\ub2e4\ud06c']].map(p=>'<button data-a="th" data-th="'+p[0]+'" class="'+(THEME===p[0]?'on':'')+'">'+p[1]+'</button>').join('')+'</div></div>'
+ +'<div class="card"><h3>\ubc31\uc5c5</h3><p class="small">\ub370\uc774\ud130\ub294 \uc774 \uae30\uae30 \ube0c\ub77c\uc6b0\uc800\uc5d0\ub9cc \uc800\uc7a5\ub3fc\uc694. \uae30\uae30\ub97c \ubc14\uafb8\uba74 \ubc31\uc5c5\uc744 \ubd88\ub7ec\uc624\uc138\uc694.</p>'
+ +'<div class="row"><button class="btn" data-a="export">\ubc31\uc5c5 \ud30c\uc77c \uc800\uc7a5</button><button class="btn ghost" data-a="pick">\ubc31\uc5c5 \ubd88\ub7ec\uc624\uae30</button></div>'
+ +'<button class="btn ghost block" data-a="showjson" style="margin-top:10px">\ubc31\uc5c5 \ub0b4\uc6a9 \ubcf4\uae30 (\ubcf5\uc0ac\uc6a9)</button>'
+ +(BKP?'<textarea readonly rows="6" onfocus="this.select()" style="margin:10px 0 0">'+esc(BKP)+'</textarea>':'')+'</div>'
+ +'<div class="card small">\ud560 \uc77c '+S.tasks.length+' \u00b7 \ube0c\ub9ac\ud551 '+S.brief.length+' \u00b7 \uae00\uac10 '+S.ideas.length+' \u00b7 \ucd08\uc548 '+S.drafts.length+' \u00b7 \ud0a4\uc6cc\ub4dc '+S.kw.length+' \u00b7 \uba54\ubaa8 '+S.memos.length+'</div>';
+}
+const VIEWS={home:homeV,tasks:tasksV,brief:briefV,write:writeV,kw:kwV,set:setV};
+function render(){
+ const main=$('main');
+ const keep={};
+ main.querySelectorAll('[id]').forEach(e=>{if(e.type!=='file')keep[e.id]=e.type==='checkbox'?e.checked:e.value});
+ main.innerHTML=(VIEWS[V]||homeV)();
+ Object.keys(keep).forEach(id=>{const e=$(id);if(!e)return;if(e.type==='checkbox')e.checked=keep[id];else e.value=keep[id]});
+ document.querySelectorAll('.tb button').forEach(b=>{const on=b.dataset.v===V;b.classList.toggle('on',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+ main.classList.remove('in');void main.offsetWidth;main.classList.add('in');
+ applyTheme();
+}
+function removeByKey(k){
+ const p=k.split(':'),type=p[0],id=p[1];
+ if(type==='task')S.tasks=S.tasks.filter(x=>String(x.id)!==id);
+ else if(type==='brief')S.brief=S.brief.filter(x=>String(x.id)!==id);
+ else if(type==='kw')S.kw=S.kw.filter(x=>String(x.id)!==id);
+ else if(type==='idea')S.ideas=S.ideas.filter(x=>String(x.id)!==id);
+ else if(type==='memo')S.memos=S.memos.filter(x=>String(x.id)!==id);
+ else if(type==='draft'){S.drafts=S.drafts.filter(x=>String(x.id)!==id);if(String(SEL)===id)SEL=null}
+ else if(type==='link'){const d=byId(S.drafts,p[2]);if(d)d.links=(d.links||[]).filter(l=>String(l.id)!==id)}
+}
+function exportBackup(){
+ const txt=JSON.stringify(S,null,2);
+ try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'application/json'}));a.download='board-backup-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();toast('\ubc31\uc5c5 \ud30c\uc77c\uc744 \uc800\uc7a5\ud588\uc5b4\uc694')}
+ catch(e){BKP=txt;toast('\uc800\uc7a5\uc774 \uc548 \ub418\uba74 \uc544\ub798 \ub0b4\uc6a9\uc744 \ubcf5\uc0ac\ud574 \ubcf4\uad00\ud558\uc138\uc694')}
+}
+function importFile(f){
+ if(!f)return;
+ const r=new FileReader();
+ r.onload=()=>{try{const o=JSON.parse(r.result);if(!o||typeof o!=='object'||!Array.isArray(o.tasks))throw new Error('bad');S=Object.assign({tasks:[],brief:[],kw:[],ideas:[],drafts:[],memos:[]},o);save();toast('\ubc31\uc5c5\uc744 \ubd88\ub7ec\uc654\uc5b4\uc694');render()}catch(x){toast('\ubc31\uc5c5 \ud30c\uc77c\uc744 \uc77d\uc9c0 \ubabb\ud588\uc5b4\uc694')}};
+ r.onerror=()=>toast('\ud30c\uc77c\uc744 \uc77d\uc9c0 \ubabb\ud588\uc5b4\uc694');
+ r.readAsText(f);
+}
+document.addEventListener('click',e=>{
+ const el=e.target.closest('[data-a]');if(!el)return;
+ const a=el.dataset.a,id=el.dataset.id,k=el.dataset.k;
+ if(a!=='del'&&PEND)PEND=null;
+ switch(a){
+  case 'tab':V=el.dataset.v;COPY='';break;
+  case 'addTask':{const t=$('ttext').value.trim();if(!t)return toast('\ub0b4\uc6a9\uc744 \uc801\uc5b4 \uc8fc\uc138\uc694');const dEl=$('tdate');const due=dEl?dEl.value:'';S.tasks.unshift({id:uid(),cat:$('tcat').value,pri:$('tpri').value,text:t,due:due,st:'\ub300\uae30',at:now(),res:''});$('ttext').value='';if(dEl)dEl.value='';save();toast('\uc62c\ub838\uc5b4\uc694');break}
+  case 'copy':{const t=byId(S.tasks,id);if(!t)break;const txt='['+t.cat+'] '+t.text;COPY=txt;
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(()=>toast('\ubcf5\uc0ac\ud588\uc5b4\uc694. \ubd80\uc774\uc5d0\uac8c \ubd99\uc5ec\ub123\uc5b4 \ubcf4\ub0b4\uc138\uc694'),()=>toast('\uc544\ub798 \uc0c1\uc790\uc5d0\uc11c \ubcf5\uc0ac\ud558\uc138\uc694'))}
+    else toast('\uc544\ub798 \uc0c1\uc790\uc5d0\uc11c \ubcf5\uc0ac\ud558\uc138\uc694');break}
+  case 'tst':{const t=byId(S.tasks,id);if(!t)break;const nx={'\ub300\uae30':'\uc9c4\ud589','\uc9c4\ud589':'\uc644\ub8cc','\uc644\ub8cc':'\ub300\uae30'}[t.st];
+    if(nx==='\uc644\ub8cc'){const inp=$('res-'+t.id);const r=inp?inp.value:'';if(r.trim())t.res=r.trim();S.brief.unshift({id:uid(),cat:t.cat,text:'[\uc644\ub8cc] '+t.text+(t.res?' \u2192 '+t.res:''),at:now()})}
+    t.st=nx;save();break}
+  case 'addBrief':{const t=$('btext').value.trim();if(!t)return toast('\ub0b4\uc6a9\uc744 \uc801\uc5b4 \uc8fc\uc138\uc694');S.brief.unshift({id:uid(),cat:$('bcat').value,text:t,at:now()});$('btext').value='';save();break}
+  case 'addMemo':{const t=$('mtext').value.trim();if(!t)return toast('\uba54\ubaa8\ub97c \uc801\uc5b4 \uc8fc\uc138\uc694');S.memos.unshift({id:uid(),text:t,at:now()});$('mtext').value='';save();break}
+  case 'wtab':W=el.dataset.id;break;
+  case 'addIdea':{const ti=$('ititle').value.trim();if(!ti)return toast('\uae00\uac10\uc744 \uc801\uc5b4 \uc8fc\uc138\uc694');const src=$('isrc').value.trim();if(src&&!/^https?:\/\//.test(src))return toast('\ub9c1\ud06c\ub294 https:// \ub85c \uc2dc\uc791\ud574\uc57c \ud574\uc694');S.ideas.unshift({id:uid(),title:ti,src:src,memo:$('imemo').value.trim(),st:'\uad6c\uc0c1',at:now()});$('ititle').value='';$('isrc').value='';$('imemo').value='';save();toast('\uae00\uac10\uc744 \ubcf4\uad00\ud588\uc5b4\uc694');break}
+  case 'ist':{const x=byId(S.ideas,id);if(x)x.st={'\uad6c\uc0c1':'\uc791\uc131\uc911','\uc791\uc131\uc911':'\ubc1c\ud589','\ubc1c\ud589':'\uad6c\uc0c1'}[x.st];save();break}
+  case 'i2d':{const x=byId(S.ideas,id);if(!x)break;const d=newDraft(x.title);d.meta=x.memo||'';d.links=x.src?[{id:uid(),url:x.src,label:'\ucd9c\ucc98'}]:[];S.drafts.unshift(d);SEL=d.id;if(x.st==='\uad6c\uc0c1')x.st='\uc791\uc131\uc911';W='draft';save();toast('\ucd08\uc548\uc744 \ub9cc\ub4e4\uc5c8\uc5b4\uc694');break}
+  case 'dnew':{const d=newDraft('');S.drafts.unshift(d);SEL=d.id;W='draft';save();break}
+  case 'dsel':SEL=id;break;
+  case 'addLink':{const D=curD();if(!D)break;const url=$('lurl').value.trim();if(!/^https?:\/\//.test(url))return toast('https:// \ub85c \uc2dc\uc791\ud558\ub294 \ub9c1\ud06c\ub97c \ub123\uc5b4 \uc8fc\uc138\uc694');D.links=D.links||[];D.links.push({id:uid(),url:url,label:$('llabel').value.trim()});$('lurl').value='';$('llabel').value='';save();break}
+  case 'addKw':{const kw=$('kk').value.trim(),v=+$('kv').value;if(!kw||!v)return toast('\ud0a4\uc6cc\ub4dc\uc640 \uc6d4 \uac80\uc0c9\ub7c9\uc744 \uc801\uc5b4 \uc8fc\uc138\uc694');S.kw.push({id:uid(),k:kw,v:v,tip:$('kt').value.trim()});S.kw.sort((x,y)=>y.v-x.v);$('kk').value='';$('kv').value='';$('kt').value='';save();toast(v>=30000?'\ucc44\ud0dd \ud0a4\uc6cc\ub4dc\uc608\uc694':'\ubbf8\ub2ec \ud0a4\uc6cc\ub4dc\uc608\uc694');break}
+  case 'th':THEME=el.dataset.th;store.set('gb-theme',THEME);applyTheme();break;
+  case 'export':exportBackup();break;
+  case 'showjson':BKP=JSON.stringify(S,null,2);break;
+  case 'pick':$('imp').click();return;
+  case 'del':{if(PEND!==k){PEND=k;break}PEND=null;removeByKey(k);save();toast('\uc0ad\uc81c\ud588\uc5b4\uc694');break}
+ }
+ render();
+});
+document.addEventListener('input',e=>{
+ const el=e.target;if(!el.dataset||!el.dataset.f)return;
+ const D=curD();if(!D)return;
+ D[el.dataset.f]=el.value;save();
+ const b=countOf(D.body);
+ const set=(i,t)=>{const x=$(i);if(x)x.textContent=t};
+ set('tstat',len(D.title)+'\uc790');
+ const c=(D.cands||'').split('\n').map(s=>s.trim()).filter(Boolean);
+ set('cstat','\ud6c4\ubcf4 '+c.length+'\uac1c \u00b7 \uac00\uc7a5 \uae34 \ud6c4\ubcf4 '+c.reduce((m,s)=>Math.max(m,len(s)),0)+'\uc790');
+ set('mstat',len(D.meta)+'\uc790');
+ set('bstat',b.nospace+'\uc790(\uacf5\ubc31 \uc81c\uc678) \u00b7 '+b.chars+'\uc790 \u00b7 \uc608\uc0c1 \uc77d\uae30 '+b.min+'\ubd84');
+});
+document.addEventListener('change',e=>{
+ const el=e.target;
+ if(el.dataset&&el.dataset.filter){FL[el.dataset.filter]=el.value;render();return}
+ if(el.dataset&&el.dataset.chk){const D=curD();if(!D)return;D.checks=D.checks||{};D.checks[el.dataset.chk]=el.checked;save();const p=$('prog');if(p)p.textContent=CHK.filter(x=>D.checks[x]).length+'/'+CHK.length;return}
+ if(el.id==='imp'){importFile(el.files&&el.files[0]);el.value='';}
+});
+window.addEventListener('error',()=>toast('\uc624\ub958\uac00 \uc788\uc5c8\uc5b4\uc694. \uc0c8\ub85c\uace0\uce68 \ud6c4 \ub2e4\uc2dc \uc2dc\ub3c4\ud574 \ubcf4\uc138\uc694'));
+render();
+})();
+</script>
+</body>
+</html>
