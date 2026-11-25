@@ -436,6 +436,39 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
   .bulk-kw{max-width:118px}
 }
 
+/* ── 블톡 추천 키워드 ────────────────────── */
+.rec-section{margin:16px 0 0}
+.rec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 14px}
+.rec-head h2{margin:0;font-size:16.5px;font-weight:800;letter-spacing:-.03em}
+.rec-sub{margin:4px 0 0;font-size:12.5px;color:var(--text-2);line-height:1.45}
+.rec-sub b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:750}
+.rec-tools{display:flex;gap:8px;flex-wrap:wrap;flex:none}
+.rec-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
+.rec-card{
+  border:1px solid var(--line);border-radius:15px;background:var(--surface);padding:14px;
+  display:flex;flex-direction:column;gap:8px;min-width:0;
+}
+.rec-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rec-kw{font-size:16px;font-weight:800;letter-spacing:-.03em;min-width:0;overflow-wrap:anywhere}
+.rec-badge{
+  flex:none;font-size:11.5px;font-weight:800;letter-spacing:-.01em;
+  padding:4px 10px;border-radius:999px;border:1px solid transparent;white-space:nowrap;
+}
+.rec-badge.s{background:linear-gradient(135deg,#4d55cf,#7b5bf2);color:#fff;border-color:transparent}
+.rec-badge.a{background:var(--good-bg);color:var(--good);border-color:var(--good-line)}
+.rec-metrics{display:flex;flex-wrap:wrap;gap:3px 12px;font-size:12.5px;color:var(--text-2)}
+.rec-metrics b{color:var(--text);font-weight:800;font-variant-numeric:tabular-nums}
+.rec-reason{margin:0;font-size:12.5px;line-height:1.55;color:var(--text-2)}
+.rec-extra{display:flex;flex-wrap:wrap;gap:5px}
+.rec-tag{font-size:11px;font-weight:700;color:var(--text-3);background:var(--surface-2);border:1px solid var(--line-2);border-radius:8px;padding:3px 7px;white-space:nowrap}
+.rec-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+.rec-actions .btn{flex:1 1 140px;min-height:38px}
+.rec-state{border:1px dashed var(--line);border-radius:14px;padding:20px 16px;text-align:center;color:var(--text-2);font-size:13px;line-height:1.6}
+.rec-state strong{display:block;color:var(--text);font-weight:800;margin-bottom:4px}
+@media (min-width:880px){
+  .rec-grid{grid-template-columns:1fr 1fr;gap:12px}
+}
+
 /* toast */
 .toast{
   position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translate(-50%,14px);
@@ -546,6 +579,24 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
           <button class="btn ghost" data-act="open-bulk">일괄 붙여넣기</button>
         </div>
       </div>
+
+      <!-- 블톡 추천 키워드 -->
+      <section class="rec-section" aria-labelledby="rec-title">
+        <div class="rec-head">
+          <div>
+            <h2 id="rec-title">블톡 추천 키워드</h2>
+            <p class="rec-sub" id="rec-meta">마지막 업데이트 확인 중…</p>
+          </div>
+          <div class="rec-tools">
+            <button class="btn ghost sm" data-act="rec-refresh" aria-label="추천 키워드 새로고침">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 10-2.3 5.7"/><path d="M20 5v6h-6"/></svg>
+              새로고침
+            </button>
+            <button class="btn primary sm" data-act="rec-request">키워드 찾기 요청</button>
+          </div>
+        </div>
+        <div class="rec-grid" id="rec-list" aria-live="polite"></div>
+      </section>
 
       <div class="stats" id="home-stats"></div>
 
@@ -1046,6 +1097,158 @@ function renderHome(){
 function statHtml(label, value, sub, accent){
   return '<div class="stat' + (accent ? ' accent' : '') + '"><span>' + label + '</span>' +
     '<strong>' + num(value) + '</strong><em>' + sub + '</em></div>';
+}
+
+/* ── 블톡 추천 키워드 ───────────────────── */
+var REC_URL = './recommendations.json';
+var REC_REQUEST_TEXT = '블톡에서 S급·A급 키워드 새로 찾아서 스튜디오에 올려줘';
+var rec = { loading:false, loaded:false, error:'', data:null };
+
+function recPct(v){
+  var n = Number(v);
+  if(!isFinite(n) || n <= 0) return '—';
+  if(n < 1) return '1% 미만';
+  return (n % 1 ? n.toFixed(1) : String(n)) + '%';
+}
+function isRecItem(it){
+  return !!it && typeof it === 'object' && String(it.keyword || '').trim() !== '' &&
+    String(it.grade || '').trim() !== '' && isFinite(Number(it.monthlySearch));
+}
+function loadRecs(announce){
+  if(rec.loading) return;
+  rec.loading = true; rec.error = '';
+  renderRecs();
+  fetch(REC_URL + '?t=' + Date.now(), { cache:'no-store' })
+    .then(function(res){
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .then(function(d){
+      var items = (d && Array.isArray(d.items)) ? d.items.filter(isRecItem) : [];
+      if(!items.length) throw new Error('추천 데이터가 비어 있어요');
+      rec.data = {
+        updatedAt: String(d.updatedAt || ''),
+        source: String(d.source || '블톡'),
+        sourceNote: String(d.sourceNote || ''),
+        items: items
+      };
+      rec.loaded = true; rec.loading = false; rec.error = '';
+      renderRecs();
+      if(announce) toast('추천 키워드 ' + items.length + '개를 새로 불러왔어요');
+    })
+    .catch(function(err){
+      rec.loading = false;
+      if(!rec.loaded){
+        rec.error = String((err && err.message) || '알 수 없는 오류');
+        rec.data = null;
+      }
+      renderRecs();
+      if(announce) toast('추천 키워드를 새로 불러오지 못했어요');
+    });
+}
+function renderRecs(){
+  var box = document.getElementById('rec-list');
+  var meta = document.getElementById('rec-meta');
+  if(!box || !meta) return;
+  if(rec.loading && !rec.loaded){
+    meta.textContent = '마지막 업데이트 확인 중…';
+    box.innerHTML = '<div class="rec-state">블톡 추천 키워드를 불러오는 중…</div>';
+    return;
+  }
+  if(rec.error && !rec.loaded){
+    meta.textContent = '불러오기 실패';
+    box.innerHTML = '<div class="rec-state"><strong>추천 키워드를 불러오지 못했어요</strong>' +
+      esc(rec.error) + '<br>잠시 후 <b>새로고침</b>을 다시 눌러 주세요.</div>';
+    return;
+  }
+  if(!rec.data) return;
+  var d = rec.data;
+  var sCount = d.items.filter(function(i){ return String(i.grade).indexOf('S') === 0; }).length;
+  var aCount = d.items.length - sCount;
+  meta.innerHTML = '마지막 업데이트 <b>' + esc(d.updatedAt || '—') + '</b> · ' + esc(d.source) +
+    ' · ' + d.items.length + '개 (S급 ' + sCount + ' · A급 ' + aCount + ')';
+  box.innerHTML = d.items.map(recCard).join('');
+}
+function recCard(it, i){
+  var g = String(it.grade || '');
+  var cls = g.indexOf('S') === 0 ? 's' : 'a';
+  var tags = [];
+  if(it.entry) tags.push('진입 가능성 ' + it.entry);
+  if(it.speed) tags.push('진입 속도 ' + it.speed);
+  if(it.blogSlots) tags.push('블로그 자리 ' + it.blogSlots + '칸');
+  if(it.adComp && it.adComp !== '-') tags.push('광고 경쟁 ' + it.adComp);
+  return '<article class="rec-card">' +
+    '<div class="rec-top"><strong class="rec-kw">' + esc(it.keyword) + '</strong>' +
+      '<span class="rec-badge ' + cls + '">' + esc(g) + '</span></div>' +
+    '<div class="rec-metrics"><span>검색량 월 <b>' + num(it.monthlySearch) + '</b>회</span>' +
+      (it.monthlyPublish != null ? '<span>발행 <b>' + num(it.monthlyPublish) + '</b>건</span>' : '') +
+      '<span>포화도 <b>' + recPct(it.saturation) + '</b></span></div>' +
+    (it.reason ? '<p class="rec-reason">' + esc(it.reason) + '</p>' : '') +
+    (tags.length ? '<div class="rec-extra">' + tags.map(function(t){
+      return '<span class="rec-tag">' + esc(t) + '</span>';
+    }).join('') + '</div>' : '') +
+    '<div class="rec-actions">' +
+      '<button class="btn primary sm" data-act="rec-write" data-idx="' + i + '">이 키워드로 작성하기</button>' +
+      '<button class="btn ghost sm" data-act="rec-save" data-idx="' + i + '">보관함에 담기</button>' +
+    '</div></article>';
+}
+function buildRecPrompt(it){
+  var name = state.cfg.blogName || DEFAULT_CFG.blogName;
+  var lines = [];
+  lines.push('아래 키워드로 ' + name + ' 블로그에 올릴 글을 작성해 주세요.');
+  lines.push('');
+  lines.push('[키워드 정보 · 블톡 분석]');
+  lines.push('- 키워드: ' + it.keyword);
+  lines.push('- 등급: ' + it.grade + ' · 진입 가능성 ' + (it.entry || '-') + ' · 진입 속도 ' + (it.speed || '-'));
+  lines.push('- 월 검색량: ' + num(it.monthlySearch) + '회');
+  if(it.monthlyPublish != null) lines.push('- 월 발행량: ' + num(it.monthlyPublish) + '건');
+  lines.push('- 콘텐츠 포화도: ' + recPct(it.saturation));
+  if(it.reason) lines.push('- 분석 요약: ' + it.reason);
+  lines.push('');
+  lines.push('[요청]');
+  lines.push('1. 네이버 통합검색 상위노출을 목표로, 이 키워드의 상위 9개 문서를 먼저 분석해 경쟁 구도·문서 유형·빈틈을 정리해 주세요.');
+  lines.push('2. 상위 글이 다루지 않은 각도(비교표, 체크리스트, 자주 겪는 실패, 최신 일정·가격)를 최소 2개 넣어 차별화해 주세요.');
+  lines.push('3. 1인 IT 블로거가 직접 써 본 담백한 톤으로 써 주세요. 과장·광고 문구와 "저희" 같은 업체 말투는 쓰지 마세요.');
+  lines.push('4. 제목 후보 3개(키워드를 앞쪽에 배치, 30자 이내)를 먼저 제안해 주세요.');
+  lines.push('5. 본문은 소제목 4~6개, 비교표 1개 이상, 이미지 넣을 자리 표시([사진1 - 설명])를 포함해 주세요.');
+  lines.push('6. 마지막에 3줄 요약과 함께 확인해야 할 주의사항을 넣어 주세요.');
+  lines.push('7. 분량은 공백 포함 2,000자 이상으로 작성해 주세요.');
+  return lines.join('\n');
+}
+function recByIdx(i){
+  var n = Number(i);
+  if(!rec.data || !rec.data.items || !isFinite(n)) return null;
+  return rec.data.items[n] || null;
+}
+function recWrite(i){
+  var it = recByIdx(i);
+  if(!it) return;
+  copyText(buildRecPrompt(it)).then(function(ok){
+    toast(ok ? '“' + it.keyword + '” 작성 프롬프트를 복사했어요 — AI에 붙여넣어 보세요'
+             : '복사하지 못했어요. 다시 한번 눌러 주세요');
+  });
+}
+function recSave(i){
+  var it = recByIdx(i);
+  if(!it) return;
+  if(dupOf(it.keyword)){ toast('“' + it.keyword + '” 이미 보관함에 있어요', { action:'키워드 탭 열기', duration:4000, onAction:function(){ setTab('keywords'); } }); return; }
+  var search = Number(it.monthlySearch) || 0;
+  var publish = (it.monthlyPublish != null) ? Number(it.monthlyPublish) || 0 : Math.round(search * (Number(it.saturation) || 0) / 100);
+  var item = normKw({
+    id: nid(), kw: it.keyword, vol: search, docs: publish, status:'채택',
+    memo: '블톡 ' + it.grade + ' · 포화도 ' + recPct(it.saturation) + (it.reason ? ' · ' + it.reason : ''),
+    createdAt: new Date().toISOString()
+  });
+  if(!item){ toast('키워드를 보관함에 담지 못했어요'); return; }
+  state.kws.push(item);
+  save(); refresh();
+  toast('“' + it.keyword + '” 보관함에 담았어요', { action:'키워드 탭 열기', duration:4200, onAction:function(){ setTab('keywords'); } });
+}
+function recRequest(){
+  copyText(REC_REQUEST_TEXT).then(function(ok){
+    toast(ok ? '요청 문구를 복사했어요 — 피클에게 붙여넣어 보내세요'
+             : '복사하지 못했어요: ' + REC_REQUEST_TEXT);
+  });
 }
 
 /* ── 키워드 ───────────────────────────── */
@@ -1626,6 +1829,10 @@ document.addEventListener('click', function(e){
     if(t) t();
     return;
   }
+  if(act === 'rec-refresh'){ loadRecs(true); return; }
+  if(act === 'rec-request'){ recRequest(); return; }
+  if(act === 'rec-write'){ recWrite(el.dataset.idx); return; }
+  if(act === 'rec-save'){ recSave(el.dataset.idx); return; }
   if(act === 'bulk-save'){ saveBulk(); return; }
 });
 
@@ -1743,6 +1950,7 @@ bindSettings();
 renderSettings();
 refresh();
 setTab('home');
+loadRecs();
 })();
 </script>
 </body>
