@@ -478,6 +478,57 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
   .rec-grid{grid-template-columns:1fr 1fr;gap:12px}
 }
 
+/* ── GitHub 동기화 ─────────────────────── */
+[hidden]{display:none !important}
+.sync-chip{
+  display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;
+  border-radius:999px;border:1px solid var(--line);background:var(--surface);
+  color:var(--text-2);font-size:11.5px;font-weight:750;letter-spacing:-.01em;
+  max-width:104px;white-space:nowrap;overflow:hidden;
+  box-shadow:var(--shadow);flex:none;
+}
+.sync-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--text-3);flex:none}
+.sync-chip span:last-child{overflow:hidden;text-overflow:ellipsis}
+.sync-chip[data-state="syncing"] .dot{background:var(--brand);animation:syncpulse 1s ease-in-out infinite}
+.sync-chip[data-state="ok"] .dot{background:var(--good)}
+.sync-chip[data-state="error"] .dot{background:var(--bad)}
+.sync-chip[data-state="idle"] .dot{background:var(--gold)}
+.sync-chip[data-state="ready"] .dot{background:var(--good)}
+.sync-chip:active{transform:scale(.96)}
+@keyframes syncpulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.sync-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 12px}
+.sync-badge{
+  display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;
+  font-size:11.5px;font-weight:800;border:1px solid transparent;
+  background:var(--surface-3);color:var(--text-2);white-space:nowrap;
+}
+.sync-badge[data-state="idle"],.sync-badge[data-state="ready"]{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-line)}
+.sync-badge[data-state="syncing"]{background:var(--brand-soft);color:var(--brand)}
+.sync-badge[data-state="ok"]{background:var(--good-bg);color:var(--good);border-color:var(--good-line)}
+.sync-badge[data-state="error"]{background:var(--bad-bg);color:var(--bad);border-color:var(--bad-line)}
+.sync-status-text{font-size:11.5px;color:var(--text-3);min-width:0;flex:1 1 140px;overflow-wrap:anywhere;line-height:1.45}
+.sync-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media (min-width:700px){.sync-grid{grid-template-columns:1.35fr 1fr 96px}}
+.token-wrap{position:relative;display:flex;align-items:center}
+.token-wrap input{padding-right:66px}
+.token-eye{
+  position:absolute;right:5px;min-height:34px;height:34px;padding:0 10px;border-radius:9px;
+  border:1px solid var(--line);background:var(--surface);color:var(--text-2);
+  font-size:11.5px;font-weight:800;
+}
+.sync-actions{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 6px}
+.sync-help{border-top:1px solid var(--line-2);margin-top:10px;padding:10px 0 6px}
+.sync-help summary{cursor:pointer;font-size:12.5px;font-weight:750;color:var(--text-2);min-height:32px;display:flex;align-items:center}
+.sync-help ol{margin:6px 0 8px;padding-left:18px;font-size:12px;color:var(--text-2);line-height:1.7}
+.sync-help li{margin-bottom:3px}
+.sync-help code{
+  font-size:11.5px;background:var(--surface-2);border:1px solid var(--line-2);border-radius:6px;
+  padding:1px 5px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere;
+}
+.sync-help a{overflow-wrap:anywhere}
+.sync-help .set-note{margin:6px 0 8px}
+
 /* toast */
 .toast{
   position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translate(-50%,14px);
@@ -562,6 +613,9 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
       <button role="tab" data-act="tab" data-tab="settings" aria-selected="false">설정</button>
     </nav>
     <div class="top-actions">
+      <button class="sync-chip" id="sync-chip" data-act="sync-now" data-state="idle" hidden aria-label="GitHub 동기화 상태">
+        <span class="dot" aria-hidden="true"></span><span id="sync-chip-text">동기화</span>
+      </button>
       <button class="icon-btn" data-act="theme" aria-label="라이트·다크 모드 전환" id="theme-btn">
         <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       </button>
@@ -717,6 +771,53 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
               <button data-act="set-theme" data-theme="dark">다크</button>
             </div>
           </div>
+        </div>
+
+        <div class="card set-card wide" id="sync-card">
+          <h3>아이폰 ↔ PC 동기화 (GitHub)</h3>
+          <p>비공개 GitHub 저장소에 키워드를 두고 여러 기기에서 같은 데이터를 써요</p>
+          <div class="sync-head">
+            <span class="sync-badge" id="sync-badge" data-state="off">미설정</span>
+            <span class="sync-status-text" id="sync-status-text">토큰을 넣으면 자동으로 동기화돼요</span>
+          </div>
+          <div class="sync-grid">
+            <div class="field">
+              <label for="sync-repo">저장소</label>
+              <input id="sync-repo" type="text" placeholder="beomiya0901-byte/studio-sync" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="field">
+              <label for="sync-path">파일 경로</label>
+              <input id="sync-path" type="text" placeholder="sync.json" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="field">
+              <label for="sync-branch">브랜치</label>
+              <input id="sync-branch" type="text" placeholder="main" autocomplete="off" spellcheck="false">
+            </div>
+          </div>
+          <div class="field">
+            <label for="sync-token">GitHub 토큰 (Fine-grained PAT)</label>
+            <div class="token-wrap">
+              <input id="sync-token" type="password" placeholder="github_pat_..." autocomplete="new-password" spellcheck="false">
+              <button type="button" class="token-eye" data-act="sync-toggle-token" id="sync-eye" aria-label="토큰 보기">보기</button>
+            </div>
+            <span class="hint">토큰은 이 기기 브라우저에만 저장돼요. 저장소 파일에는 키워드만 들어가요</span>
+          </div>
+          <div class="sync-actions">
+            <button class="btn ghost sm" data-act="sync-test">연결 테스트</button>
+            <button class="btn primary sm" data-act="sync-now">지금 동기화</button>
+            <button class="btn danger sm" data-act="sync-clear">토큰 지우기</button>
+          </div>
+          <details class="sync-help">
+            <summary>토큰 30초 발급 방법</summary>
+            <ol>
+              <li><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a> 를 엽니다.</li>
+              <li>Token name에 <code>keyword-studio</code>, Expiration은 원하는 기간을 고릅니다.</li>
+              <li>Repository access → <b>Only select repositories</b> → <code>studio-sync</code> 선택.</li>
+              <li>Permissions → Repository permissions → <b>Contents: Read and write</b> 만 켭니다.</li>
+              <li>Generate token 후 나온 <code>github_pat_…</code> 값을 위 칸에 붙여넣고 [연결 테스트]를 누릅니다.</li>
+            </ol>
+            <div class="set-note">토큰은 이 브라우저에만 남고 GitHub 파일·백업 JSON에는 들어가지 않아요. 아이폰과 PC에서 각각 한 번씩 넣으면 됩니다.</div>
+          </details>
         </div>
 
         <div class="card set-card wide">
@@ -922,9 +1023,16 @@ var toastAction = null;
 var toastTimer = null;
 var saveTimer = null;
 
+var SYNC_KEY = 'kwstudio.sync.v1';
+var SYNC_DEFAULT = { repo:'beomiya0901-byte/studio-sync', path:'sync.json', branch:'main' };
+var syncCfg = loadSyncCfg();
+var syncState = { kind:'off', at:'', msg:'' };
+var syncInFlight = false, syncReady = false, pushTimer = null, pushSuppress = false, syncPending = false;
+var lastCfgJson = JSON.stringify(state.cfg);
+
 /* ── 저장/불러오기 ─────────────────────── */
 function load(){
-  var base = { cfg: Object.assign({}, DEFAULT_CFG), kws: [] };
+  var base = { cfg: Object.assign({}, DEFAULT_CFG), cfgUpdatedAt:'', kws: [], deleted:{} };
   try{
     var raw = localStorage.getItem(LS_KEY);
     if(!raw) return base;
@@ -933,7 +1041,11 @@ function load(){
     var cfg = Object.assign({}, DEFAULT_CFG, (d.cfg && typeof d.cfg === 'object') ? d.cfg : {});
     if(!LEVEL_FACTOR[cfg.level]) cfg.level = DEFAULT_CFG.level;
     var kws = Array.isArray(d.kws) ? d.kws.map(normKw).filter(Boolean) : [];
-    return { cfg: cfg, kws: kws };
+    var deleted = {};
+    if(d.deleted && typeof d.deleted === 'object'){
+      Object.keys(d.deleted).forEach(function(id){ if(isFinite(Date.parse(d.deleted[id]))) deleted[id] = d.deleted[id]; });
+    }
+    return { cfg: cfg, cfgUpdatedAt: typeof d.cfgUpdatedAt === 'string' ? d.cfgUpdatedAt : '', kws: kws, deleted: deleted };
   }catch(e){ return base; }
 }
 function normKw(k){
@@ -958,7 +1070,12 @@ function normKw(k){
   if(k.vol != null && !isNaN(Number(k.vol))) o.vol = toNum(k.vol);
   return o;
 }
-function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify({ v:1, cfg:state.cfg, kws:state.kws })); }catch(e){ toast('저장 공간이 부족해 저장하지 못했어요'); } }
+function save(){
+  var cj = JSON.stringify(state.cfg);
+  if(cj !== lastCfgJson){ lastCfgJson = cj; state.cfgUpdatedAt = new Date().toISOString(); }
+  try{ localStorage.setItem(LS_KEY, JSON.stringify({ v:1, cfg:state.cfg, cfgUpdatedAt:state.cfgUpdatedAt||'', kws:state.kws, deleted:state.deleted||{} })); }catch(e){ toast('저장 공간이 부족해 저장하지 못했어요'); }
+  scheduleSyncPush();
+}
 function queueSave(){ clearTimeout(saveTimer); saveTimer = setTimeout(save, 400); }
 function nid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 function toNum(v){ var n = Number(String(v == null ? 0 : v).replace(/[^\d.-]/g,'')); return isFinite(n) ? Math.max(0, Math.round(n)) : 0; }
@@ -1646,6 +1763,7 @@ function renderSettings(){
   updateCfgHint();
   document.getElementById('about-count').textContent = state.kws.length;
   document.getElementById('about-ver').textContent = APP_VER;
+  renderSyncCard();
 }
 function updateCfgHint(){
   var lf = LEVEL_FACTOR[state.cfg.level] || 1;
@@ -1678,9 +1796,11 @@ function bindSettings(){
         if(!kws) throw new Error('format');
         var cfg = (d.cfg && typeof d.cfg === 'object') ? d.cfg : state.cfg;
         confirmDialog('백업을 불러올까요?', kws.length + '개 키워드로 현재 데이터를 바꿔요. 지금 데이터는 사라져요.', '불러오기', function(){
+          var nextKws = kws.map(normKw).filter(Boolean);
+          markRemovedIds(state.kws, nextKws);
           state.cfg = Object.assign({}, DEFAULT_CFG, cfg);
           if(!LEVEL_FACTOR[state.cfg.level]) state.cfg.level = DEFAULT_CFG.level;
-          state.kws = kws.map(normKw).filter(Boolean);
+          state.kws = nextKws;
           save(); refresh(true); toast(state.kws.length + '개 키워드를 불러왔어요');
         });
       }catch(err){ toast('백업 파일을 읽지 못했어요'); }
@@ -1721,7 +1841,9 @@ function sampleKws(){
 }
 function resetAll(){
   confirmDialog('전체 초기화할까요?', '모든 키워드와 설정이 지워져요. 되돌릴 수 없으니 먼저 JSON으로 백업해 두세요.', '초기화', function(){
-    state = { cfg: Object.assign({}, DEFAULT_CFG), kws: [] };
+    var now = new Date().toISOString();
+    state.kws.forEach(function(k){ state.deleted[k.id] = now; });
+    state = { cfg: Object.assign({}, DEFAULT_CFG), cfgUpdatedAt: now, kws: [], deleted: state.deleted || {} };
     save(); applyTheme(); refresh(true);
     toast('모두 초기화했어요');
   });
@@ -1755,6 +1877,355 @@ function submitPublish(e){
   save(); closeDlg('dlg-publish'); pendingPubId = null;
   refresh();
   toast('발행 완료로 옮겼어요');
+}
+
+/* ── GitHub 동기화 ──────────────────────── */
+function loadSyncCfg(){
+  var base = { repo:SYNC_DEFAULT.repo, path:SYNC_DEFAULT.path, branch:SYNC_DEFAULT.branch, token:'', lastSyncAt:'' };
+  try{
+    var d = JSON.parse(localStorage.getItem(SYNC_KEY) || '{}');
+    if(!d || typeof d !== 'object') return base;
+    return {
+      repo: (typeof d.repo === 'string' && d.repo.trim()) ? d.repo.trim() : base.repo,
+      path: (typeof d.path === 'string' && d.path.trim()) ? d.path.trim().replace(/^\/+/, '') : base.path,
+      branch: (typeof d.branch === 'string' && d.branch.trim()) ? d.branch.trim() : base.branch,
+      token: typeof d.token === 'string' ? d.token : '',
+      lastSyncAt: typeof d.lastSyncAt === 'string' ? d.lastSyncAt : ''
+    };
+  }catch(e){ return base; }
+}
+function saveSyncCfg(){ try{ localStorage.setItem(SYNC_KEY, JSON.stringify(syncCfg)); }catch(e){ toast('이 브라우저에 토큰을 저장하지 못했어요'); } }
+
+function isoNow(){ return new Date().toISOString(); }
+function itemTime(k){ var t = Date.parse(k && (k.updatedAt || k.createdAt)); return isFinite(t) ? t : 0; }
+function markRemovedIds(oldKws, newKws){
+  var keep = {};
+  (newKws || []).forEach(function(k){ if(k && k.id) keep[k.id] = 1; });
+  var at = isoNow();
+  (oldKws || []).forEach(function(k){ if(k && k.id && !keep[k.id]) state.deleted[k.id] = at; });
+}
+function pruneDeleted(){
+  var now = Date.now();
+  if(!state.deleted) state.deleted = {};
+  Object.keys(state.deleted).forEach(function(id){
+    var t = Date.parse(state.deleted[id]);
+    if(!isFinite(t) || now - t > 7776000000) delete state.deleted[id];  /* 90일 */
+  });
+}
+function payloadOf(src){
+  return {
+    v: 1,
+    updatedAt: isoNow(),
+    cfg: src.cfg,
+    cfgUpdatedAt: src.cfgUpdatedAt || '',
+    kws: src.kws || [],
+    deleted: src.deleted || {}
+  };
+}
+function canonData(d){
+  var kws = (d.kws || []).slice().sort(function(a,b){ return a.id < b.id ? -1 : a.id > b.id ? 1 : 0; });
+  var del = {};
+  Object.keys(d.deleted || {}).sort().forEach(function(id){ del[id] = d.deleted[id]; });
+  return JSON.stringify({ cfg: d.cfg, cfgUpdatedAt: d.cfgUpdatedAt || '', kws: kws, deleted: del });
+}
+function toB64(text){
+  var bytes = new TextEncoder().encode(text);
+  var bin = '', CH = 0x8000;
+  for(var i=0;i<bytes.length;i+=CH){
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, Math.min(i + CH, bytes.length)));
+  }
+  return btoa(bin);
+}
+function fromB64(b64){
+  var bin = atob(String(b64 == null ? '' : b64).replace(/\s+/g, ''));
+  var bytes = new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(bytes);
+}
+function mergeData(local, remote){
+  var byId = {}, order = [];
+  (local.kws || []).forEach(function(k){ if(!byId[k.id]) order.push(k.id); byId[k.id] = k; });
+  (remote.kws || []).forEach(function(rk){
+    var k = normKw(rk);
+    if(!k) return;
+    var cur = byId[k.id];
+    if(!cur){ order.push(k.id); byId[k.id] = k; return; }
+    if(itemTime(k) > itemTime(cur)) byId[k.id] = k;
+  });
+  var del = {};
+  [local.deleted || {}, remote.deleted || {}].forEach(function(m){
+    Object.keys(m).forEach(function(id){
+      var t = Date.parse(m[id]) || 0;
+      if(!del[id] || t > (Date.parse(del[id]) || 0)) del[id] = m[id];
+    });
+  });
+  order.forEach(function(id){
+    var k = byId[id];
+    var d = del[id] ? (Date.parse(del[id]) || 0) : 0;
+    if(d && d >= itemTime(k)){ delete byId[id]; return; }
+    if(d) delete del[id];
+  });
+  var kws = order.filter(function(id){ return !!byId[id]; }).map(function(id){ return byId[id]; });
+  var cfg = local.cfg, cfgAt = local.cfgUpdatedAt || '';
+  var rAt = remote.cfgUpdatedAt || '';
+  if(remote.cfg && typeof remote.cfg === 'object' && (Date.parse(rAt) || 0) > (Date.parse(cfgAt) || 0)){
+    cfg = remote.cfg; cfgAt = rAt;
+  }
+  return { cfg: cfg, cfgUpdatedAt: cfgAt, kws: kws, deleted: del };
+}
+function applyMerged(m){
+  pushSuppress = true;
+  try{
+    state.cfg = Object.assign({}, DEFAULT_CFG, (m.cfg && typeof m.cfg === 'object') ? m.cfg : {});
+    if(!LEVEL_FACTOR[state.cfg.level]) state.cfg.level = DEFAULT_CFG.level;
+    state.cfgUpdatedAt = m.cfgUpdatedAt || '';
+    state.kws = (m.kws || []).map(normKw).filter(Boolean);
+    state.deleted = m.deleted || {};
+    lastCfgJson = JSON.stringify(state.cfg);
+    pruneDeleted();
+    save();
+  }finally{ pushSuppress = false; }
+  applyTheme();
+  refresh(true);
+  renderSyncUI();
+}
+
+function fmtSyncTime(iso){
+  var d = new Date(iso);
+  if(!iso || isNaN(d.getTime())) return '';
+  var hm = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+  return (d.toDateString() === new Date().toDateString()) ? hm : ((d.getMonth()+1) + '/' + d.getDate() + ' ' + hm);
+}
+function setSyncState(kind, msg){
+  syncState.kind = kind;
+  syncState.msg = msg || '';
+  if(kind === 'ok') syncState.at = isoNow();
+  renderSyncUI();
+}
+function renderSyncUI(){
+  var hasToken = !!(syncCfg.token && syncCfg.token.length > 10);
+  var kind = hasToken ? (syncState.kind === 'off' ? 'idle' : syncState.kind) : 'off';
+  var label = '미설정', desc = '토큰을 넣으면 자동으로 동기화돼요', chipLabel = '';
+  if(hasToken){
+    if(syncState.kind === 'syncing'){ label = '동기화 중'; chipLabel = '동기화 중'; desc = syncState.msg || 'GitHub와 주고받는 중…'; }
+    else if(syncState.kind === 'error'){ label = '오류'; chipLabel = '오류'; desc = syncState.msg || '동기화에 실패했어요'; }
+    else if(syncState.kind === 'ready'){ label = '연결 확인됨'; chipLabel = '연결됨'; desc = syncState.msg || ('연결 확인됨 · ' + syncCfg.repo); }
+    else if(syncState.kind === 'ok'){ label = '동기화됨'; chipLabel = '동기화됨'; desc = '마지막 동기화 ' + fmtSyncTime(syncState.at || syncCfg.lastSyncAt) + ' · ' + syncCfg.repo; }
+    else { label = '동기화 대기'; chipLabel = '동기화'; desc = syncState.msg || ('아직 동기화하지 않았어요 · ' + syncCfg.repo); }
+  }
+  var badge = document.getElementById('sync-badge');
+  if(badge){ badge.dataset.state = kind; badge.textContent = label; }
+  var text = document.getElementById('sync-status-text');
+  if(text) text.textContent = desc;
+  var chip = document.getElementById('sync-chip');
+  if(chip){
+    chip.hidden = !hasToken;
+    chip.dataset.state = kind;
+    chip.title = 'GitHub 동기화 · ' + desc;
+    var chipText = document.getElementById('sync-chip-text');
+    if(chipText) chipText.textContent = chipLabel;
+  }
+}
+function renderSyncCard(){
+  var rep = document.getElementById('sync-repo');
+  if(!rep) return;
+  var pair = [['sync-repo','repo'],['sync-path','path'],['sync-branch','branch'],['sync-token','token']];
+  pair.forEach(function(p){
+    var el = document.getElementById(p[0]);
+    if(el && document.activeElement !== el) el.value = syncCfg[p[1]] || '';
+  });
+  renderSyncUI();
+}
+function syncReadyForPush(){
+  return !!(syncCfg.token && syncCfg.token.length > 10) && syncReady && !pushSuppress;
+}
+function scheduleSyncPush(){
+  if(!syncReadyForPush()) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(function(){ syncNow({ auto:true }); }, 1500);
+}
+
+function ghHeaders(){
+  return {
+    'Authorization': 'Bearer ' + syncCfg.token,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  };
+}
+function ghRepoUrl(){
+  return 'https://api.github.com/repos/' + syncCfg.repo.split('/').map(encodeURIComponent).join('/');
+}
+function ghFileUrl(withRef){
+  var p = syncCfg.path.split('/').filter(Boolean).map(encodeURIComponent).join('/');
+  var u = ghRepoUrl() + '/contents/' + p;
+  if(withRef) u += '?ref=' + encodeURIComponent(syncCfg.branch);
+  return u;
+}
+function ghErrMsg(res){
+  if(res.status === 401) return '토큰이 올바르지 않거나 만료됐어요';
+  if(res.status === 403) return '권한이 없어요. 토큰의 Contents: Read and write 권한을 확인해 주세요';
+  if(res.status === 404) return '저장소를 찾지 못했어요. 저장소 이름과 토큰의 저장소 선택을 확인해 주세요';
+  if(res.status === 429) return 'GitHub 요청 한도를 넘었어요. 잠시 뒤 다시 시도해 주세요';
+  return 'GitHub 오류 (' + res.status + ')';
+}
+function friendlyErr(err){
+  var m = (err && err.message) || '';
+  if(/Failed to fetch|NetworkError|Load failed|network/i.test(m)) return '인터넷 연결을 확인해 주세요';
+  return m || '동기화하지 못했어요';
+}
+async function ghGet(){
+  var res = await fetch(ghFileUrl(true), { method:'GET', headers: ghHeaders(), cache:'no-store' });
+  if(res.status === 404) return { missing:true };
+  if(!res.ok) throw new Error(ghErrMsg(res));
+  var j = await res.json();
+  var data = null;
+  try{ data = JSON.parse(fromB64(j.content)); }catch(e){ data = null; }
+  return { sha: j.sha, data: data };
+}
+async function ghPut(data, sha){
+  var body = {
+    message: '키워드 스튜디오 동기화 · ' + new Date().toLocaleString('ko-KR'),
+    content: toB64(JSON.stringify(data)),
+    branch: syncCfg.branch
+  };
+  if(sha) body.sha = sha;
+  var res = await fetch(ghFileUrl(false), {
+    method:'PUT',
+    headers: Object.assign({ 'Content-Type':'application/json; charset=utf-8' }, ghHeaders()),
+    body: JSON.stringify(body)
+  });
+  if(res.ok){
+    var j = await res.json();
+    return { sha: (j && j.content && j.content.sha) || '' };
+  }
+  if(res.status === 409 || res.status === 422) return { conflict:true, status:res.status };
+  throw new Error(ghErrMsg(res));
+}
+async function syncOnce(){
+  var lastErr = null;
+  for(var attempt=0; attempt<3; attempt++){
+    var got = await ghGet();
+    if(got.missing){
+      var created = await ghPut(payloadOf(state), null);
+      if(created.conflict){ lastErr = new Error('원격 브랜치(' + syncCfg.branch + ')에 파일을 만들지 못했어요. 브랜치 이름과 권한을 확인해 주세요'); continue; }
+      syncState.sha = created.sha;
+      return { pushed:true, pulled:false };
+    }
+    syncState.sha = got.sha;
+    var remote = got.data;
+    if(!remote || typeof remote !== 'object' || !Array.isArray(remote.kws)) throw new Error('원격 sync.json 형식을 읽지 못했어요. 파일 경로를 확인해 주세요');
+    var merged = mergeData(state, remote);
+    var remoteStale = canonData(merged) !== canonData(remote);
+    var localChanged = canonData(merged) !== canonData(state);
+    if(localChanged) applyMerged(merged);
+    if(remoteStale){
+      var put = await ghPut(payloadOf(merged), syncState.sha);
+      if(put.conflict){ lastErr = new Error('동기화 충돌이 반복돼요. 잠시 뒤 다시 시도해 주세요'); continue; }
+      syncState.sha = put.sha;
+      return { pushed:true, pulled:localChanged };
+    }
+    return { pushed:false, pulled:localChanged };
+  }
+  throw lastErr || new Error('동기화하지 못했어요');
+}
+async function syncNow(opts){
+  opts = opts || {};
+  if(!syncCfg.token || syncCfg.token.length < 10){ if(opts.manual) toast('먼저 GitHub 토큰을 넣어 주세요'); renderSyncUI(); return false; }
+  if(syncInFlight){ if(opts.auto) syncPending = true; if(opts.manual) toast('지금 동기화 중이에요'); return false; }
+  if(!/^[\w.-]+\/[\w.-]+$/.test(syncCfg.repo)){ setSyncState('error', '저장소는 owner/repo 형식으로 넣어 주세요'); return false; }
+  if(!syncCfg.path){ setSyncState('error', '파일 경로를 넣어 주세요'); return false; }
+  syncInFlight = true;
+  clearTimeout(pushTimer);
+  setSyncState('syncing');
+  try{
+    var r = await syncOnce();
+    syncCfg.lastSyncAt = isoNow();
+    saveSyncCfg();
+    setSyncState('ok');
+    if(r.pulled) refresh(true);
+    if(opts.manual) toast(r.pushed ? 'GitHub에 올렸어요' : (r.pulled ? 'GitHub에서 받아왔어요' : '이미 최신이에요'));
+    return true;
+  }catch(err){
+    setSyncState('error', friendlyErr(err));
+    if(opts.manual) toast(friendlyErr(err));
+    return false;
+  }finally{
+    syncInFlight = false;
+    syncReady = true;
+    if(syncPending){ syncPending = false; scheduleSyncPush(); }
+  }
+}
+async function testSync(){
+  if(!syncCfg.token || syncCfg.token.length < 10){ toast('먼저 GitHub 토큰을 넣어 주세요'); return; }
+  if(syncInFlight){ toast('지금 동기화 중이에요'); return; }
+  syncInFlight = true;
+  setSyncState('syncing', '연결을 확인하는 중…');
+  try{
+    var res = await fetch(ghRepoUrl(), { headers: ghHeaders(), cache:'no-store' });
+    if(!res.ok) throw new Error(ghErrMsg(res));
+    var repo = await res.json();
+    var canWrite = !!(repo.permissions && repo.permissions.push);
+    var got = await ghGet();
+    syncState.sha = got.sha || '';
+    if(!canWrite){
+      setSyncState('error', '읽기만 가능한 토큰이에요. Contents: Read and write 를 켜 주세요');
+      toast('읽기만 가능해요. Contents: Read and write 를 켜 주세요');
+      return;
+    }
+    syncReady = true;
+    if(got.missing){
+      setSyncState('ready', '연결 확인됨 · 첫 동기화를 누르면 ' + syncCfg.path + ' 이(가) 만들어져요');
+      toast('연결됐어요 · 아직 ' + syncCfg.path + ' 이(가) 없어요');
+      return;
+    }
+    setSyncState('ready', '연결 확인됨 · 지금 동기화를 누르면 데이터를 맞춰요');
+    toast('연결됐어요 · 원격 파일도 확인했어요');
+  }catch(err){
+    setSyncState('error', friendlyErr(err));
+    toast(friendlyErr(err));
+  }finally{
+    syncInFlight = false;
+  }
+}
+function bindSync(){
+  var map = { 'sync-repo':'repo', 'sync-path':'path', 'sync-branch':'branch', 'sync-token':'token' };
+  Object.keys(map).forEach(function(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('input', function(){
+      var k = map[id], v = el.value.trim();
+      if(k === 'repo') syncCfg.repo = v || SYNC_DEFAULT.repo;
+      else if(k === 'path') syncCfg.path = v.replace(/^\/+/, '') || SYNC_DEFAULT.path;
+      else if(k === 'branch') syncCfg.branch = v || SYNC_DEFAULT.branch;
+      else syncCfg.token = v.replace(/\s+/g, '');
+      saveSyncCfg();
+      if(k === 'token'){
+        syncReady = false;
+        syncState.kind = (v.length > 10) ? 'idle' : 'off';
+        syncState.msg = '';
+      }else{
+        syncState.kind = 'idle'; syncState.msg = '';
+      }
+      renderSyncUI();
+    });
+    if(id === 'sync-token'){
+      el.addEventListener('change', function(){
+        if(syncCfg.token && syncCfg.token.length > 10) syncNow({ auto:true });
+      });
+    }
+  });
+}
+function initSync(){
+  bindSync();
+  renderSyncCard();
+  if(syncCfg.token && syncCfg.token.length > 10){
+    syncState.kind = 'idle';
+    renderSyncUI();
+    syncNow({ initial:true });
+  }else{
+    syncState.kind = 'off';
+    renderSyncUI();
+  }
 }
 
 /* ── 토스트 ───────────────────────────── */
@@ -1824,9 +2295,12 @@ document.addEventListener('click', function(e){
     for(var i=0;i<state.kws.length;i++){ if(state.kws[i].id === id){ idx = i; break; } }
     if(idx < 0) return;
     var removed = state.kws.splice(idx, 1)[0];
+    state.deleted[removed.id] = new Date().toISOString();
     save(); refresh();
     toast('“' + removed.kw + '” 삭제했어요', { action:'되돌리기', duration:4500, onAction:function(){
       state.kws.splice(Math.min(idx, state.kws.length), 0, removed);
+      delete state.deleted[removed.id];
+      removed.updatedAt = new Date().toISOString();
       save(); refresh(); toast('되돌렸어요');
     }});
     return;
@@ -1871,6 +2345,33 @@ document.addEventListener('click', function(e){
   if(act === 'rec-request'){ recRequest(); return; }
   if(act === 'rec-write'){ recWrite(el.dataset.idx); return; }
   if(act === 'rec-save'){ recSave(el.dataset.idx); return; }
+  if(act === 'sync-now'){ syncNow({ manual:true }); return; }
+  if(act === 'sync-test'){ testSync(); return; }
+  if(act === 'sync-toggle-token'){
+    var ti = document.getElementById('sync-token');
+    if(!ti) return;
+    var show = ti.type === 'password';
+    ti.type = show ? 'text' : 'password';
+    el.textContent = show ? '숨기기' : '보기';
+    el.setAttribute('aria-label', show ? '토큰 숨기기' : '토큰 보기');
+    return;
+  }
+  if(act === 'sync-clear'){
+    if(!syncCfg.token){ toast('저장된 토큰이 없어요'); return; }
+    confirmDialog('토큰을 지울까요?', '이 기기에 저장된 GitHub 토큰만 지워요. 동기화된 데이터와 GitHub의 파일은 그대로 남아요.', '지우기', function(){
+      syncCfg.token = '';
+      saveSyncCfg();
+      var ti = document.getElementById('sync-token');
+      if(ti){ ti.value = ''; ti.type = 'password'; }
+      var eye = document.getElementById('sync-eye');
+      if(eye){ eye.textContent = '보기'; eye.setAttribute('aria-label', '토큰 보기'); }
+      syncReady = false;
+      syncState.kind = 'off'; syncState.msg = '';
+      renderSyncUI();
+      toast('토큰을 지웠어요');
+    });
+    return;
+  }
   if(act === 'bulk-save'){ saveBulk(); return; }
 });
 
@@ -1989,6 +2490,7 @@ renderSettings();
 refresh();
 setTab('home');
 loadRecs();
+initSync();
 })();
 </script>
 </body>
