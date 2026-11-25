@@ -1,0 +1,722 @@
+<title>키워드 스튜디오</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: 폰은 하단 탭 + 한 열, PC(960px~)는 왼쪽 사이드바 + 가운데 작업 열. 카드는 "작업 단위"에만 씀. */
+:root{
+ --bg:#f3f4f1; --surface:#ffffff; --sunk:#eceee9; --ink:#1b1f1d; --muted:#646e69; --line:#dfe3dd;
+ --accent:#2a56c6; --accent-ink:#ffffff; --soft:#e6ecfa;
+ --good:#1d7f47; --good-bg:#e1f2e7; --warn:#9a5c00; --warn-bg:#fbefd9; --bad:#b9342b; --bad-bg:#f9e3e0;
+ --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+ --f-num:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+ --r:14px; --r-sm:9px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+ --bg:#101312; --surface:#191d1b; --sunk:#222725; --ink:#ebeeea; --muted:#9aa39e; --line:#2b312e;
+ --accent:#86a6ff; --accent-ink:#0c1222; --soft:#1d2643;
+ --good:#62c98d; --good-bg:#16301f; --warn:#e3a54c; --warn-bg:#33270f; --bad:#f08077; --bad-bg:#3a1c19; color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#101312; --surface:#191d1b; --sunk:#222725; --ink:#ebeeea; --muted:#9aa39e; --line:#2b312e;
+ --accent:#86a6ff; --accent-ink:#0c1222; --soft:#1d2643;
+ --good:#62c98d; --good-bg:#16301f; --warn:#e3a54c; --warn-bg:#33270f; --bad:#f08077; --bad-bg:#3a1c19; color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body);margin:0}
+main{max-width:760px;margin:0 auto;padding-block:20px 120px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@media (min-width:960px){main{margin-left:240px;margin-right:auto;padding-block:36px 60px;padding-left:40px;padding-right:40px;max-width:900px}}
+h1{font-size:26px;line-height:1.25;margin:0;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:17px;margin:0;text-wrap:balance}
+h3{font-size:15px;margin:0}
+p{margin:0}
+a{color:var(--accent)}
+.stack{display:flex;flex-direction:column;gap:12px}
+.stack-lg{display:flex;flex-direction:column;gap:28px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+.grow{flex:1;min-width:0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.eyebrow{font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.head{display:flex;flex-direction:column;gap:6px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.note{background:var(--soft);border-radius:var(--r-sm);padding:10px 12px;font-size:13px}
+.note.warn{background:var(--warn-bg);color:var(--warn)}
+/* nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;background:var(--surface);border-top:1px solid var(--line);
+ padding:4px max(4px,env(safe-area-inset-right,0px)) calc(4px + env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))}
+.nav button{flex:1;border:0;background:none;color:var(--muted);font:inherit;font-size:11.5px;font-weight:600;padding:8px 0 6px;min-height:52px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:10px}
+.nav button svg{width:20px;height:20px}
+.nav button.on{color:var(--accent)}
+.brand{display:none}
+@media (min-width:960px){
+ .nav{top:0;right:auto;width:240px;flex-direction:column;gap:2px;border-top:0;border-right:1px solid var(--line);padding:28px 14px;padding-left:max(14px,env(safe-area-inset-left,0px))}
+ .nav button{flex:none;flex-direction:row;gap:10px;font-size:14px;min-height:42px;padding:0 12px;justify-content:flex-start}
+ .nav button.on{background:var(--soft)}
+ .brand{display:block;font-weight:700;font-size:16px;padding:0 12px 18px}
+ .brand span{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+}
+/* controls */
+.btn{border:0;border-radius:var(--r-sm);padding:10px 14px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;min-height:42px;background:var(--accent);color:var(--accent-ink);display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.sub{background:var(--sunk);color:var(--ink)}
+.btn.line{background:none;border:1px solid var(--line);color:var(--ink)}
+.btn.text{background:none;color:var(--accent);padding:6px 8px;min-height:34px}
+.btn.danger{background:none;color:var(--bad);padding:6px 8px;min-height:34px}
+.btn.danger.armed{background:var(--bad);color:#fff}
+.btn.sm{min-height:34px;padding:6px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.block{width:100%}
+label.f{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted);min-width:0}
+.inp,textarea,select{width:100%;background:var(--sunk);color:var(--ink);border:1px solid transparent;border-radius:var(--r-sm);padding:10px 12px;font:inherit;font-size:16px;outline:none;-webkit-appearance:none;appearance:none}
+textarea{min-height:90px;resize:vertical;line-height:1.5}
+textarea.prompt{font-size:13px;min-height:150px;color:var(--muted)}
+.inp:focus,textarea:focus,select:focus{border-color:var(--accent)}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 17px) 55%,calc(100% - 12px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:30px}
+button:focus-visible,a:focus-visible,.inp:focus-visible,textarea:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:6px 12px;font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;min-height:34px;display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip .tag{font-size:11px;font-weight:600;opacity:.75}
+.seg{display:flex;background:var(--sunk);border-radius:var(--r-sm);padding:3px;gap:2px;overflow-x:auto}
+.seg button{flex:1;border:0;background:none;padding:8px 6px;border-radius:7px;cursor:pointer;font:inherit;font-size:13.5px;font-weight:600;color:var(--muted);white-space:nowrap;min-height:36px}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+/* pills */
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.pill.good{background:var(--good-bg);color:var(--good)}
+.pill.warn{background:var(--warn-bg);color:var(--warn)}
+.pill.bad{background:var(--bad-bg);color:var(--bad)}
+.pill.acc{background:var(--soft);color:var(--accent)}
+.st-후보{background:var(--sunk);color:var(--muted)}
+.st-분석됨{background:var(--soft);color:var(--accent)}
+.st-채택{background:var(--good-bg);color:var(--good)}
+.st-보류{background:var(--warn-bg);color:var(--warn)}
+.st-제외{background:var(--bad-bg);color:var(--bad)}
+/* pipeline */
+.pipe{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.pipe button{border:0;border-right:1px solid var(--line);background:none;font:inherit;color:var(--ink);padding:12px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.pipe button:last-child{border-right:0}
+.pipe b{font-family:var(--f-num);font-size:22px;font-weight:600;line-height:1.1}
+.pipe span{font-size:12px;color:var(--muted)}
+.pipe .arrow{color:var(--line)}
+/* keyword rows */
+.list{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.kwrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:none;font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%}
+.kwrow:last-child{border-bottom:0}
+.kwrow:hover{background:var(--sunk)}
+.kwrow .k{font-weight:600;font-size:15.5px;overflow-wrap:anywhere}
+.kwrow .m{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12.5px;color:var(--muted)}
+.kwrow .v{text-align:right;font-family:var(--f-num);font-weight:600;font-size:15px}
+.kwrow .v small{display:block;font-family:var(--f-body);font-weight:400;font-size:11.5px;color:var(--muted)}
+.dots{display:inline-flex;gap:3px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.추천{background:var(--good)}.dot.보통{background:var(--warn)}.dot.비추천{background:var(--bad)}
+.empty{border:1px dashed var(--line);border-radius:var(--r);padding:22px 16px;text-align:center;color:var(--muted);font-size:14px;display:flex;flex-direction:column;gap:10px;align-items:center}
+/* metrics */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px}
+.metric{background:var(--sunk);border-radius:var(--r-sm);padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.metric span{font-size:12px;color:var(--muted)}
+.metric input{background:none;border:0;padding:0;font-family:var(--f-num);font-size:18px;font-weight:600;color:var(--ink);width:100%;outline:none}
+.metric input:focus{box-shadow:0 2px 0 var(--accent)}
+.metric b{font-family:var(--f-num);font-size:18px;font-weight:600}
+/* analysis */
+.ana{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.ana:first-of-type{border-top:0;padding-top:0}
+.kv{display:grid;grid-template-columns:88px minmax(0,1fr);gap:4px 10px;font-size:13.5px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;overflow-wrap:anywhere;white-space:pre-wrap}
+details summary{cursor:pointer;color:var(--muted);font-size:13px}
+details pre{white-space:pre-wrap;font:12.5px/1.5 var(--f-body);background:var(--sunk);padding:10px;border-radius:var(--r-sm);margin:8px 0 0;overflow-wrap:anywhere}
+.rel{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.rel:last-child{border-bottom:0}
+.rel .k{font-weight:600;overflow-wrap:anywhere}
+.rel .k small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.parsed{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.parsed label{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:start;padding:9px 12px;border-bottom:1px solid var(--line);cursor:pointer;font-size:14px}
+.parsed label:last-child{border-bottom:0}
+.parsed input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--accent)}
+.parsed small{display:block;color:var(--muted);font-size:12px}
+.steps{display:flex;flex-direction:column;gap:14px;counter-reset:s}
+.step{display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px}
+.step::before{counter-increment:s;content:counter(s);width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);font:600 12px/24px var(--f-num);text-align:center}
+.step>div{display:flex;flex-direction:column;gap:8px;min-width:0}
+table.stat{width:100%;border-collapse:collapse;font-size:13.5px}
+table.stat th,table.stat td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+table.stat th:first-child,table.stat td:first-child{text-align:left}
+table.stat th{color:var(--muted);font-weight:600;font-size:12px}
+.tw{overflow-x:auto}
+.links{display:flex;gap:6px;flex-wrap:wrap}
+.links a{font-size:13px;text-decoration:none;border:1px solid var(--line);border-radius:99px;padding:5px 11px;color:var(--ink)}
+.links a:hover{border-color:var(--accent);color:var(--accent)}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,12px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;opacity:0;transition:.25s;pointer-events:none;font-size:14px;max-width:calc(100% - 32px);text-align:center;z-index:9}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (min-width:960px){.toast{bottom:28px;left:calc(50% + 120px)}}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-width:420px){.two{grid-template-columns:1fr}}
+</style>
+
+<nav class="nav" aria-label="메뉴">
+ <div class="brand">키워드 스튜디오<span>네이버 블로그 키워드 리서치</span></div>
+ <button data-a="tab" data-v="home" id="nav-home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>작업대</button>
+ <button data-a="tab" data-v="discover" id="nav-discover"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/><path d="M11 8v6M8 11h6"/></svg>발굴</button>
+ <button data-a="tab" data-v="list" id="nav-list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M4 12h16M4 17h7"/><circle cx="18" cy="7" r="2"/></svg>키워드</button>
+ <button data-a="tab" data-v="agents" id="nav-agents"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="3"/><circle cx="17" cy="9" r="3"/><path d="M3 19c.8-2.8 2.7-4 5-4s4.2 1.2 5 4M12.5 16c.9-.7 2.3-1 4.5-1 2.3 0 4.2 1.2 5 4"/></svg>에이전트</button>
+ <button data-a="tab" data-v="settings" id="nav-settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>설정</button>
+</nav>
+<main id="main"></main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl=u=>/^https:\/\//.test(String(u||''))?esc(u):'';
+const clone=o=>JSON.parse(JSON.stringify(o));
+const nowIso=()=>new Date().toISOString();
+const newId=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const fmt=n=>n==null||isNaN(n)?'—':Math.round(n).toLocaleString('ko-KR');
+const when=iso=>{try{return new Date(iso).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}catch(e){return ''}};
+
+const STAGES=['후보','분석됨','채택','보류','제외'];
+const STEPS={discover:'키워드 발굴',analyze:'키워드 분석',related:'연관 키워드'};
+const DEFAULT_CFG={
+ blogUrl:'https://blog.naver.com/beompercar',
+ topics:'IT·테크 정보글',
+ minVol:30000,
+ goodRatio:1,
+ agents:[
+  {id:'pickle',name:'피클',note:''},
+  {id:'muse',name:'뮤즈',note:''},
+  {id:'voo',name:'voo',note:''},
+  {id:'keyring',name:'키링',note:''},
+  {id:'claude',name:'클로드',note:'이 앱 안에서 바로 실행할 수 있어요'}
+ ],
+ assign:{discover:'',analyze:'',related:''}
+};
+
+/* ---------- state ---------- */
+const ST={
+ mode:'loading', ready:false, note:'',
+ kws:[], cfg:clone(DEFAULT_CFG),
+ view:'home', sel:null,
+ filter:{stage:'',q:'',sort:'recent'},
+ jobs:{
+  discover:{agent:null,seed:'',notes:'',n:'15',paste:'',parsed:null},
+  analyze:{agent:null,paste:'',open:false},
+  related:{agent:null,paste:'',open:false}
+ },
+ manual:'', relManual:'', armed:null, busy:{}, showData:false
+};
+let DB=null, SAMPLE=null, composing=false, pendingRender=false;
+
+/* ---------- normalize untrusted rows ---------- */
+const numOrNull=v=>{const n=Number(v);return v===''||v==null||!isFinite(n)?null:n};
+function normKw(id,d){
+ d=d||{};
+ return {id:String(id),kw:String(d.kw||''),stage:STAGES.includes(d.stage)?d.stage:'후보',
+  src:d.src&&typeof d.src==='object'?{agent:String(d.src.agent||''),step:String(d.src.step||'manual'),from:String(d.src.from||'')}:{agent:'',step:'manual',from:''},
+  pc:numOrNull(d.pc),mo:numOrNull(d.mo),docs:numOrNull(d.docs),estVol:numOrNull(d.estVol),memo:String(d.memo||''),
+  analyses:Array.isArray(d.analyses)?d.analyses.filter(a=>a&&typeof a==='object').map(a=>({id:String(a.id||newId('a')),agent:String(a.agent||''),at:String(a.at||''),verdict:['추천','보통','비추천'].includes(a.verdict)?a.verdict:'',score:numOrNull(a.score),pc:numOrNull(a.pc),mo:numOrNull(a.mo),docs:numOrNull(a.docs),comp:String(a.comp||''),intent:String(a.intent||''),title:String(a.title||''),why:String(a.why||''),raw:String(a.raw||''),est:!!a.est})):[],
+  related:Array.isArray(d.related)?d.related.filter(r=>r&&typeof r==='object').map(r=>({id:String(r.id||newId('r')),kw:String(r.kw||''),vol:numOrNull(r.vol),memo:String(r.memo||''),agent:String(r.agent||''),at:String(r.at||''),promoted:String(r.promoted||'')})):[],
+  createdAt:String(d.createdAt||''),updatedAt:String(d.updatedAt||'')};
+}
+function normCfg(d){
+ d=d||{};const c=clone(DEFAULT_CFG);
+ if(typeof d.blogUrl==='string')c.blogUrl=d.blogUrl;
+ if(typeof d.topics==='string')c.topics=d.topics;
+ if(numOrNull(d.minVol)!=null)c.minVol=Number(d.minVol);
+ if(numOrNull(d.goodRatio)!=null)c.goodRatio=Number(d.goodRatio);
+ if(Array.isArray(d.agents)&&d.agents.length)c.agents=d.agents.filter(a=>a&&a.id).map(a=>({id:String(a.id),name:String(a.name||a.id),note:String(a.note||'')}));
+ if(d.assign&&typeof d.assign==='object')Object.keys(c.assign).forEach(k=>{c.assign[k]=String(d.assign[k]||'')});
+ return c;
+}
+
+/* ---------- persistence ---------- */
+const LKEY='kw-studio-v1';
+function lsGet(){try{return JSON.parse(localStorage.getItem(LKEY)||'null')}catch(e){return null}}
+function lsSet(){try{localStorage.setItem(LKEY,JSON.stringify({kws:ST.kws,cfg:ST.cfg}))}catch(e){}}
+const Q={};
+function enqueue(key,fn){const p=(Q[key]||Promise.resolve()).then(fn).catch(e=>{toast(dbErr(e))});Q[key]=p;return p}
+function dbErr(e){const c=e&&e.code;if(c==='quota_exceeded')return '저장 공간이 꽉 찼어요. 제외한 키워드를 지워 주세요.';if(c==='revoked')return '저장 권한이 사라졌어요. 새로고침해 주세요.';return '저장하지 못했어요. 잠시 뒤 다시 해 주세요.'}
+function saveKw(k){
+ k.updatedAt=nowIso();if(!k.createdAt)k.createdAt=k.updatedAt;
+ const i=ST.kws.findIndex(x=>x.id===k.id);if(i<0)ST.kws.unshift(k);else ST.kws[i]=k;
+ if(DB){const body=clone(k);delete body.id;enqueue('kw:'+k.id,()=>DB.collection('keywords').doc(k.id).set(body))}else lsSet();
+}
+function removeKw(id){
+ ST.kws=ST.kws.filter(x=>x.id!==id);
+ ST.kws.forEach(k=>{let ch=false;k.related.forEach(r=>{if(r.promoted===id){r.promoted='';ch=true}});if(ch)saveKw(k)});
+ if(DB)enqueue('kw:'+id,()=>DB.collection('keywords').doc(id).delete());else lsSet();
+}
+function saveCfg(){if(DB){const b=clone(ST.cfg);enqueue('cfg',()=>DB.doc('config/main').set(b))}else lsSet()}
+const getKw=id=>ST.kws.find(k=>k.id===id)||null;
+const editKw=id=>{const k=getKw(id);return k?clone(k):null};
+
+/* ---------- metrics ---------- */
+function total(k){return k.pc==null&&k.mo==null?null:(k.pc||0)+(k.mo||0)}
+function ratio(k){const t=total(k);return k.docs==null||!t?null:k.docs/t}
+function ratioCls(r){if(r==null)return '';const g=ST.cfg.goodRatio;return r<=g?'good':r<=g*3?'warn':'bad'}
+function volCls(t){return t==null?'':t>=ST.cfg.minVol?'good':'bad'}
+function ratioPill(k){const r=ratio(k);return r==null?'':'<span class="pill '+ratioCls(r)+'">포화도 '+r.toFixed(2)+'</span>'}
+function verdictCount(k){const c={추천:0,보통:0,비추천:0};k.analyses.forEach(a=>{if(c[a.verdict]!=null)c[a.verdict]++});return c}
+const agentName=id=>{const a=ST.cfg.agents.find(x=>x.id===id);return a?a.name:(id||'직접')};
+const stagePill=s=>'<span class="pill st-'+esc(s)+'">'+esc(s)+'</span>';
+
+/* ---------- parsing pasted agent output ---------- */
+function parseNum(s){
+ if(s==null)return null;s=String(s).replace(/,/g,'');
+ const m=s.match(/(\d+(?:\.\d+)?)\s*(만|천|k|K)?/);if(!m)return null;
+ let n=parseFloat(m[1]);if(m[2]==='만')n*=1e4;else if(m[2]==='천'||m[2]==='k'||m[2]==='K')n*=1e3;
+ return Math.round(n);
+}
+function parseList(text){
+ const out=[],seen={};
+ String(text||'').split(/\r?\n/).forEach(line=>{
+  let l=line.trim();if(!l)return;
+  if(/^[|\s:-]+$/.test(l))return;
+  l=l.replace(/^\|/,'').replace(/\|$/,'').trim();
+  l=l.replace(/^(?:[-*•·]|\d+[.)])\s*/,'').replace(/\*\*/g,'').trim();
+  let parts=l.split(/\s*[|\t]\s*/);
+  if(parts.length<2){const m=l.match(/^(.+?)\s*[-–:]\s*(.+)$/);parts=m?[m[1],m[2]]:[l]}
+  const kw=parts[0].replace(/^["'“”]+|["'“”]+$/g,'').trim();
+  if(!kw||kw.length>40||/^(키워드|연관 ?키워드|keyword)$/i.test(kw))return;
+  const key=kw.replace(/\s/g,'');if(seen[key])return;seen[key]=1;
+  let vol=null,memo='';
+  if(parts.length>1){const v=parseNum(parts[1]);if(v!=null&&/\d/.test(parts[1])&&parts[1].length<20){vol=v;memo=parts.slice(2).join(' · ')}else memo=parts.slice(1).join(' · ')}
+  out.push({kw,vol,memo:memo.trim()});
+ });
+ return out;
+}
+function field(text,labels){
+ for(const lb of labels){const re=new RegExp('^\\s*[-*]*\\s*\\**\\s*(?:'+lb+')\\s*\\**\\s*[:：]\\s*(.+)$','im');const m=String(text).match(re);if(m)return m[1].replace(/\*\*/g,'').trim()}
+ return '';
+}
+function normVerdict(v){v=String(v||'');if(/비추/.test(v))return '비추천';if(/추천/.test(v))return '추천';if(/보통|중간/.test(v))return '보통';return ''}
+function parseAnalysis(text){
+ const a={verdict:normVerdict(field(text,['판정','결론','추천 ?여부'])),
+  score:parseNum(field(text,['점수','score'])),
+  pc:parseNum(field(text,['월\\s*검색량\\s*\\(?PC\\)?','PC\\s*검색량','PC'])),
+  mo:parseNum(field(text,['월\\s*검색량\\s*\\(?모바일\\)?','모바일\\s*검색량','모바일','MO'])),
+  docs:parseNum(field(text,['블로그\\s*문서\\s*수','문서\\s*수','발행량'])),
+  comp:field(text,['경쟁(?:도|강도)?']),
+  intent:field(text,['검색\\s*의도','의도']),
+  title:field(text,['노릴 만한 제목(?: 예시)?','제목(?: 예시)?']),
+  why:field(text,['근거','이유','메모','코멘트'])};
+ a.est=/추정/.test(text);
+ return a;
+}
+
+/* ---------- prompts ---------- */
+function blogLine(){const c=ST.cfg;return '내 블로그: 네이버 블로그 '+(c.blogUrl||'')+(c.topics.trim()?'\n블로그 주제: '+c.topics.trim():'')}
+function promptDiscover(forJson){
+ const j=ST.jobs.discover,c=ST.cfg,n=parseInt(j.n,10)||15;
+ return '너는 네이버 블로그 키워드 리서처야.\n'+blogLine()+'\n이번에 찾을 주제/씨앗 키워드: '+(j.seed.trim()||'(블로그 주제에 맞게 자유롭게)')+(j.notes.trim()?'\n조건: '+j.notes.trim():'')
+ +'\n\n네이버에서 실제로 검색되는 키워드 후보 '+n+'개를 찾아줘. 월간 검색량(PC+모바일)이 '+fmt(c.minVol)+' 이상일 가능성이 있고, 블로그로 상위노출을 노려볼 만한 것 위주로.\n'
+ +(forJson?'JSON 배열로만 답해. 형식: [{"kw":"키워드","vol":예상월검색량숫자,"why":"고른 이유 한 줄"}]. 검색량을 모르면 vol은 null.'
+ :'\n아래 형식으로만, 한 줄에 하나씩 답해줘. 다른 설명은 빼줘.\n키워드 | 예상 월검색량(숫자) | 고른 이유');
+}
+function kwFacts(k){const f=[];if(k.pc!=null)f.push('PC 월검색량 '+fmt(k.pc));if(k.mo!=null)f.push('모바일 월검색량 '+fmt(k.mo));if(k.docs!=null)f.push('블로그 문서수 '+fmt(k.docs));return f.length?'\n내가 확인한 숫자: '+f.join(', '):''}
+function promptAnalyze(k,forJson){
+ const c=ST.cfg;
+ return '너는 네이버 블로그 키워드 분석가야.\n'+blogLine()+'\n분석할 키워드: '+k.kw+kwFacts(k)
+ +'\n\n이 키워드로 네이버 블로그 글을 쓸 가치가 있는지 분석해줘. 기준: 월간 검색량(PC+모바일) '+fmt(c.minVol)+' 이상, 블로그 문서수가 검색량에 비해 적을수록 좋음, 내 블로그 주제와 맞는지.\n'
+ +(forJson?'JSON 객체로만 답해. 형식: {"verdict":"추천|보통|비추천","score":0~100,"pc":숫자|null,"mo":숫자|null,"docs":숫자|null,"comp":"낮음|중간|높음","intent":"검색 의도","title":"노릴 만한 제목 예시","why":"근거 2~3문장"}. 실시간 데이터를 볼 수 없으니 숫자는 추정치로 넣고 모르면 null.'
+ :'\n아래 형식 그대로 채워서 답해줘.\n판정: 추천 / 보통 / 비추천 중 하나\n점수: 0~100\n월검색량 PC: 숫자\n월검색량 모바일: 숫자\n블로그 문서수: 숫자\n경쟁: 낮음 / 중간 / 높음\n검색 의도: \n노릴 만한 제목 예시: \n근거: \n\n확실하지 않은 숫자는 뒤에 (추정)이라고 붙여줘.');
+}
+function promptRelated(k,forJson){
+ return '너는 네이버 블로그 키워드 리서처야.\n'+blogLine()+'\n기준 키워드: '+k.kw
+ +'\n\n이 키워드와 함께 검색되거나 이어서 쓸 만한 네이버 연관 키워드 15개를 찾아줘. 롱테일 키워드(더 구체적인 조합)도 섞어줘.\n'
+ +(forJson?'JSON 배열로만 답해. 형식: [{"kw":"연관 키워드","vol":예상월검색량숫자|null,"memo":"한 줄 메모"}]'
+ :'\n아래 형식으로만, 한 줄에 하나씩 답해줘.\n연관 키워드 | 예상 월검색량(숫자) | 한 줄 메모');
+}
+function promptFor(step,k,forJson){return step==='discover'?promptDiscover(forJson):step==='analyze'?promptAnalyze(k,forJson):promptRelated(k,forJson)}
+
+/* ---------- toast & copy ---------- */
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2200)}
+function copyFrom(id,msg){
+ const el=$(id);if(!el)return;const txt=el.value;
+ const fallback=()=>{el.focus();el.select();toast('복사가 막혀 있어요. 선택된 글을 길게 눌러 복사하세요')};
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(()=>toast(msg||'복사했어요'),fallback);else fallback();
+}
+
+/* ---------- view pieces ---------- */
+function syncNote(){
+ if(ST.mode==='loading')return '<div class="note">저장소에 연결하는 중이에요…</div>';
+ if(ST.mode==='local')return '<div class="note warn">지금은 이 기기에만 저장돼요. 폰과 PC 연동은 claude.ai에서 이 페이지를 열어야 돼요.</div>';
+ return ST.note?'<div class="note warn">'+esc(ST.note)+'</div>':'';
+}
+function kwRow(k){
+ const t=total(k),vc=verdictCount(k);
+ const dots=k.analyses.length?'<span class="dots" title="분석 판정">'+k.analyses.map(a=>'<i class="dot '+esc(a.verdict)+'"></i>').join('')+'</span>':'';
+ return '<button class="kwrow" data-a="open" data-id="'+esc(k.id)+'"><div class="k">'+esc(k.kw)+'</div>'
+ +'<div class="v '+(t==null?'muted':'')+'">'+(t==null&&k.estVol!=null?'≈'+fmt(k.estVol)+'<small>예상 검색량</small>':fmt(t)+'<small>월 검색량</small>')+'</div>'
+ +'<div class="m">'+stagePill(k.stage)+ratioPill(k)+dots+(k.analyses.length?'<span>분석 '+k.analyses.length+(vc.추천?' · 추천 '+vc.추천:'')+'</span>':'')+(k.related.length?'<span>연관 '+k.related.length+'</span>':'')+'</div><div></div></button>';
+}
+function agentChips(step){
+ const j=ST.jobs[step],as=ST.cfg.assign[step];
+ return '<div class="chips" role="group" aria-label="에이전트 고르기">'+ST.cfg.agents.map(a=>'<button class="chip '+(j.agent===a.id?'on':'')+'" data-a="pickAgent" data-step="'+step+'" data-id="'+esc(a.id)+'">'+esc(a.name)+(as===a.id?'<span class="tag">배정</span>':'')+'</button>').join('')+'</div>';
+}
+function jobBody(step,k){
+ const j=ST.jobs[step];
+ if(!j.agent)return '<p class="small muted">맡길 에이전트를 고르세요.'+(ST.cfg.assign[step]?'':' 아직 배정된 에이전트가 없어요. 여러 에이전트에게 같은 일을 맡겨 보고 결과를 비교해 보세요.')+'</p>';
+ const name=esc(agentName(j.agent));
+ if(j.agent==='claude'&&SAMPLE){
+  const busy=ST.busy[step];
+  return '<div class="row"><button class="btn" data-a="runClaude" data-step="'+step+'" '+(busy?'disabled':'')+'>'+(busy?'<span class="spin"></span>생각하는 중…':'클로드로 바로 실행')+'</button>'+(busy?'<button class="btn sub" data-a="stopClaude" data-step="'+step+'">중지</button>':'')+'</div>'
+  +'<p class="small muted">클로드는 네이버 실시간 데이터를 볼 수 없어요. 검색량·문서수는 추정치로 저장돼요.</p>';
+ }
+ return '<div class="steps">'
+ +'<div class="step"><div><div class="row between"><h3>요청문 복사</h3><button class="btn sm" data-a="copyPrompt" data-step="'+step+'">복사</button></div><textarea class="prompt" id="prompt-'+step+'" readonly aria-label="요청문">'+esc(promptFor(step,k,false))+'</textarea></div></div>'
+ +'<div class="step"><div><h3>'+name+' 앱에 붙여 넣고 답을 받아요</h3></div></div>'
+ +'<div class="step"><div><h3>받은 답을 여기에 붙여 넣기</h3><textarea id="paste-'+step+'" data-bind="jobs.'+step+'.paste" placeholder="'+name+'의 답을 그대로 붙여 넣으세요">'+esc(j.paste)+'</textarea><button class="btn" data-a="readPaste" data-step="'+step+'">'+(step==='discover'?'후보 읽기':step==='analyze'?'분석 저장':'연관 키워드 저장')+'</button></div></div>'
+ +'</div>';
+}
+
+/* ---------- views ---------- */
+function homeV(){
+ const c={};STAGES.forEach(s=>c[s]=0);ST.kws.forEach(k=>c[k.stage]++);
+ const waiting=ST.kws.filter(k=>k.stage==='후보').slice(0,5);
+ const adopted=ST.kws.filter(k=>k.stage==='채택').sort((a,b)=>(total(b)||0)-(total(a)||0));
+ const needRel=adopted.filter(k=>k.related.length<3);
+ const blog=safeUrl(ST.cfg.blogUrl);
+ return '<div class="stack-lg">'
+ +'<div class="head"><span class="eyebrow">네이버 블로그 키워드 리서치</span><h1>키워드 스튜디오</h1>'+(blog?'<a class="small" href="'+blog+'" target="_blank" rel="noopener">'+esc(ST.cfg.blogUrl.replace(/^https:\/\//,''))+'</a>':'')+'</div>'
+ +syncNote()
+ +'<section class="stack"><div class="row between"><h2>키워드 흐름</h2><span class="small muted">기준 월 검색량 '+fmt(ST.cfg.minVol)+'</span></div>'
+ +'<div class="pipe">'+STAGES.map(s=>'<button data-a="gostage" data-v="'+s+'"><b>'+c[s]+'</b><span>'+s+'</span></button>').join('')+'</div></section>'
+ +(ST.kws.length?'':'<div class="empty"><b>아직 키워드가 없어요</b><span>발굴 탭에서 에이전트에게 키워드 후보를 찾게 하거나, 알고 있는 키워드를 바로 넣어 보세요.</span><button class="btn" data-a="tab" data-v="discover">키워드 발굴하러 가기</button></div>')
+ +(waiting.length?'<section class="stack"><div class="row between"><h2>분석을 기다리는 키워드</h2><button class="btn text" data-a="gostage" data-v="후보">전체 보기</button></div><div class="list">'+waiting.map(kwRow).join('')+'</div></section>':'')
+ +(adopted.length?'<section class="stack"><h2>채택한 키워드</h2><div class="list">'+adopted.slice(0,8).map(kwRow).join('')+'</div>'+(needRel.length?'<p class="small muted">연관 키워드가 3개 안 되는 채택 키워드가 '+needRel.length+'개 있어요. 키워드를 눌러 연관 키워드를 찾아 두세요.</p>':'')+'</section>':'')
+ +'<section class="stack"><div class="row between"><h2>에이전트 배정</h2><button class="btn text" data-a="tab" data-v="agents">바꾸기</button></div><div class="list">'
+ +Object.keys(STEPS).map(s=>'<div class="kwrow" style="cursor:default"><div class="k">'+STEPS[s]+'</div><div class="v" style="font-family:var(--f-body)">'+(ST.cfg.assign[s]?esc(agentName(ST.cfg.assign[s])):'<span class="muted">미정</span>')+'</div></div>').join('')+'</div></section>'
+ +'</div>';
+}
+function discoverV(){
+ const j=ST.jobs.discover;
+ let parsed='';
+ if(j.parsed){
+  const on=j.parsed.filter(p=>p.on).length;
+  parsed='<section class="panel"><div class="row between"><h2>읽은 후보 '+j.parsed.length+'개</h2><button class="btn text" data-a="clearParsed">지우기</button></div>'
+  +(j.parsed.length?'<div class="parsed">'+j.parsed.map((p,i)=>'<label><input type="checkbox" id="pp-'+i+'" data-a="togglePick" data-i="'+i+'"'+(p.on?' checked':'')+(p.dup?' disabled':'')+'><span>'+esc(p.kw)+(p.memo?'<small>'+esc(p.memo)+'</small>':'')+(p.dup?'<small>이미 있는 키워드예요</small>':'')+'</span><span class="num small muted">'+(p.vol!=null?fmt(p.vol):'')+'</span></label>').join('')+'</div>'
+  +'<button class="btn block" data-a="addPicked" '+(on?'':'disabled')+'>선택한 '+on+'개를 후보로 추가</button>':'<p class="small muted">읽을 수 있는 줄이 없었어요. 답이 「키워드 | 검색량 | 이유」 형식인지 확인해 주세요.</p>')
+  +'</section>';
+ }
+ return '<div class="stack-lg">'
+ +'<div class="head"><span class="eyebrow">1단계</span><h1>키워드 발굴</h1><p class="muted">주제를 정하고 에이전트에게 후보를 찾게 한 뒤, 고른 것만 후보로 넣어요.</p></div>'
+ +syncNote()
+ +'<section class="panel"><h2>무엇을 찾을까요</h2>'
+ +'<label class="f">주제나 씨앗 키워드<input class="inp" id="d-seed" data-bind="jobs.discover.seed" value="'+esc(j.seed)+'" placeholder="예) 갤럭시 S26 배터리 절약"></label>'
+ +'<div class="two"><label class="f">조건 (선택)<input class="inp" id="d-notes" data-bind="jobs.discover.notes" value="'+esc(j.notes)+'" placeholder="예) 초보자도 따라 할 수 있는 것"></label>'
+ +'<label class="f">개수<select id="d-n" data-bind="jobs.discover.n">'+['10','15','20','30'].map(n=>'<option'+(j.n===n?' selected':'')+'>'+n+'</option>').join('')+'</select></label></div></section>'
+ +'<section class="panel"><div class="row between"><h2>누구에게 맡길까요</h2></div>'+agentChips('discover')+jobBody('discover',null)+'</section>'
+ +parsed
+ +'<section class="panel"><h2>직접 넣기</h2><p class="small muted">이미 아는 키워드는 한 줄에 하나씩 적으세요. 「키워드 | 검색량」으로 적으면 검색량도 같이 들어가요.</p><textarea id="manual" data-bind="manual" placeholder="아이폰 배터리 성능 확인&#10;윈도우11 업데이트 끄기 | 12000">'+esc(ST.manual)+'</textarea><button class="btn sub" data-a="addManual">후보로 추가</button></section>'
+ +'</div>';
+}
+function listV(){
+ const f=ST.filter,c={};STAGES.forEach(s=>c[s]=0);ST.kws.forEach(k=>c[k.stage]++);
+ return '<div class="stack-lg"><div class="head"><span class="eyebrow">전체 '+ST.kws.length+'개</span><h1>키워드</h1></div>'+syncNote()
+ +'<div class="stack"><input class="inp" id="q" type="search" data-bind="filter.q" data-list="1" value="'+esc(f.q)+'" placeholder="키워드 검색">'
+ +'<div class="chips"><button class="chip '+(!f.stage?'on':'')+'" data-a="fstage" data-v="">전체</button>'+STAGES.map(s=>'<button class="chip '+(f.stage===s?'on':'')+'" data-a="fstage" data-v="'+s+'">'+s+' <span class="tag">'+c[s]+'</span></button>').join('')+'</div>'
+ +'<div class="seg" role="group" aria-label="정렬">'+[['recent','최근'],['vol','검색량'],['ratio','포화도'],['score','추천 많은 순']].map(p=>'<button data-a="fsort" data-v="'+p[0]+'" class="'+(f.sort===p[0]?'on':'')+'">'+p[1]+'</button>').join('')+'</div></div>'
+ +'<div id="kwlist">'+listBody()+'</div></div>';
+}
+function listBody(){
+ const f=ST.filter,q=f.q.trim().replace(/\s/g,'').toLowerCase();
+ let l=ST.kws.filter(k=>(!f.stage||k.stage===f.stage)&&(!q||k.kw.replace(/\s/g,'').toLowerCase().includes(q)));
+ const big=-1e15;
+ if(f.sort==='vol')l.sort((a,b)=>(total(b)??big)-(total(a)??big));
+ else if(f.sort==='ratio')l.sort((a,b)=>(ratio(a)??1e15)-(ratio(b)??1e15));
+ else if(f.sort==='score')l.sort((a,b)=>verdictCount(b).추천-verdictCount(a).추천||(total(b)??big)-(total(a)??big));
+ else l.sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)));
+ if(!ST.kws.length)return '<div class="empty"><span>키워드가 없어요. 발굴 탭에서 후보를 모아 보세요.</span><button class="btn" data-a="tab" data-v="discover">발굴하러 가기</button></div>';
+ return l.length?'<div class="list">'+l.map(kwRow).join('')+'</div>':'<div class="empty">조건에 맞는 키워드가 없어요.</div>';
+}
+function detailV(){
+ const k=getKw(ST.sel);
+ if(!k)return '<div class="stack-lg"><button class="btn text" data-a="back" style="align-self:flex-start">← 키워드 목록</button><div class="empty">이 키워드는 지워졌어요.</div></div>';
+ const t=total(k),r=ratio(k),vc=verdictCount(k),q=encodeURIComponent(k.kw);
+ const src=k.src.step==='discover'?'발굴: '+agentName(k.src.agent):k.src.step==='related'?(getKw(k.src.from)?'「'+esc(getKw(k.src.from).kw)+'」의 연관 키워드 · '+esc(agentName(k.src.agent)):'연관 키워드에서 · '+esc(agentName(k.src.agent))):'직접 추가';
+ const armed=ST.armed==='kw:'+k.id;
+ const anaOpen=ST.jobs.analyze.open, relOpen=ST.jobs.related.open;
+ return '<div class="stack-lg">'
+ +'<button class="btn text" data-a="back" style="align-self:flex-start;margin-left:-8px">← 키워드 목록</button>'
+ +'<div class="head"><span class="eyebrow">'+(k.src.step==='discover'?esc(src):src)+'</span><h1>'+esc(k.kw)+'</h1></div>'
+ +syncNote()
+ +'<div class="seg" role="group" aria-label="단계">'+STAGES.map(s=>'<button data-a="setStage" data-v="'+s+'" class="'+(k.stage===s?'on':'')+'">'+s+'</button>').join('')+'</div>'
+ +'<section class="stack"><div class="row between"><h2>숫자</h2><span class="small muted">눌러서 고칠 수 있어요</span></div>'
+ +'<div class="metrics">'
+ +'<label class="metric"><span>PC 월 검색량</span><input id="m-pc" inputmode="numeric" data-kwf="pc" value="'+(k.pc??'')+'" placeholder="—"></label>'
+ +'<label class="metric"><span>모바일 월 검색량</span><input id="m-mo" inputmode="numeric" data-kwf="mo" value="'+(k.mo??'')+'" placeholder="—"></label>'
+ +'<label class="metric"><span>블로그 문서수</span><input id="m-docs" inputmode="numeric" data-kwf="docs" value="'+(k.docs??'')+'" placeholder="—"></label>'
+ +'<div class="metric"><span>합계 검색량</span><b>'+fmt(t)+'</b>'+(t==null&&k.estVol!=null?'<span class="small muted">에이전트 예상 ≈'+fmt(k.estVol)+'</span>':'')+(t!=null?'<span class="pill '+volCls(t)+'" style="align-self:flex-start">'+(t>=ST.cfg.minVol?'기준 넘음':'기준 미달')+'</span>':'')+'</div>'
+ +'<div class="metric"><span>포화도 (문서수÷검색량)</span><b>'+(r==null?'—':r.toFixed(2))+'</b>'+(r!=null?'<span class="pill '+ratioCls(r)+'" style="align-self:flex-start">'+(ratioCls(r)==='good'?'여유 있음':ratioCls(r)==='warn'?'경쟁 있음':'포화')+'</span>':'')+'</div>'
+ +'</div>'
+ +'<div class="links"><a href="https://search.naver.com/search.naver?query='+q+'" target="_blank" rel="noopener">네이버 검색</a><a href="https://search.naver.com/search.naver?ssc=tab.blog.all&amp;query='+q+'" target="_blank" rel="noopener">블로그 탭</a><a href="https://datalab.naver.com/keyword/trendSearch.naver" target="_blank" rel="noopener">데이터랩</a><a href="https://searchad.naver.com/" target="_blank" rel="noopener">검색광고 키워드도구</a></div></section>'
+ // analysis
+ +'<section class="panel"><div class="row between"><h2>분석 '+k.analyses.length+'</h2>'+(k.analyses.length?'<span class="small muted">추천 '+vc.추천+' · 보통 '+vc.보통+' · 비추천 '+vc.비추천+'</span>':'')+'</div>'
+ +k.analyses.slice().reverse().map(a=>anaCard(k,a)).join('')
+ +(anaOpen?'<div class="stack" style="border-top:1px solid var(--line);padding-top:12px"><div class="row between"><h3>분석 맡기기</h3><button class="btn text" data-a="toggleJob" data-step="analyze">닫기</button></div>'+agentChips('analyze')+jobBody('analyze',k)+'</div>'
+ :'<button class="btn '+(k.analyses.length?'sub':'')+'" data-a="toggleJob" data-step="analyze">'+(k.analyses.length?'다른 에이전트에게도 분석 맡기기':'에이전트에게 분석 맡기기')+'</button>')
+ +'</section>'
+ // related
+ +'<section class="panel"><div class="row between"><h2>연관 키워드 '+k.related.length+'</h2></div>'
+ +(k.related.length?'<div>'+k.related.map(rl=>relRow(k,rl)).join('')+'</div>':'<p class="small muted">아직 없어요. 에이전트에게 찾게 하거나 직접 적어 두세요.</p>')
+ +(relOpen?'<div class="stack" style="border-top:1px solid var(--line);padding-top:12px"><div class="row between"><h3>연관 키워드 찾기</h3><button class="btn text" data-a="toggleJob" data-step="related">닫기</button></div>'+agentChips('related')+jobBody('related',k)+'</div>'
+ :'<button class="btn sub" data-a="toggleJob" data-step="related">에이전트에게 연관 키워드 찾게 하기</button>')
+ +'<div class="row"><input class="inp grow" id="relManual" data-bind="relManual" value="'+esc(ST.relManual)+'" placeholder="직접 추가 (예: 아이폰 배터리 교체 비용 | 8000)"><button class="btn line" data-a="addRelManual">추가</button></div>'
+ +'</section>'
+ +'<section class="stack"><h2>글감 메모</h2><textarea id="m-memo" data-kwf="memo" placeholder="이 키워드로 쓸 글의 각도, 제목 아이디어, 체험단 연결 등">'+esc(k.memo)+'</textarea><p class="small muted">입력을 마치고 다른 곳을 누르면 저장돼요.</p></section>'
+ +'<div class="row"><button class="btn danger '+(armed?'armed':'')+'" data-a="delKw">'+(armed?'한 번 더 누르면 지워져요':'이 키워드 지우기')+'</button></div>'
+ +'</div>';
+}
+function anaCard(k,a){
+ const armed=ST.armed==='ana:'+a.id;
+ const vp=a.verdict==='추천'?'good':a.verdict==='보통'?'warn':a.verdict==='비추천'?'bad':'';
+ const rows=[];
+ const t=a.pc==null&&a.mo==null?null:(a.pc||0)+(a.mo||0);
+ if(t!=null)rows.push(['검색량',fmt(t)+(a.pc!=null||a.mo!=null?' (PC '+fmt(a.pc)+' · 모바일 '+fmt(a.mo)+')':'')]);
+ if(a.docs!=null)rows.push(['문서수',fmt(a.docs)]);
+ if(a.comp)rows.push(['경쟁',a.comp]);
+ if(a.intent)rows.push(['검색 의도',a.intent]);
+ if(a.title)rows.push(['제목 예시',a.title]);
+ if(a.why)rows.push(['근거',a.why]);
+ const hasNums=a.pc!=null||a.mo!=null||a.docs!=null;
+ return '<div class="ana"><div class="row between"><div class="row"><b>'+esc(agentName(a.agent))+'</b>'+(a.verdict?'<span class="pill '+vp+'">'+a.verdict+'</span>':'<span class="pill">판정 없음</span>')+(a.score!=null?'<span class="num small">'+a.score+'점</span>':'')+(a.est?'<span class="pill">추정치</span>':'')+'</div><span class="small muted">'+esc(when(a.at))+'</span></div>'
+ +(rows.length?'<dl class="kv">'+rows.map(r=>'<dt>'+r[0]+'</dt><dd>'+esc(r[1])+'</dd>').join('')+'</dl>':'')
+ +(a.raw?'<details><summary>받은 답 원문</summary><pre>'+esc(a.raw)+'</pre></details>':'')
+ +'<div class="row">'+(hasNums?'<button class="btn text" data-a="applyNums" data-id="'+esc(a.id)+'">이 숫자로 바꾸기</button>':'')+'<button class="btn danger '+(armed?'armed':'')+'" data-a="delAna" data-id="'+esc(a.id)+'">'+(armed?'한 번 더 누르면 지워져요':'지우기')+'</button></div></div>';
+}
+function relRow(k,r){
+ const p=r.promoted&&getKw(r.promoted);
+ return '<div class="rel"><div class="k">'+esc(r.kw)+'<small>'+esc([agentName(r.agent),r.memo].filter(Boolean).join(' · '))+'</small></div><span class="num small muted">'+(r.vol!=null?fmt(r.vol):'')+'</span>'
+ +(p?'<button class="btn text sm" data-a="open" data-id="'+esc(p.id)+'">보기</button>':'<div class="row" style="gap:0"><button class="btn text sm" data-a="promote" data-id="'+esc(r.id)+'">후보로</button><button class="btn danger sm" data-a="delRel" data-id="'+esc(r.id)+'" aria-label="지우기">✕</button></div>')+'</div>';
+}
+function agentStats(){
+ return ST.cfg.agents.map(a=>{
+  const d=ST.kws.filter(k=>k.src.step==='discover'&&k.src.agent===a.id);
+  const dA=d.filter(k=>k.stage==='채택').length;
+  let an=0,rec=0,dec=0,agree=0,rel=0,relP=0;
+  ST.kws.forEach(k=>{
+   k.analyses.forEach(x=>{if(x.agent!==a.id)return;an++;if(x.verdict==='추천')rec++;
+    if((k.stage==='채택'||k.stage==='제외')&&x.verdict){dec++;if((x.verdict==='추천'&&k.stage==='채택')||(x.verdict==='비추천'&&k.stage==='제외'))agree++}});
+   k.related.forEach(x=>{if(x.agent!==a.id)return;rel++;if(x.promoted)relP++});
+  });
+  return {a,d:d.length,dA,an,rec,dec,agree,rel,relP};
+ });
+}
+function agentsV(){
+ const s=agentStats();
+ const pct=(x,y)=>y?Math.round(x/y*100)+'%':'—';
+ return '<div class="stack-lg"><div class="head"><span class="eyebrow">'+ST.cfg.agents.length+'명</span><h1>에이전트</h1><p class="muted">단계마다 맡을 에이전트를 정해 두면 그 에이전트가 먼저 선택돼요. 아직 정하지 못했다면 같은 일을 여러 에이전트에게 맡겨 보고 아래 성적표로 비교해 보세요.</p></div>'+syncNote()
+ +'<section class="panel"><h2>단계별 배정</h2>'+Object.keys(STEPS).map(st=>'<label class="f">'+STEPS[st]+'<select id="as-'+st+'" data-assign="'+st+'"><option value="">미정</option>'+ST.cfg.agents.map(a=>'<option value="'+esc(a.id)+'"'+(ST.cfg.assign[st]===a.id?' selected':'')+'>'+esc(a.name)+'</option>').join('')+'</select></label>').join('')+'</section>'
+ +'<section class="panel"><h2>성적표</h2><div class="tw"><table class="stat"><thead><tr><th>에이전트</th><th>발굴</th><th>발굴→채택</th><th>분석</th><th>판정 적중</th><th>연관</th><th>연관→후보</th></tr></thead><tbody>'
+ +s.map(x=>'<tr><td><b>'+esc(x.a.name)+'</b></td><td class="num">'+x.d+'</td><td class="num">'+pct(x.dA,x.d)+'</td><td class="num">'+x.an+'</td><td class="num">'+pct(x.agree,x.dec)+'</td><td class="num">'+x.rel+'</td><td class="num">'+pct(x.relP,x.rel)+'</td></tr>').join('')
+ +'</tbody></table></div><p class="small muted">판정 적중: 「추천」한 키워드를 내가 채택했거나 「비추천」한 키워드를 제외한 비율이에요. 채택·제외로 결정한 키워드만 셉니다.</p></section>'
+ +'<section class="stack"><h2>에이전트 정보</h2>'
+ +ST.cfg.agents.map((a,i)=>{const armed=ST.armed==='agent:'+a.id;return '<div class="panel"><div class="two"><label class="f">이름<input class="inp" id="ag-name-'+i+'" data-agentf="name" data-id="'+esc(a.id)+'" value="'+esc(a.name)+'"></label><label class="f">메모 (어떤 앱인지, 잘하는 것)<input class="inp" id="ag-note-'+i+'" data-agentf="note" data-id="'+esc(a.id)+'" value="'+esc(a.note)+'" placeholder="예) 검색량 숫자를 잘 줌"></label></div>'
+ +(a.id==='claude'?'<p class="small muted">'+(SAMPLE?'이 앱 안에서 바로 실행돼요. 실행할 때 내 Claude 사용량을 써요.':'이 화면에서는 바로 실행을 쓸 수 없어요. 다른 에이전트처럼 요청문을 복사해 쓰면 돼요.')+'</p>':'<div class="row"><button class="btn danger '+(armed?'armed':'')+'" data-a="delAgent" data-id="'+esc(a.id)+'">'+(armed?'한 번 더 누르면 빠져요':'목록에서 빼기')+'</button></div>')+'</div>'}).join('')
+ +'<button class="btn line" data-a="addAgent">에이전트 추가</button></section></div>';
+}
+function settingsV(){
+ const c=ST.cfg;
+ return '<div class="stack-lg"><div class="head"><h1>설정</h1></div>'+syncNote()
+ +'<section class="panel"><h2>내 블로그</h2>'
+ +'<label class="f">블로그 주소<input class="inp" id="c-url" data-cfg="blogUrl" value="'+esc(c.blogUrl)+'" inputmode="url"></label>'
+ +'<label class="f">블로그 주제 소개 (요청문에 같이 들어가요)<textarea id="c-topics" data-cfg="topics" placeholder="예) IT·테크 정보글. 스마트폰·노트북 설정법, 앱 추천, 신제품 비교. 체험단 리뷰도 씀.">'+esc(c.topics)+'</textarea></label></section>'
+ +'<section class="panel"><h2>판정 기준</h2><div class="two">'
+ +'<label class="f">기준 월 검색량 (PC+모바일)<input class="inp num" id="c-min" data-cfg="minVol" inputmode="numeric" value="'+esc(c.minVol)+'"></label>'
+ +'<label class="f">포화도 기준 (문서수÷검색량)<input class="inp num" id="c-ratio" data-cfg="goodRatio" inputmode="decimal" value="'+esc(c.goodRatio)+'"></label></div>'
+ +'<p class="small muted">포화도가 기준 이하면 「여유 있음」, 기준의 3배까지는 「경쟁 있음」, 그 위는 「포화」로 표시돼요. 숫자가 낮을수록 글을 올렸을 때 노출될 자리가 많다는 뜻이에요.</p></section>'
+ +'<section class="panel"><h2>데이터</h2><p class="small">'+(ST.mode==='db'?'claude.ai에 저장되고 있어요. 같은 계정으로 폰과 PC에서 열면 똑같이 보여요.':'이 기기 브라우저에만 저장되고 있어요.')+'</p>'
+ +'<p class="small muted">키워드 '+ST.kws.length+'개 · 분석 '+ST.kws.reduce((s,k)=>s+k.analyses.length,0)+'개 · 연관 키워드 '+ST.kws.reduce((s,k)=>s+k.related.length,0)+'개</p>'
+ +'<button class="btn sub" data-a="toggleData">'+(ST.showData?'데이터 숨기기':'전체 데이터 보기 (백업용 복사)')+'</button>'
+ +(ST.showData?'<textarea id="dump" readonly class="prompt">'+esc(JSON.stringify({cfg:ST.cfg,keywords:ST.kws},null,1))+'</textarea><button class="btn sm" data-a="copyDump">복사</button>':'')
+ +'</section></div>';
+}
+const VIEWS={home:homeV,discover:discoverV,list:listV,detail:detailV,agents:agentsV,settings:settingsV};
+
+/* ---------- render ---------- */
+function render(){
+ if(composing){pendingRender=true;return}
+ const main=$('main'),a=document.activeElement;
+ const fid=a&&main.contains(a)?a.id:'';let s1=null,s2=null,keepVal=null;
+ if(fid){try{s1=a.selectionStart;s2=a.selectionEnd}catch(e){}if(a.dataset&&(a.dataset.kwf||a.dataset.cfg||a.dataset.agentf))keepVal=a.value}
+ main.innerHTML=(VIEWS[ST.view]||homeV)();
+ const navV=ST.view==='detail'?'list':ST.view;
+ document.querySelectorAll('.nav button').forEach(b=>{const on=b.dataset.v===navV;b.classList.toggle('on',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+ if(fid){const e=$(fid);if(e){if(keepVal!=null)e.value=keepVal;try{e.focus({preventScroll:true});if(s1!=null)e.setSelectionRange(s1,s2)}catch(x){}}}
+}
+function go(view){ST.view=view;ST.armed=null;window.scrollTo(0,0);render()}
+function openKw(id){
+ if(ST.sel!==id){ST.jobs.analyze={agent:ST.cfg.assign.analyze||null,paste:'',open:false};ST.jobs.related={agent:ST.cfg.assign.related||null,paste:'',open:false};ST.relManual=''}
+ ST.sel=id;go('detail');
+}
+
+/* ---------- actions ---------- */
+function dupKey(s){return String(s).replace(/\s/g,'').toLowerCase()}
+function findByKw(s){const d=dupKey(s);return ST.kws.find(k=>dupKey(k.kw)===d)}
+function makeKw(kw,src,vol,memo){
+ const k=normKw(newId('k'),{kw:kw,stage:'후보',src:src,memo:memo||''});
+ if(vol!=null)k.estVol=vol;
+ return k;
+}
+function addAnalysis(k,a,agent,raw){
+ const x=Object.assign({id:newId('a'),agent:agent,at:nowIso(),raw:raw||''},a);
+ k.analyses.push(normKw('t',{analyses:[x]}).analyses[0]);
+ if(k.pc==null&&k.mo==null&&k.docs==null){if(x.pc!=null)k.pc=x.pc;if(x.mo!=null)k.mo=x.mo;if(x.docs!=null)k.docs=x.docs}
+ if(k.stage==='후보')k.stage='분석됨';
+}
+function addRelated(k,items,agent){
+ let n=0;const have={};k.related.forEach(r=>have[dupKey(r.kw)]=1);have[dupKey(k.kw)]=1;
+ items.forEach(it=>{const d=dupKey(it.kw);if(!it.kw||have[d])return;have[d]=1;const ex=findByKw(it.kw);
+  k.related.push({id:newId('r'),kw:it.kw,vol:it.vol??null,memo:it.memo||'',agent:agent,at:nowIso(),promoted:ex?ex.id:''});n++});
+ return n;
+}
+function markDups(list){return list.map(p=>Object.assign(p,{dup:!!findByKw(p.kw),on:!findByKw(p.kw)}))}
+
+function readPaste(step){
+ const j=ST.jobs[step],txt=j.paste.trim();
+ if(!txt)return toast('받은 답을 먼저 붙여 넣어 주세요');
+ if(step==='discover'){j.parsed=markDups(parseList(txt));render();return}
+ const k=editKw(ST.sel);if(!k)return;
+ if(step==='analyze'){
+  const a=parseAnalysis(txt);
+  addAnalysis(k,a,j.agent,txt);saveKw(k);j.paste='';j.open=false;
+  toast(a.verdict?agentName(j.agent)+' 분석을 저장했어요':'판정을 못 읽었지만 원문은 저장했어요');
+ }else{
+  const items=parseList(txt);const n=addRelated(k,items,j.agent);saveKw(k);
+  if(n){j.paste='';j.open=false;toast('연관 키워드 '+n+'개를 넣었어요')}else toast('새로 넣을 연관 키워드가 없었어요');
+ }
+ render();
+}
+const CTL={};
+function sampleErr(e){
+ const c=e&&e.code;
+ if(c==='cancelled')return '';
+ if(c==='not_granted'||c==='sampling_disabled'||c==='not_declared'||c==='capability_disabled'||c==='capability_removed'){SAMPLE=null;return '이 화면에서는 클로드를 바로 쓸 수 없어요. 요청문을 복사해서 써 주세요.'}
+ if(c==='rate_limited')return '클로드 사용량이 잠시 꽉 찼어요. 조금 뒤에 다시 눌러 주세요.';
+ if(c==='invalid_json')return '클로드 답을 읽지 못했어요. 한 번 더 눌러 주세요.';
+ if(c==='session_expired')return 'claude.ai에 다시 로그인해 주세요.';
+ return '클로드 응답이 끊겼어요. 다시 눌러 주세요.';
+}
+async function runClaude(step){
+ if(!SAMPLE||ST.busy[step])return;
+ const k=step==='discover'?null:getKw(ST.sel);if(step!=='discover'&&!k)return;
+ const ctl=new AbortController();CTL[step]=ctl;ST.busy[step]=true;render();
+ try{
+  const res=await SAMPLE.json(promptFor(step,k,true),{signal:ctl.signal,modelTier:'default'});
+  if(step==='discover'){
+   const arr=Array.isArray(res)?res:[];
+   ST.jobs.discover.parsed=markDups(arr.filter(x=>x&&x.kw).map(x=>({kw:String(x.kw).slice(0,40),vol:numOrNull(x.vol),memo:String(x.why||'')})));
+  }else if(step==='analyze'){
+   const kk=editKw(k.id);if(!kk)throw {code:'gone'};
+   const r=res&&typeof res==='object'?res:{};
+   addAnalysis(kk,{verdict:normVerdict(r.verdict),score:numOrNull(r.score),pc:numOrNull(r.pc),mo:numOrNull(r.mo),docs:numOrNull(r.docs),comp:String(r.comp||''),intent:String(r.intent||''),title:String(r.title||''),why:String(r.why||''),est:true},'claude','');
+   saveKw(kk);ST.jobs.analyze.open=false;toast('클로드 분석을 저장했어요');
+  }else{
+   const kk=editKw(k.id);if(!kk)throw {code:'gone'};
+   const arr=Array.isArray(res)?res:[];
+   const n=addRelated(kk,arr.filter(x=>x&&x.kw).map(x=>({kw:String(x.kw).slice(0,40),vol:numOrNull(x.vol),memo:String(x.memo||'')})),'claude');
+   saveKw(kk);ST.jobs.related.open=false;toast('연관 키워드 '+n+'개를 넣었어요');
+  }
+ }catch(e){const m=sampleErr(e);if(m)toast(m)}
+ finally{ST.busy[step]=false;CTL[step]=null;render()}
+}
+
+document.addEventListener('click',e=>{
+ const el=e.target.closest('[data-a]');if(!el)return;
+ const a=el.dataset.a,id=el.dataset.id,step=el.dataset.step;
+ const wasArmed=ST.armed;if(!/^del/.test(a))ST.armed=null;
+ switch(a){
+  case 'tab':go(el.dataset.v);return;
+  case 'gostage':ST.filter.stage=el.dataset.v;go('list');return;
+  case 'open':openKw(id);return;
+  case 'back':go('list');return;
+  case 'fstage':ST.filter.stage=el.dataset.v;break;
+  case 'fsort':ST.filter.sort=el.dataset.v;break;
+  case 'pickAgent':ST.jobs[step].agent=ST.jobs[step].agent===id?null:id;break;
+  case 'toggleJob':{const j=ST.jobs[step];j.open=!j.open;if(j.open&&!j.agent)j.agent=ST.cfg.assign[step]||null;break}
+  case 'copyPrompt':copyFrom('prompt-'+step,'요청문을 복사했어요. '+agentName(ST.jobs[step].agent)+' 앱에 붙여 넣으세요');return;
+  case 'readPaste':readPaste(step);return;
+  case 'runClaude':runClaude(step);return;
+  case 'stopClaude':if(CTL[step])CTL[step].abort();return;
+  case 'clearParsed':ST.jobs.discover.parsed=null;break;
+  case 'togglePick':{const p=ST.jobs.discover.parsed&&ST.jobs.discover.parsed[+el.dataset.i];if(p&&!p.dup)p.on=el.checked;const on=ST.jobs.discover.parsed.filter(x=>x.on).length;const b=document.querySelector('[data-a="addPicked"]');if(b){b.disabled=!on;b.textContent='선택한 '+on+'개를 후보로 추가'}return}
+  case 'addPicked':{const j=ST.jobs.discover;const pick=(j.parsed||[]).filter(p=>p.on&&!findByKw(p.kw));
+   pick.slice().reverse().forEach(p=>saveKw(makeKw(p.kw,{agent:j.agent||'',step:'discover',from:''},p.vol,p.memo)));
+   j.parsed=null;j.paste='';toast(pick.length+'개를 후보로 넣었어요');break}
+  case 'addManual':{const items=parseList(ST.manual);let n=0;items.slice().reverse().forEach(p=>{if(findByKw(p.kw))return;const k=makeKw(p.kw,{agent:'',step:'manual',from:''},null,p.memo);if(p.vol!=null)k.mo=p.vol;saveKw(k);n++});
+   if(!items.length)return toast('키워드를 한 줄에 하나씩 적어 주세요');ST.manual='';toast(n?n+'개를 후보로 넣었어요':'모두 이미 있는 키워드예요');break}
+  case 'setStage':{const k=editKw(ST.sel);if(!k||k.stage===el.dataset.v)return;k.stage=el.dataset.v;saveKw(k);break}
+  case 'applyNums':{const k=editKw(ST.sel);if(!k)return;const x=k.analyses.find(y=>y.id===id);if(!x)return;if(x.pc!=null)k.pc=x.pc;if(x.mo!=null)k.mo=x.mo;if(x.docs!=null)k.docs=x.docs;saveKw(k);toast(agentName(x.agent)+'의 숫자로 바꿨어요');break}
+  case 'delAna':{if(wasArmed!=='ana:'+id){ST.armed='ana:'+id;break}ST.armed=null;const k=editKw(ST.sel);if(!k)return;k.analyses=k.analyses.filter(y=>y.id!==id);if(!k.analyses.length&&k.stage==='분석됨')k.stage='후보';saveKw(k);toast('분석을 지웠어요');break}
+  case 'delKw':{if(wasArmed!=='kw:'+ST.sel){ST.armed='kw:'+ST.sel;break}ST.armed=null;removeKw(ST.sel);toast('키워드를 지웠어요');go('list');return}
+  case 'promote':{const k=editKw(ST.sel);if(!k)return;const r=k.related.find(y=>y.id===id);if(!r)return;const ex=findByKw(r.kw);
+   if(ex){r.promoted=ex.id}else{const nk=makeKw(r.kw,{agent:r.agent,step:'related',from:k.id},r.vol,r.memo);saveKw(nk);r.promoted=nk.id}
+   saveKw(k);toast('후보에 넣었어요: '+r.kw);break}
+  case 'delRel':{const k=editKw(ST.sel);if(!k)return;k.related=k.related.filter(y=>y.id!==id);saveKw(k);break}
+  case 'addRelManual':{const k=editKw(ST.sel);if(!k)return;const items=parseList(ST.relManual);if(!items.length)return toast('연관 키워드를 적어 주세요');const n=addRelated(k,items,'');saveKw(k);ST.relManual='';toast(n?'추가했어요':'이미 있는 키워드예요');break}
+  case 'addAgent':{const ag={id:newId('g'),name:'새 에이전트',note:''};ST.cfg.agents.push(ag);saveCfg();break}
+  case 'delAgent':{if(wasArmed!=='agent:'+id){ST.armed='agent:'+id;break}ST.armed=null;ST.cfg.agents=ST.cfg.agents.filter(x=>x.id!==id);Object.keys(ST.cfg.assign).forEach(s=>{if(ST.cfg.assign[s]===id)ST.cfg.assign[s]=''});Object.keys(ST.jobs).forEach(s=>{if(ST.jobs[s].agent===id)ST.jobs[s].agent=null});saveCfg();break}
+  case 'toggleData':ST.showData=!ST.showData;break;
+  case 'copyDump':copyFrom('dump','데이터를 복사했어요');return;
+ }
+ render();
+});
+function setPath(path,val){const p=path.split('.');let o=ST;for(let i=0;i<p.length-1;i++)o=o[p[i]];o[p[p.length-1]]=val}
+document.addEventListener('compositionstart',()=>{composing=true});
+document.addEventListener('compositionend',e=>{composing=false;setTimeout(()=>{onBind(e.target);if(pendingRender){pendingRender=false;render()}},0)});
+function onBind(el){
+ if(!el||!el.dataset||!el.dataset.bind)return;
+ setPath(el.dataset.bind,el.value);
+ if(el.dataset.list){const l=$('kwlist');if(l)l.innerHTML=listBody()}
+ if(/^jobs\.discover\.(seed|notes|n)$/.test(el.dataset.bind)){const p=$('prompt-discover');if(p)p.value=promptDiscover(false)}
+}
+document.addEventListener('input',e=>{if(e.isComposing||composing){if(e.target.dataset&&e.target.dataset.bind)setPath(e.target.dataset.bind,e.target.value);return}onBind(e.target)});
+document.addEventListener('change',e=>{
+ const el=e.target;if(!el.dataset)return;
+ if(el.dataset.bind){onBind(el);return}
+ if(el.dataset.kwf){const k=editKw(ST.sel);if(!k)return;const f=el.dataset.kwf;
+  if(f==='memo'){if(k.memo===el.value)return;k.memo=el.value}else{const v=el.value.trim()===''?null:parseNum(el.value);if(k[f]===v)return;k[f]=v}
+  saveKw(k);toast('저장했어요');render();return}
+ if(el.dataset.cfg){const f=el.dataset.cfg;let v=el.value;if(f==='minVol'){v=parseNum(v);if(v==null)return toast('숫자로 적어 주세요')}if(f==='goodRatio'){v=parseFloat(v);if(!isFinite(v)||v<=0)return toast('0보다 큰 숫자로 적어 주세요')}
+  ST.cfg[f]=v;saveCfg();toast('저장했어요');render();return}
+ if(el.dataset.agentf){const ag=ST.cfg.agents.find(x=>x.id===el.dataset.id);if(!ag)return;const v=el.value.trim();if(el.dataset.agentf==='name'&&!v){el.value=ag.name;return}ag[el.dataset.agentf]=v;saveCfg();toast('저장했어요');render();return}
+ if(el.dataset.assign){ST.cfg.assign[el.dataset.assign]=el.value;if(!ST.jobs[el.dataset.assign].agent)ST.jobs[el.dataset.assign].agent=el.value||null;saveCfg();toast(el.value?STEPS[el.dataset.assign]+'은 '+agentName(el.value)+'에게 맡겨요':'미정으로 바꿨어요');render();return}
+});
+
+/* ---------- boot ---------- */
+function startLocal(){
+ ST.mode='local';ST.ready=true;const d=lsGet();
+ if(d){ST.kws=Array.isArray(d.kws)?d.kws.map(k=>normKw(k.id||newId('k'),k)):[];ST.cfg=normCfg(d.cfg)}
+ ST.jobs.discover.agent=ST.cfg.assign.discover||null;render();
+}
+async function boot(){
+ render();
+ const c=window.claude;
+ if(!c||typeof c.use!=='function'){startLocal();return}
+ c.use('sample').then(s=>{SAMPLE=s||null;render()}).catch(()=>{});
+ let db=null;try{db=await c.use('db')}catch(e){db=null}
+ if(!db){startLocal();return}
+ DB=db;ST.mode='db';render();
+ const timer=setTimeout(()=>{if(!ST.ready){ST.note='저장소에 아직 연결되지 않았어요. 인터넷 연결을 확인해 주세요.';render()}},10000);
+ let cfgSeen=false;
+ db.collection('keywords').onSnapshot(s=>{
+  ST.kws=s.docs.filter(d=>d.exists).map(d=>normKw(d.id,d.data()));
+  if(!s.metadata.fromCache){clearTimeout(timer);ST.note=''}
+  ST.ready=true;render();
+ },()=>{clearTimeout(timer);ST.note='저장소 연결이 끊겼어요. 새로고침해 주세요.';render()});
+ db.doc('config/main').onSnapshot(s=>{
+  ST.cfg=s.exists?normCfg(s.data()):clone(DEFAULT_CFG);
+  if(!cfgSeen){cfgSeen=true;if(!ST.jobs.discover.agent)ST.jobs.discover.agent=ST.cfg.assign.discover||null}
+  render();
+ },()=>{});
+}
+boot();
+})();
+</script>
