@@ -89,6 +89,7 @@
 ### `studio/written.json`
 
 - Claude가 블로그 기록(`data/post-index.jsonl`)과 노션 기작성 아카이브로 만드는 기작성 목록이에요. 직접 고치지 말아 주세요.
+- `posts`: RSS로 발행이 확인된 글 목록이에요(순위 추적용). `[{ "keyword": "메인 키워드", "title": "글 제목", "url": "https://blog.naver.com/beompercar/로그번호", "publishedAt": "YYYY-MM-DD" }]`, 최신순. Claude가 글이 발행될 때마다 같이 갱신해요.
 
 ### 작성 프롬프트
 
