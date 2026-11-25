@@ -464,6 +464,15 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
 .rec-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
 .rec-actions .btn{flex:1 1 140px;min-height:38px}
 .rec-state{border:1px dashed var(--line);border-radius:14px;padding:20px 16px;text-align:center;color:var(--text-2);font-size:13px;line-height:1.6}
+.rec-more{font-size:12.5px;color:var(--text-2)}
+.rec-more summary{cursor:pointer;font-weight:700;color:var(--text-2);padding:4px 0;min-height:32px;display:flex;align-items:center}
+.rec-subs{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:2px}
+.rec-subs li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line-2);padding:4px 0}
+.rec-subs b{font-variant-numeric:tabular-nums;color:var(--text)}
+.rec-ac{margin:8px 0 0;line-height:1.5;overflow-wrap:anywhere}
+.rec-posts{margin:8px 0 0;padding-left:18px;line-height:1.5}
+.rec-posts a{color:var(--text);overflow-wrap:anywhere}
+.rec-hidden{grid-column:1/-1;margin:2px 0 0;font-size:12px;color:var(--text-3);line-height:1.5}
 .rec-state strong{display:block;color:var(--text);font-weight:800;margin-bottom:4px}
 @media (min-width:880px){
   .rec-grid{grid-template-columns:1fr 1fr;gap:12px}
@@ -1102,7 +1111,25 @@ function statHtml(label, value, sub, accent){
 /* ── 블톡 추천 키워드 ───────────────────── */
 var REC_URL = './recommendations.json';
 var REC_REQUEST_TEXT = '블톡에서 S급·A급 키워드 새로 찾아서 스튜디오에 올려줘';
-var rec = { loading:false, loaded:false, error:'', data:null };
+var WRITTEN_URL = './written.json';
+var rec = { loading:false, loaded:false, error:'', data:null, written:null };
+
+function normK(s){ return String(s == null ? '' : s).replace(/\s+/g,'').toLowerCase(); }
+function writtenHit(kw){
+  var w = rec.written; if(!w) return '';
+  var k = normK(kw); if(!k) return '';
+  for(var i=0;i<w.keywords.length;i++){ if(normK(w.keywords[i]) === k) return w.keywords[i]; }
+  for(var j=0;j<w.titles.length;j++){ if(normK(w.titles[j]).indexOf(k) !== -1) return w.titles[j]; }
+  return '';
+}
+function loadWritten(){
+  return fetch(WRITTEN_URL + '?t=' + Date.now(), { cache:'no-store' })
+    .then(function(res){ return res.ok ? res.json() : null; })
+    .then(function(d){
+      if(d && Array.isArray(d.keywords) && Array.isArray(d.titles)) rec.written = { keywords:d.keywords, titles:d.titles };
+    })
+    .catch(function(){});
+}
 
 function recPct(v){
   var n = Number(v);
@@ -1118,7 +1145,8 @@ function loadRecs(announce){
   if(rec.loading) return;
   rec.loading = true; rec.error = '';
   renderRecs();
-  fetch(REC_URL + '?t=' + Date.now(), { cache:'no-store' })
+  loadWritten()
+    .then(function(){ return fetch(REC_URL + '?t=' + Date.now(), { cache:'no-store' }); })
     .then(function(res){
       if(!res.ok) throw new Error('HTTP ' + res.status);
       return res.json();
@@ -1163,11 +1191,19 @@ function renderRecs(){
   }
   if(!rec.data) return;
   var d = rec.data;
-  var sCount = d.items.filter(function(i){ return String(i.grade).indexOf('S') === 0; }).length;
-  var aCount = d.items.length - sCount;
+  var shown = [], hidden = [];
+  d.items.forEach(function(it, i){ (writtenHit(it.keyword) ? hidden : shown).push({ it:it, i:i }); });
+  var sCount = shown.filter(function(x){ return String(x.it.grade).indexOf('S') === 0; }).length;
+  var aCount = shown.length - sCount;
   meta.innerHTML = '마지막 업데이트 <b>' + esc(d.updatedAt || '—') + '</b> · ' + esc(d.source) +
-    ' · ' + d.items.length + '개 (S급 ' + sCount + ' · A급 ' + aCount + ')';
-  box.innerHTML = d.items.map(recCard).join('');
+    ' · ' + shown.length + '개 (S급 ' + sCount + ' · A급 ' + aCount + ')';
+  var html = shown.map(function(x){ return recCard(x.it, x.i); }).join('');
+  if(!shown.length) html = '<div class="rec-state"><strong>새로 쓸 추천 키워드가 없어요</strong>추천 키워드가 모두 이미 쓴 글과 겹쳐요. <b>키워드 찾기 요청</b>을 눌러 주세요.</div>';
+  if(hidden.length){
+    html += '<p class="rec-hidden">이미 쓴 글과 겹쳐서 숨긴 키워드 ' + hidden.length + '개: ' +
+      hidden.map(function(x){ return esc(x.it.keyword); }).join(', ') + '</p>';
+  }
+  box.innerHTML = html;
 }
 function recCard(it, i){
   var g = String(it.grade || '');
@@ -1187,32 +1223,49 @@ function recCard(it, i){
     (tags.length ? '<div class="rec-extra">' + tags.map(function(t){
       return '<span class="rec-tag">' + esc(t) + '</span>';
     }).join('') + '</div>' : '') +
+    recDetails(it) +
     '<div class="rec-actions">' +
       '<button class="btn primary sm" data-act="rec-write" data-idx="' + i + '">이 키워드로 작성하기</button>' +
       '<button class="btn ghost sm" data-act="rec-save" data-idx="' + i + '">보관함에 담기</button>' +
     '</div></article>';
 }
+function recSubs(it){ return Array.isArray(it.subKeywords) ? it.subKeywords.filter(function(s){ return s && String(s.keyword||'').trim(); }) : []; }
+function recList(v){ return Array.isArray(v) ? v.map(function(x){ return String(x||'').trim(); }).filter(Boolean) : []; }
+function recPosts(it){ return Array.isArray(it.topPosts) ? it.topPosts.filter(function(p){ return p && String(p.url||'').trim(); }) : []; }
+function recDetails(it){
+  var subs = recSubs(it), ac = recList(it.autocomplete), posts = recPosts(it);
+  if(!subs.length && !ac.length && !posts.length) return '';
+  var h = '<details class="rec-more"><summary>세부 키워드 ' + subs.length + ' · 자동완성 ' + ac.length + ' · 상위 글 ' + posts.length + '</summary>';
+  if(subs.length) h += '<ul class="rec-subs">' + subs.map(function(s){
+    return '<li><span>' + esc(s.keyword) + '</span><b>' + (s.monthlySearch != null ? num(s.monthlySearch) : '—') + '</b></li>';
+  }).join('') + '</ul>';
+  if(ac.length) h += '<p class="rec-ac">자동완성: ' + ac.map(esc).join(', ') + '</p>';
+  if(posts.length) h += '<ol class="rec-posts">' + posts.map(function(p){
+    return '<li><a href="' + esc(p.url) + '" target="_blank" rel="noopener">' + esc(p.title || p.url) + '</a></li>';
+  }).join('') + '</ol>';
+  return h + '</details>';
+}
 function buildRecPrompt(it){
-  var name = state.cfg.blogName || DEFAULT_CFG.blogName;
   var lines = [];
-  lines.push('아래 키워드로 ' + name + ' 블로그에 올릴 글을 작성해 주세요.');
+  lines.push('정보글 작성해줘. 블톡 키워드는 아래와 같아. CLAUDE.md 규칙대로 조사하고 네이버 임시저장까지 해줘.');
   lines.push('');
-  lines.push('[키워드 정보 · 블톡 분석]');
-  lines.push('- 키워드: ' + it.keyword);
-  lines.push('- 등급: ' + it.grade + ' · 진입 가능성 ' + (it.entry || '-') + ' · 진입 속도 ' + (it.speed || '-'));
-  lines.push('- 월 검색량: ' + num(it.monthlySearch) + '회');
-  if(it.monthlyPublish != null) lines.push('- 월 발행량: ' + num(it.monthlyPublish) + '건');
-  lines.push('- 콘텐츠 포화도: ' + recPct(it.saturation));
-  if(it.reason) lines.push('- 분석 요약: ' + it.reason);
-  lines.push('');
-  lines.push('[요청]');
-  lines.push('1. 네이버 통합검색 상위노출을 목표로, 이 키워드의 상위 9개 문서를 먼저 분석해 경쟁 구도·문서 유형·빈틈을 정리해 주세요.');
-  lines.push('2. 상위 글이 다루지 않은 각도(비교표, 체크리스트, 자주 겪는 실패, 최신 일정·가격)를 최소 2개 넣어 차별화해 주세요.');
-  lines.push('3. 1인 IT 블로거가 직접 써 본 담백한 톤으로 써 주세요. 과장·광고 문구와 "저희" 같은 업체 말투는 쓰지 마세요.');
-  lines.push('4. 제목 후보 3개(키워드를 앞쪽에 배치, 30자 이내)를 먼저 제안해 주세요.');
-  lines.push('5. 본문은 소제목 4~6개, 비교표 1개 이상, 이미지 넣을 자리 표시([사진1 - 설명])를 포함해 주세요.');
-  lines.push('6. 마지막에 3줄 요약과 함께 확인해야 할 주의사항을 넣어 주세요.');
-  lines.push('7. 분량은 공백 포함 2,000자 이상으로 작성해 주세요.');
+  lines.push('[메인 키워드]');
+  lines.push('- ' + it.keyword + ' · ' + it.grade + ' · 월 검색 ' + num(it.monthlySearch) +
+    (it.monthlyPublish != null ? ' · 월 발행 ' + num(it.monthlyPublish) : '') + ' · 포화도 ' + recPct(it.saturation));
+  if(it.reason) lines.push('- 블톡 메모: ' + it.reason);
+  var subs = recSubs(it);
+  if(subs.length){
+    lines.push('');
+    lines.push('[세부 키워드 · 월 검색량]');
+    subs.forEach(function(s){ lines.push('- ' + s.keyword + (s.monthlySearch != null ? ' ' + num(s.monthlySearch) : '')); });
+  }
+  var ac = recList(it.autocomplete);
+  if(ac.length){ lines.push(''); lines.push('[네이버 자동완성]'); lines.push('- ' + ac.join(', ')); }
+  var posts = recPosts(it);
+  if(posts.length){
+    lines.push(''); lines.push('[상위 글]');
+    posts.forEach(function(p){ lines.push('- ' + (p.title ? p.title + ' ' : '') + p.url); });
+  }
   return lines.join('\n');
 }
 function recByIdx(i){
@@ -1406,29 +1459,14 @@ function doneCard(k){
 
 /* ── 프롬프트 ─────────────────────────── */
 function buildPrompt(k){
-  var c = comp(k);
   var lines = [
-    '네이버 블로그 글 하나를 써 주세요.',
+    '정보글 작성해줘. 키워드는 아래와 같아. CLAUDE.md 규칙대로 블톡 세부 키워드부터 조사하고 네이버 임시저장까지 해줘.',
     '',
-    '## 키워드',
-    '- 키워드: ' + k.kw,
-    '- 월간 검색량: ' + num(vol(k)) + '회 (' + (k.vol != null ? '합계' : 'PC ' + num(k.pc) + ' · 모바일 ' + num(k.mo)) + ')',
-    '- 블로그 문서 수: ' + num(k.docs) + '건 · 경쟁강도 ' + (c == null ? '-' : c.toFixed(2)) + ' (' + gradeOf(k) + ')',
-    '- 내 블로그 레벨: ' + state.cfg.level
+    '[메인 키워드]',
+    '- ' + k.kw + ' · 월 검색 ' + num(vol(k)) + ' · 블로그 문서 ' + num(k.docs) + ' · 경쟁강도 ' + compText(k) + ' (' + gradeOf(k) + ')'
   ];
   if(k.title.trim()) lines.push('- 제목 아이디어: ' + k.title.trim());
-  if(k.memo.trim()) lines.push('- 참고 메모: ' + k.memo.trim());
-  lines = lines.concat([
-    '',
-    '## 작성 조건',
-    "1. '" + (state.cfg.blogName || '내 블로그') + "'에 올릴 IT 정보글. 1인 블로거가 직접 해보고 정리한 담백한 말투로, 2,000자 이상.",
-    '2. 검색한 사람이 바로 따라 할 수 있게 실제 화면 순서대로 쓰고, 메뉴 경로는 정확히 적어 주세요.',
-    '3. 소제목 4~6개로 나누고, 단계마다 무엇을 누르고 무엇이 보이는지 구체적으로 써 주세요.',
-    '4. 상위 글과 똑같은 구성은 피하고, 초보가 헷갈리는 부분을 한두 군데 짚어 주세요.',
-    '5. 마지막에 3줄 요약과 주의할 점을 넣어 주세요.',
-    '6. 제목 후보도 3개 함께 제안해 주세요.',
-    '7. 홍보 문구·과장·이모지 남발 없이. 맨 끝은 "감사합니다."로 마무리.'
-  ]);
+  if(k.memo.trim()) lines.push('- 메모: ' + k.memo.trim());
   return lines.join('\n');
 }
 function copyText(text){
