@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-25 22:03",
+  "updatedAt": "2026-11-25 22:04",
   "source": "블톡",
   "sourceUrl": "https://beta.blogtalk.io/service/keyword-analysis",
   "sourceNote": "블톡 키워드 분석(카테고리 IT·컴퓨터, 최근 30일 집계) 2026-11-25 재수집 · 기작성 키워드 제외 후 S급 4·A급 10",
@@ -773,10 +773,6 @@
         {
           "keyword": "네이버keep 공유방법",
           "monthlySearch": 40
-        },
-        {
-          "keyword": "네이버keepo",
-          "monthlySearch": 30
         }
       ],
       "autocomplete": [
