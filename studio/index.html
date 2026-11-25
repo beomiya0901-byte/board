@@ -216,6 +216,9 @@ main{padding:14px 0 8px}
 .rank-delta.down{color:var(--bad)}
 .rank-delta.new{color:var(--brand)}
 .rank-time{font-size:11px;color:var(--text-3);font-weight:600}
+.src-tag{font-size:10.5px;font-weight:700;color:var(--text-3);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:3px 6px;white-space:nowrap}
+.more-wrap{display:flex;justify-content:center;margin-top:10px}
+.more-note{font-size:11.5px;color:var(--text-3);margin-top:8px;text-align:center}
 .rank-bar{
   display:flex;align-items:center;gap:8px;flex-wrap:wrap;
   margin:0 0 12px;padding:9px 11px;border-radius:14px;
@@ -1224,12 +1227,11 @@ function renderHome(){
   var kws = state.kws;
   var adopted = kws.filter(function(k){ return k.status === '채택'; });
   var waiting = adopted.filter(function(k){ return !!(k.title.trim() || k.dueDate); });
-  var done = kws.filter(function(k){ return k.status === '발행완료'; });
   document.getElementById('home-stats').innerHTML = [
     statHtml('전체 키워드', kws.length, '보관함 전체', false),
     statHtml('채택', adopted.length, '글 쓸 후보', true),
     statHtml('발행대기', waiting.length, '제목·일정 입력됨', false),
-    statHtml('발행완료', done.length, '블로그에 올림', false)
+    statHtml('발행완료', doneMerged().total, '블로그에 올림', false)
   ].join('');
 
   var pool = adopted.slice().sort(function(a,b){
@@ -1267,23 +1269,48 @@ function statHtml(label, value, sub, accent){
 var REC_URL = './recommendations.json';
 var REC_REQUEST_TEXT = '블톡에서 S급·A급 키워드 새로 찾아서 스튜디오에 올려줘';
 var WRITTEN_URL = './written.json';
-var rec = { loading:false, loaded:false, error:'', data:null, written:null };
+var rec = { loading:false, loaded:false, error:'', data:null, written:null, writtenErr:'', writtenAt:'' };
+var writtenTask = null;
 
 function normK(s){ return String(s == null ? '' : s).replace(/\s+/g,'').toLowerCase(); }
+function logNoOf(u){
+  var m = /blog\.naver\.com\/[\w.-]+\/(\d+)/.exec(String(u == null ? '' : u));
+  return m ? m[1] : '';
+}
+function isWrittenPost(p){
+  return !!p && typeof p === 'object' && String(p.keyword == null ? '' : p.keyword).trim() !== '';
+}
+function writtenPosts(){ return (rec.written && Array.isArray(rec.written.posts)) ? rec.written.posts : []; }
 function writtenHit(kw){
   var w = rec.written; if(!w) return '';
   var k = normK(kw); if(!k) return '';
-  for(var i=0;i<w.keywords.length;i++){ if(normK(w.keywords[i]) === k) return w.keywords[i]; }
-  for(var j=0;j<w.titles.length;j++){ if(normK(w.titles[j]).indexOf(k) !== -1) return w.titles[j]; }
+  var kws = Array.isArray(w.keywords) ? w.keywords : [], tts = Array.isArray(w.titles) ? w.titles : [];
+  for(var i=0;i<kws.length;i++){ if(normK(kws[i]) === k) return kws[i]; }
+  for(var j=0;j<tts.length;j++){ if(normK(tts[j]).indexOf(k) !== -1) return tts[j]; }
   return '';
 }
+/* written.json = 블로그에 이미 올린 글 목록(발행 완료 탭·순위 집계에 함께 쓴다). */
 function loadWritten(){
-  return fetch(WRITTEN_URL + '?t=' + Date.now(), { cache:'no-store' })
-    .then(function(res){ return res.ok ? res.json() : null; })
+  if(writtenTask) return writtenTask;
+  writtenTask = fetch(WRITTEN_URL + '?t=' + Date.now(), { cache:'no-store' })
+    .then(function(res){ if(!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
     .then(function(d){
-      if(d && Array.isArray(d.keywords) && Array.isArray(d.titles)) rec.written = { keywords:d.keywords, titles:d.titles };
+      if(!d || typeof d !== 'object') throw new Error('형식을 읽지 못했어요');
+      var kws = Array.isArray(d.keywords) ? d.keywords : [];
+      var tts = Array.isArray(d.titles) ? d.titles : [];
+      var posts = Array.isArray(d.posts) ? d.posts.filter(isWrittenPost).map(function(p){
+        return { keyword:String(p.keyword).trim(), title:String(p.title || '').trim(),
+                 url:String(p.url || '').trim(),
+                 publishedAt:isDate(p.publishedAt) ? p.publishedAt : '' };
+      }) : [];
+      if(!kws.length && !tts.length && !posts.length) throw new Error('내용이 비어 있어요');
+      rec.written = { keywords:kws, titles:tts, posts:posts, updatedAt:String(d.updatedAt || '') };
+      rec.writtenAt = String(d.updatedAt || '');
+      rec.writtenErr = '';
     })
-    .catch(function(){});
+    .catch(function(err){ rec.writtenErr = String((err && err.message) || '불러오지 못했어요'); })
+    .then(function(){ writtenTask = null; });
+  return writtenTask;
 }
 
 function recPct(v){
@@ -1300,7 +1327,7 @@ function loadRecs(announce){
   if(rec.loading) return;
   rec.loading = true; rec.error = '';
   renderRecs();
-  loadWritten()
+  (rec.written ? Promise.resolve() : loadWritten())
     .then(function(){ return fetch(REC_URL + '?t=' + Date.now(), { cache:'no-store' }); })
     .then(function(res){
       if(!res.ok) throw new Error('HTTP ' + res.status);
@@ -1556,37 +1583,76 @@ function kwCard(k){
 }
 
 /* ── 글감 ─────────────────────────────── */
+var WRITTEN_PAGE = 20;                /* written.json 발행 기록은 처음에 이만큼만 보여준다 */
+var writtenMore = { open:false };
+
+/* 발행 완료 목록 = 보관함의 발행완료 + written.json posts(중복 제외) */
+function doneMerged(){
+  var local = state.kws.filter(function(k){ return k.status === '발행완료'; });
+  local.sort(function(a,b){ return String(b.publishedAt || b.updatedAt).localeCompare(String(a.publishedAt || a.updatedAt)); });
+  var usedKw = {}, usedUrl = {};
+  state.kws.forEach(function(k){
+    var ln0 = logNoOf(k.url);
+    if(ln0) usedUrl[ln0] = 1;                       /* 같은 글 URL 은 중복 */
+    if(k.status === '발행완료' && !ln0){ var nk0 = normK(k.kw); if(nk0) usedKw[nk0] = 1; }
+  });
+  var posts = writtenPosts().slice().sort(function(a,b){
+    var da = a.publishedAt || '', db = b.publishedAt || '';
+    if(da !== db) return da < db ? 1 : -1;
+    return 0;
+  }).filter(function(p){
+    var ln = logNoOf(p.url), nk = normK(p.keyword);
+    if(ln){
+      if(usedUrl[ln]) return false;
+      usedUrl[ln] = 1;
+      return true;
+    }
+    if(nk && usedKw[nk]) return false;
+    if(nk) usedKw[nk] = 1;
+    return true;
+  });
+  return { local: local, posts: posts, total: local.length + posts.length };
+}
 function renderWrite(){
   var wait = state.kws.filter(function(k){ return k.status === '채택'; });
-  var done = state.kws.filter(function(k){ return k.status === '발행완료'; });
+  var done = doneMerged();
   wait.sort(function(a,b){
     var da = isDate(a.dueDate) ? a.dueDate : '9999-99-99';
     var db = isDate(b.dueDate) ? b.dueDate : '9999-99-99';
     if(da !== db) return da < db ? -1 : 1;
     return String(b.updatedAt).localeCompare(String(a.updatedAt));
   });
-  done.sort(function(a,b){ return String(b.publishedAt || b.updatedAt).localeCompare(String(a.publishedAt || a.updatedAt)); });
 
   var html = '';
-  if(!state.kws.length){
+  if(!state.kws.length && !done.total){
     html += '<div class="empty">' +
       '<div class="e-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10a2.5 2.5 0 0 0-3.5-3.5L4.5 16.5z"/><path d="M13.5 6.5L17.5 10.5"/></svg></div>' +
       '<strong>아직 글감이 없어요</strong><p>키워드 탭에서 채택한 키워드가<br>여기에 글감 카드로 모여요.</p>' +
       '<button class="btn primary" data-act="tab" data-tab="keywords">키워드 탭으로</button></div>';
-  } else if(!wait.length){
-    html += '<div class="empty"><strong>발행 대기 중인 글감이 없어요</strong>' +
-      '<p>키워드 탭에서 <b>글감으로</b>를 누르거나<br>상태를 <b>채택</b>으로 바꿔 보세요.</p>' +
-      '<button class="btn primary" data-act="tab" data-tab="keywords">키워드 보기</button></div>';
-  } else {
+  } else if(wait.length){
     html += '<div class="section-head" style="margin-top:2px"><div><h2 style="font-size:15px">발행 대기</h2>' +
       '<p>제목과 일정을 채우면 발행대기로 집계돼요</p></div><span class="count-label">' + wait.length + '개</span></div>';
     html += '<div class="write-grid">' + wait.map(writeCard).join('') + '</div>';
+  } else if(!done.total){
+    html += '<div class="empty"><strong>발행 대기 중인 글감이 없어요</strong>' +
+      '<p>키워드 탭에서 <b>글감으로</b>를 누르거나<br>상태를 <b>채택</b>으로 바꿔 보세요.</p>' +
+      '<button class="btn primary" data-act="tab" data-tab="keywords">키워드 보기</button></div>';
   }
 
-  if(done.length){
+  if(done.total){
+    var shown = writtenMore.open ? done.posts : done.posts.slice(0, WRITTEN_PAGE);
+    var rest = done.posts.length - shown.length;
     html += '<section class="section"><div class="section-head"><div><h2 style="font-size:15px">발행 완료</h2>' +
-      '<p>올린 글을 기록해 두면 나중에 찾기 쉬워요</p></div><span class="count-label">' + done.length + '개</span></div>' +
-      '<div class="write-grid">' + done.map(doneCard).join('') + '</div></section>';
+      '<p>올린 글을 기록해 두면 나중에 찾기 쉬워요</p></div><span class="count-label">' + done.total + '개</span></div>' +
+      '<div class="write-grid">' + done.local.map(doneCard).join('') + shown.map(writtenCard).join('') + '</div>';
+    if(!rec.written) html += '<p class="more-note">' +
+      (rec.writtenErr ? 'written.json 발행 기록을 불러오지 못했어요' : 'written.json 발행 기록을 불러오는 중…') + '</p>';
+    if(rest > 0){
+      html += '<div class="more-wrap"><button class="btn ghost sm" data-act="written-more">나머지 ' + rest + '편 더 보기</button></div>';
+    }else if(writtenMore.open && done.posts.length > WRITTEN_PAGE){
+      html += '<div class="more-wrap"><button class="btn ghost sm" data-act="written-more">접기</button></div>';
+    }
+    html += '</section>';
   }
   document.getElementById('write-body').innerHTML = html;
   renderRankBar();
@@ -1626,6 +1692,18 @@ function doneCard(k){
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9"/><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>' +
       '글 열기</a>' : '') +
     '<button class="btn ghost sm" data-act="unpublish" data-id="' + k.id + '">발행 취소</button>' +
+  '</article>';
+}
+/* written.json 에서 온 발행 기록 카드 — 로컬 글감이 아니라 발행 취소·수정 버튼은 두지 않는다. */
+function writtenCard(p){
+  return '<article class="card done-card">' +
+    '<div class="dc-main"><h3>' + esc(p.title || p.keyword) + '</h3>' +
+      '<p>' + esc(p.keyword) + ' · ' + (isDate(p.publishedAt) ? fmtDate(p.publishedAt) + ' 발행' : '발행일 미기록') + '</p>' +
+      rankRowHtml({ id:'', kw:p.keyword }) + '</div>' +
+    (p.url ? '<a class="wc-url" href="' + esc(p.url) + '" target="_blank" rel="noopener">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9"/><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>' +
+      '글 열기</a>' : '') +
+    '<span class="src-tag" title="written.json 발행 기록">written.json</span>' +
   '</article>';
 }
 
@@ -2299,10 +2377,12 @@ function rankFileUrl(withRef){
 }
 function rankFor(k){
   if(!k || !ranks.items) return null;
-  var e = ranks.items[k.id];
-  if(e && typeof e === 'object') return e;
-  e = ranks.items[normK(k.kw)];
-  return (e && typeof e === 'object') ? e : null;
+  if(k.id){
+    var e = ranks.items[k.id];
+    if(e && typeof e === 'object') return e;
+  }
+  var nk = ranks.items[normK(k.kw)];
+  return (nk && typeof nk === 'object') ? nk : null;
 }
 function fmtCheckedAt(s){
   var m = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/.exec(String(s == null ? '' : s));
@@ -2341,10 +2421,18 @@ function rankRowHtml(k){
     (t ? '<span class="rank-time">' + t + ' 기준</span>' : '') +
   '</div>';
 }
+/* 순위 집계 대상 = 보관함 발행 기록 + written.json 발행 기록(중복 제외) */
+function rankTargets(){
+  var list = [];
+  (state.kws || []).forEach(function(k){
+    if(k.status === '발행완료' || String(k.url || '').trim()) list.push(k);
+  });
+  doneMerged().posts.forEach(function(p){ list.push({ id:'', kw:p.keyword }); });
+  return list;
+}
 function rankStats(){
   var exposed = [], out = { total:0, exposed:0, none:0, pending:0, best:null };
-  (state.kws || []).forEach(function(k){
-    if(!(k.status === '발행완료' || String(k.url || '').trim())) return;
+  rankTargets().forEach(function(k){
     out.total++;
     var e = rankFor(k);
     if(!e){ out.pending++; return; }
@@ -2530,6 +2618,7 @@ document.addEventListener('click', function(e){
   }
   if(act === 'publish'){ openPublish(id); return; }
   if(act === 'rank-refresh'){ loadRankings({ manual:true }); return; }
+  if(act === 'written-more'){ writtenMore.open = !writtenMore.open; renderWrite(); return; }
   if(act === 'unpublish'){
     var uk = byId(id); if(!uk) return;
     uk.status = '채택'; uk.url = ''; uk.publishedAt = ''; uk.updatedAt = new Date().toISOString();
@@ -2706,6 +2795,7 @@ bindSettings();
 renderSettings();
 refresh();
 setTab('home');
+loadWritten().then(function(){ renderHome(); if(ui.tab === 'write') renderWrite(); });
 loadRecs();
 initSync();
 })();
