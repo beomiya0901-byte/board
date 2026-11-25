@@ -915,7 +915,7 @@ function onBind(el){
 document.addEventListener('input',e=>{if(e.isComposing||composing){if(e.target.dataset&&e.target.dataset.bind)setPath(e.target.dataset.bind,e.target.value);return}onBind(e.target)});
 document.addEventListener('change',e=>{
  const el=e.target;if(!el.dataset)return;
- if(el.dataset.bind){onBind(el);return}
+ if(el.dataset.bind){if(el.dataset.list){setPath(el.dataset.bind,el.value)}else{onBind(el)}return}
  if(el.dataset.kwf){const k=editKw(ST.sel);if(!k)return;const f=el.dataset.kwf;
   if(f==='memo'||f==='titles'||f==='must'){if(k[f]===el.value)return;k[f]=el.value}else{const v=el.value.trim()===''?null:parseNum(el.value);if(k[f]===v)return;k[f]=v}
   saveKw(k);toast('저장했어요');render();return}
