@@ -414,7 +414,7 @@ function discoverV(){
  +'<label class="f">개수<select id="d-n" data-bind="jobs.discover.n">'+['10','15','20','30'].map(n=>'<option'+(j.n===n?' selected':'')+'>'+n+'</option>').join('')+'</select></label></div></section>'
  +'<section class="panel"><div class="row between"><h2>누구에게 맡길까요</h2></div>'+agentChips('discover')+jobBody('discover',null)+'</section>'
  +parsed
- +'<section class="panel"><h2>직접 넣기</h2><p class="small muted">이미 아는 키워드는 한 줄에 하나씩 적으세요. 「키워드 | 검색량」으로 적으면 검색량도 같이 들어가요.</p><textarea id="manual" data-bind="manual" placeholder="아이폰 배터리 성능 확인&#10;윈도우11 업데이트 끄기 | 12000">'+esc(ST.manual)+'</textarea><button class="btn sub" data-a="addManual">후보로 추가</button></section>'
+ +'<section class="panel"><div class="row between"><h2>직접 넣기</h2><a class="small" href="https://beta.blogtalk.io/" target="_blank" rel="noopener">블로그톡 열기</a></div><p class="small muted">이미 아는 키워드는 한 줄에 하나씩 적으세요. 「키워드 | 검색량」으로 적으면 검색량도 같이 들어가요. 블로그톡 같은 도구에서 표를 복사해 붙여 넣어도 돼요.</p><textarea id="manual" data-bind="manual" placeholder="아이폰 배터리 성능 확인&#10;윈도우11 업데이트 끄기 | 12000">'+esc(ST.manual)+'</textarea><button class="btn sub" data-a="addManual">후보로 추가</button></section>'
  +'</div>';
 }
 function listV(){
@@ -456,7 +456,7 @@ function detailV(){
  +'<div class="metric"><span>합계 검색량</span><b>'+fmt(t)+'</b>'+(t==null&&k.estVol!=null?'<span class="small muted">에이전트 예상 ≈'+fmt(k.estVol)+'</span>':'')+(t!=null?'<span class="pill '+volCls(t)+'" style="align-self:flex-start">'+(t>=ST.cfg.minVol?'기준 넘음':'기준 미달')+'</span>':'')+'</div>'
  +'<div class="metric"><span>포화도 (문서수÷검색량)</span><b>'+(r==null?'—':r.toFixed(2))+'</b>'+(r!=null?'<span class="pill '+ratioCls(r)+'" style="align-self:flex-start">'+(ratioCls(r)==='good'?'여유 있음':ratioCls(r)==='warn'?'경쟁 있음':'포화')+'</span>':'')+'</div>'
  +'</div>'
- +'<div class="links"><a href="https://search.naver.com/search.naver?query='+q+'" target="_blank" rel="noopener">네이버 검색</a><a href="https://search.naver.com/search.naver?ssc=tab.blog.all&amp;query='+q+'" target="_blank" rel="noopener">블로그 탭</a><a href="https://datalab.naver.com/keyword/trendSearch.naver" target="_blank" rel="noopener">데이터랩</a><a href="https://searchad.naver.com/" target="_blank" rel="noopener">검색광고 키워드도구</a></div></section>'
+ +'<div class="links"><a href="https://search.naver.com/search.naver?query='+q+'" target="_blank" rel="noopener">네이버 검색</a><a href="https://search.naver.com/search.naver?ssc=tab.blog.all&amp;query='+q+'" target="_blank" rel="noopener">블로그 탭</a><a href="https://datalab.naver.com/keyword/trendSearch.naver" target="_blank" rel="noopener">데이터랩</a><a href="https://searchad.naver.com/" target="_blank" rel="noopener">검색광고 키워드도구</a><a href="https://beta.blogtalk.io/" target="_blank" rel="noopener">블로그톡</a></div></section>'
  // analysis
  +'<section class="panel"><div class="row between"><h2>분석 '+k.analyses.length+'</h2>'+(k.analyses.length?'<span class="small muted">추천 '+vc.추천+' · 보통 '+vc.보통+' · 비추천 '+vc.비추천+'</span>':'')+'</div>'
  +k.analyses.slice().reverse().map(a=>anaCard(k,a)).join('')
