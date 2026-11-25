@@ -18,6 +18,24 @@ description: 사용자의 크롬(Claude in Chrome)으로 블로그톡을 직접 
 - `/blogtalk-fill 갤럭시 배터리` 처럼 씨앗을 주면 → 그 씨앗으로 자동 발굴
 - "대기열만" → 대기열 처리만
 
+## 블로그톡 사용법 익히기 (처음 한 번)
+
+같은 폴더에 `blogtalk-guide.md` 가 없으면, 발굴 전에 먼저 사용법을 익힌다.
+가이드 세부 페이지는 로그인해야 보이므로 사용자의 크롬(로그인된 상태)으로 하나씩 연다.
+
+1. https://beta.blogtalk.io/guide 를 열고, 아래 가이드를 차례로 눌러 끝까지 읽는다.
+   - 키워드: `/guide/keyword-analysis.html`(키워드 분석), `/guide/keyword-recommendations`(키워드 추천),
+     `/guide/keyword-list`(키워드 리스트), `/guide/keyword-storage`(키워드 저장소)
+   - 채널: `/guide/valid-keywords`(유효키워드 리스트), `/guide/blog-analysis`(블로그 분석)
+   - 인플루언서: `/guide/keyword-planner`(키워드챌린지 플래너), `/guide/challenge-list.html`
+   - `/guide/faq.html`, `/guide/membership-info`(내 멤버십에서 쓸 수 있는 기능과 사용량 한도)
+2. 읽은 내용을 `blogtalk-guide.md` 로 정리한다: 각 기능의 서비스 주소(`/service/...`), 화면에 나오는 지표와 뜻
+   (키워드 등급·진입 가능성·진입 속도·콘텐츠 포화도·유효키워드 등), 검색·필터 방법, 사용량 한도.
+   특히 **키워드 추천**(`/service/keyword-recommend`)과 **키워드 리스트**(`/service/keyword-list`)로
+   조건에 맞는 키워드를 한 번에 뽑는 방법을 자세히 적는다. 자동 발굴은 이 두 화면을 먼저 쓴다.
+3. 정리한 파일을 사용자에게 요약해 보여 주고, 커밋해 둔다. 이후 실행에서는 이 파일을 먼저 읽고 따른다.
+   블로그톡 화면이 바뀌어 가이드와 다르면 파일을 고친다.
+
 ## 준비
 
 1. `ArtifactData` 도구를 쓴다(필요하면 ToolSearch로 불러온다).
@@ -36,6 +54,9 @@ description: 사용자의 크롬(Claude in Chrome)으로 블로그톡을 직접 
   (IT·테크라면 예: 스마트폰 설정법, PC 오류 해결, 앱·프로그램 사용법, 신제품 비교처럼 정보 검색 수요가 꾸준한 주제)
 
 ### 2. 블로그톡에서 넓히기
+먼저 `blogtalk-guide.md` 에 정리한 **키워드 추천 / 키워드 리스트** 화면에서 씨앗·주제로 조건(검색량, 포화도, 등급)을
+걸어 후보를 한 번에 뽑는다. 거기서 충분히 나오지 않으면 아래처럼 키워드 맵을 따라간다.
+
 씨앗마다:
 1. 블로그톡 검색창에 씨앗을 넣어 분석 결과 화면을 연다. 처음 찾은 결과 URL 규칙을 기억해 다음부터 URL로 바로 연다.
 2. **키워드 맵** 표(키워드 · 월 검색량 · 월 발행량 · 콘텐츠 포화도 · 광고 경쟁)를 끝까지 스크롤해 모두 읽는다.
