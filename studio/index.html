@@ -186,6 +186,8 @@ const STEPS={discover:'키워드 발굴',analyze:'키워드 분석',related:'연
 const DEFAULT_CFG={
  blogUrl:'https://blog.naver.com/beompercar',
  topics:'IT·테크 정보글',
+ seeds:'',
+ autoMax:10,
  minVol:30000,
  goodPct:20,
  agents:[
@@ -235,6 +237,8 @@ function normCfg(d){
  d=d||{};const c=clone(DEFAULT_CFG);
  if(typeof d.blogUrl==='string')c.blogUrl=d.blogUrl;
  if(typeof d.topics==='string')c.topics=d.topics;
+ if(typeof d.seeds==='string')c.seeds=d.seeds;
+ if(numOrNull(d.autoMax)!=null)c.autoMax=Number(d.autoMax);
  if(numOrNull(d.minVol)!=null)c.minVol=Number(d.minVol);
  if(numOrNull(d.goodPct)!=null)c.goodPct=Number(d.goodPct);
  if(Array.isArray(d.agents)&&d.agents.length)c.agents=d.agents.filter(a=>a&&a.id).map(a=>({id:String(a.id),name:String(a.name||a.id),note:String(a.note||'')}));
@@ -620,6 +624,9 @@ function settingsV(){
  +'<section class="panel"><h2>내 블로그</h2>'
  +'<label class="f">블로그 주소<input class="inp" id="c-url" data-cfg="blogUrl" value="'+esc(c.blogUrl)+'" inputmode="url"></label>'
  +'<label class="f">블로그 주제 소개 (요청문에 같이 들어가요)<textarea id="c-topics" data-cfg="topics" placeholder="예) IT·테크 정보글. 스마트폰·노트북 설정법, 앱 추천, 신제품 비교. 체험단 리뷰도 씀.">'+esc(c.topics)+'</textarea></label></section>'
+ +'<section class="panel"><h2>클로드 자동 발굴</h2><p class="small muted">맥의 Claude Code에서 /blogtalk-fill 을 실행하면, 클로드가 아래 씨앗에서 출발해 블로그톡을 돌며 판정 기준을 통과하는 키워드를 찾아 후보로 넣어요. 비워 두면 블로그 주제를 보고 클로드가 씨앗을 정해요.</p>'
+ +'<label class="f">씨앗 키워드·주제 (한 줄에 하나)<textarea id="c-seeds" data-cfg="seeds" placeholder="아이폰 설정&#10;윈도우11 오류&#10;갤럭시 꿀팁&#10;무료 프로그램 추천">'+esc(c.seeds)+'</textarea></label>'
+ +'<label class="f">한 번에 넣을 최대 개수<input class="inp num" id="c-automax" data-cfg="autoMax" inputmode="numeric" value="'+esc(c.autoMax)+'"></label></section>'
  +'<section class="panel"><h2>판정 기준</h2><div class="two">'
  +'<label class="f">기준 월 검색량 (PC+모바일)<input class="inp num" id="c-min" data-cfg="minVol" inputmode="numeric" value="'+esc(c.minVol)+'"></label>'
  +'<label class="f">콘텐츠 포화도 기준 (%)<input class="inp num" id="c-ratio" data-cfg="goodPct" inputmode="decimal" value="'+esc(c.goodPct)+'"></label></div>'
@@ -802,7 +809,7 @@ document.addEventListener('change',e=>{
  if(el.dataset.kwf){const k=editKw(ST.sel);if(!k)return;const f=el.dataset.kwf;
   if(f==='memo'){if(k.memo===el.value)return;k.memo=el.value}else{const v=el.value.trim()===''?null:parseNum(el.value);if(k[f]===v)return;k[f]=v}
   saveKw(k);toast('저장했어요');render();return}
- if(el.dataset.cfg){const f=el.dataset.cfg;let v=el.value;if(f==='minVol'){v=parseNum(v);if(v==null)return toast('숫자로 적어 주세요')}if(f==='goodPct'){v=parseFloat(v);if(!isFinite(v)||v<=0)return toast('0보다 큰 숫자로 적어 주세요')}
+ if(el.dataset.cfg){const f=el.dataset.cfg;let v=el.value;if(f==='autoMax'){v=parseNum(v);if(!v)return toast('1 이상의 숫자로 적어 주세요');v=Math.min(v,30)}if(f==='minVol'){v=parseNum(v);if(v==null)return toast('숫자로 적어 주세요')}if(f==='goodPct'){v=parseFloat(v);if(!isFinite(v)||v<=0)return toast('0보다 큰 숫자로 적어 주세요')}
   ST.cfg[f]=v;saveCfg();toast('저장했어요');render();return}
  if(el.dataset.agentf){const ag=ST.cfg.agents.find(x=>x.id===el.dataset.id);if(!ag)return;const v=el.value.trim();if(el.dataset.agentf==='name'&&!v){el.value=ag.name;return}ag[el.dataset.agentf]=v;saveCfg();toast('저장했어요');render();return}
  if(el.dataset.assign){ST.cfg.assign[el.dataset.assign]=el.value;if(!ST.jobs[el.dataset.assign].agent)ST.jobs[el.dataset.assign].agent=el.value||null;saveCfg();toast(el.value?STEPS[el.dataset.assign]+'은 '+agentName(el.value)+'에게 맡겨요':'미정으로 바꿨어요');render();return}
