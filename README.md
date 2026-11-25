@@ -85,3 +85,39 @@
 ### 작성 프롬프트
 
 - `이 키워드로 작성하기`는 키워드 정보만 담은 짧은 요청을 복사해요. 말투·분량·제목·구성 같은 작성 규칙은 Claude 쪽 `CLAUDE.md`가 정하니 프롬프트에 넣지 마세요.
+
+## 발행 글 검색 순위 (`rankings.json`)
+
+발행한 글의 네이버 노출 순위는 `sync.json`과 **다른 파일**로 비공개 저장소 `beomiya0901-byte/studio-sync`의
+`rankings.json`에 쌓입니다(설정 파일과 섞이면 동기화 충돌 409가 나기 때문). 수집은 `work/check_blog_rankings.py`가 합니다.
+
+```json
+{
+  "updatedAt": "2026-11-26T00:20:00+09:00",
+  "blogId": "beompercar",
+  "items": {
+    "<키워드 id 또는 공백제거 소문자 키워드>": {
+      "keyword": "서치어드바이저",
+      "postUrl": "https://blog.naver.com/beompercar/224490735818",
+      "section": "통합검색",
+      "rank": 1,
+      "label": "통합 1위",
+      "delta": 2,
+      "checkedAt": "2026-11-26 00:20",
+      "history": [{ "checkedAt": "2026-11-26 00:20", "section": "통합검색", "rank": 1, "label": "통합 1위" }]
+    }
+  }
+}
+```
+
+- `section`: `통합검색` | `스마트블록` | `블로그탭` | `미노출`. 통합검색 결과 영역에 있으면 그 영역 안에서의 카드 순서가 `rank`,
+  없으면 블로그 탭 상위 30위 안에서 찾고, 그것도 없으면 `미노출`(rank `null`)입니다.
+- `delta`: 직전 확인 대비 순위 변동(+면 상승). 처음 기록이면 `null`(화면에서 `NEW`).
+- `history`: 최근 10회만 남깁니다.
+- 스튜디오는 `items[키워드 id]`를 먼저 보고, 없으면 `items[공백을 뺀 소문자 키워드]`로 찾습니다.
+
+```bash
+python3 work/check_blog_rankings.py                  # sync.json 대상 조회 후 rankings.json 갱신
+python3 work/check_blog_rankings.py --dry-run        # 조회만
+python3 work/check_blog_rankings.py --test-keyword "서치어드바이저"   # 지정 키워드만 확인(저장 안 함)
+```

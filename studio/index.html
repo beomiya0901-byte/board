@@ -199,6 +199,34 @@ main{padding:14px 0 8px}
 .badge.mid{background:var(--mid-bg);color:var(--mid);border-color:var(--mid-line)}
 .badge.bad{background:var(--bad-bg);color:var(--bad);border-color:var(--bad-line)}
 .badge.plain{background:var(--surface-3);color:var(--text-2)}
+
+/* ── 발행 글 검색 순위 ─────────────────── */
+.rank-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:7px}
+.rank-badge{
+  display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 9px;border-radius:999px;
+  font-size:11.5px;font-weight:750;letter-spacing:-.01em;white-space:nowrap;max-width:100%;
+  border:1px solid transparent;
+}
+.rank-badge.top{background:var(--good-bg);color:var(--good);border-color:var(--good-line)}
+.rank-badge.mid{background:var(--brand-soft);color:var(--brand)}
+.rank-badge.none{background:var(--surface-3);color:var(--text-3)}
+.rank-badge.pending{background:var(--surface-2);color:var(--text-3);border-color:var(--line)}
+.rank-delta{font-size:11px;font-weight:800;letter-spacing:-.02em;color:var(--text-3)}
+.rank-delta.up{color:var(--good)}
+.rank-delta.down{color:var(--bad)}
+.rank-delta.new{color:var(--brand)}
+.rank-time{font-size:11px;color:var(--text-3);font-weight:600}
+.rank-bar{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin:0 0 12px;padding:9px 11px;border-radius:14px;
+  background:var(--surface);border:1px solid var(--line);
+}
+.rank-bar[hidden]{display:none}
+.rank-bar .rank-note{flex:1 1 130px;min-width:0;font-size:11.5px;font-weight:650;color:var(--text-3);line-height:1.45;overflow-wrap:anywhere}
+.hero-rank{margin-top:9px;font-size:12.5px;font-weight:650;color:var(--text-2)}
+#pub-url-hint{display:block;margin-top:6px;line-height:1.5}
+.hero-rank[hidden]{display:none}
+.hero-rank b{color:var(--text);font-weight:800}
 .status-chip{
   display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10px;border-radius:999px;
   font-size:12px;font-weight:750;
@@ -633,6 +661,7 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
             <span class="pill" id="home-level">준최적</span>
             <span id="home-basis-text">황금 기준 검색량 1,000+ · 경쟁강도 1.00 이하</span>
           </p>
+          <p class="hero-rank" id="home-rank" hidden></p>
         </div>
         <div class="hero-actions">
           <button class="btn primary" data-act="open-add">
@@ -715,6 +744,13 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
           <h2>글감 · 발행</h2>
           <p>제목과 일정을 잡고, 글쓰기 프롬프트를 복사해요</p>
         </div>
+      </div>
+      <div class="rank-bar" id="rank-bar" hidden>
+        <button class="btn ghost sm" data-act="rank-refresh" aria-label="검색 순위 새로고침">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 10-2.3 5.7"/><path d="M20 5v6h-6"/></svg>
+          순위 새로고침
+        </button>
+        <span class="rank-note" id="rank-note">순위 기록을 불러오는 중…</span>
       </div>
       <div id="write-body"></div>
     </section>
@@ -963,8 +999,9 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
     </div>
     <div class="sheet-body">
       <div class="field">
-        <label for="pub-url">블로그 글 URL (선택)</label>
+        <label for="pub-url">네이버 블로그 글 URL</label>
         <input id="pub-url" type="url" placeholder="https://blog.naver.com/beompercar/..." autocomplete="off">
+        <span class="hint" id="pub-url-hint">발행한 글 주소를 넣으면 그 글만 정확히 추적해서 순위를 확인해요.<br>비워두면 키워드로 네이버를 검색해 내 블로그 글을 찾아요.</span>
       </div>
       <div class="field">
         <label for="pub-date">발행일</label>
@@ -1183,6 +1220,7 @@ function renderBrand(){
 }
 function renderHome(){
   renderBrand();
+  renderHomeRank();
   var kws = state.kws;
   var adopted = kws.filter(function(k){ return k.status === '채택'; });
   var waiting = adopted.filter(function(k){ return !!(k.title.trim() || k.dueDate); });
@@ -1542,6 +1580,7 @@ function renderWrite(){
       '<div class="write-grid">' + done.map(doneCard).join('') + '</div></section>';
   }
   document.getElementById('write-body').innerHTML = html;
+  renderRankBar();
 }
 function writeCard(k){
   var d = dday(k.dueDate);
@@ -1561,6 +1600,7 @@ function writeCard(k){
       '<div class="field"><label>메모</label>' +
         '<input type="text" data-field="memo" data-id="' + k.id + '" value="' + esc(k.memo) + '" placeholder="준비물·참고" maxlength="300"></div>' +
     '</div>' +
+    (String(k.url || '').trim() ? rankRowHtml(k) : '') +
     '<div class="wc-actions">' +
       '<button class="btn primary" data-act="copy-prompt" data-id="' + k.id + '">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>AI 프롬프트 복사</button>' +
@@ -1571,7 +1611,8 @@ function writeCard(k){
 function doneCard(k){
   return '<article class="card done-card">' +
     '<div class="dc-main"><h3>' + esc(k.title.trim() || k.kw) + '</h3>' +
-      '<p>' + esc(k.kw) + ' · ' + (isDate(k.publishedAt) ? fmtDate(k.publishedAt) + ' 발행' : '발행일 미기록') + '</p></div>' +
+      '<p>' + esc(k.kw) + ' · ' + (isDate(k.publishedAt) ? fmtDate(k.publishedAt) + ' 발행' : '발행일 미기록') + '</p>' +
+      rankRowHtml(k) + '</div>' +
     (k.url ? '<a class="wc-url" href="' + esc(k.url) + '" target="_blank" rel="noopener">' +
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9"/><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>' +
       '글 열기</a>' : '') +
@@ -2148,6 +2189,7 @@ async function syncNow(opts){
     saveSyncCfg();
     setSyncState('ok');
     if(r.pulled) refresh(true);
+    if(opts.manual) loadRankings({ quiet:true });
     if(opts.manual) toast(r.pushed ? 'GitHub에 올렸어요' : (r.pulled ? 'GitHub에서 받아왔어요' : '이미 최신이에요'));
     return true;
   }catch(err){
@@ -2227,9 +2269,165 @@ function initSync(){
     syncState.kind = 'idle';
     renderSyncUI();
     syncNow({ initial:true });
+    loadRankings({ initial:true });
   }else{
     syncState.kind = 'off';
     renderSyncUI();
+  }
+}
+
+/* ── 발행 글 검색 순위 ─────────────────── */
+/* rankings.json 은 sync.json 과 분리된 파일이라 동기화 충돌(409)이 없다. */
+var RANK_FILE = 'rankings.json';
+var ranks = { loaded:false, loading:false, error:'', at:'', blogId:'', items:{} };
+
+function hasSyncToken(){ return !!(syncCfg.token && syncCfg.token.length > 10); }
+function rankFileUrl(withRef){
+  var p = RANK_FILE.split('/').filter(Boolean).map(encodeURIComponent).join('/');
+  var u = ghRepoUrl() + '/contents/' + p;
+  if(withRef) u += '?ref=' + encodeURIComponent(syncCfg.branch);
+  return u;
+}
+function rankFor(k){
+  if(!k || !ranks.items) return null;
+  var e = ranks.items[k.id];
+  if(e && typeof e === 'object') return e;
+  e = ranks.items[normK(k.kw)];
+  return (e && typeof e === 'object') ? e : null;
+}
+function fmtCheckedAt(s){
+  var m = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/.exec(String(s == null ? '' : s));
+  return m ? (m[2] + '-' + m[3] + ' ' + m[4] + ':' + m[5]) : '';
+}
+function rankMiss(e){ return !e || e.section === '미노출' || e.rank == null || e.rank === ''; }
+function rankEmoji(e){
+  if(rankMiss(e)) return '⚪';
+  return Number(e.rank) === 1 ? '🏆' : '🟢';
+}
+function rankLabel(e){
+  var lbl = String((e && e.label) || '').trim();
+  if(lbl) return lbl;
+  if(rankMiss(e)) return '30위권 밖';
+  return (e.section === '블로그탭' ? '블로그 ' : e.section === '스마트블록' ? '스마트블록 ' : '통합 ') + e.rank + '위';
+}
+function deltaHtml(e){
+  if(!e || e.delta === null || e.delta === undefined) return '<span class="rank-delta new">NEW</span>';
+  var n = Number(e.delta);
+  if(!isFinite(n) || n === 0) return '';
+  return n > 0 ? '<span class="rank-delta up">▲' + n + '</span>'
+               : '<span class="rank-delta down">▼' + Math.abs(n) + '</span>';
+}
+function rankRowHtml(k){
+  var e = rankFor(k);
+  if(!e){
+    return '<div class="rank-row"><span class="rank-badge pending" title="아직 순위를 확인하지 않았어요">⏳ 순위 확인 전</span></div>';
+  }
+  var miss = rankMiss(e);
+  var cls = miss ? 'none' : (Number(e.rank) <= 3 ? 'top' : 'mid');
+  var t = fmtCheckedAt(e.checkedAt);
+  var tip = [e.section || '', t ? t + ' 기준' : ''].filter(Boolean).join(' · ');
+  return '<div class="rank-row">' +
+    '<span class="rank-badge ' + cls + '" title="' + esc(tip) + '">' + rankEmoji(e) + ' ' + esc(rankLabel(e)) + '</span>' +
+    (miss ? '' : deltaHtml(e)) +
+    (t ? '<span class="rank-time">' + t + ' 기준</span>' : '') +
+  '</div>';
+}
+function rankStats(){
+  var exposed = [], out = { total:0, exposed:0, none:0, pending:0, best:null };
+  (state.kws || []).forEach(function(k){
+    if(!(k.status === '발행완료' || String(k.url || '').trim())) return;
+    out.total++;
+    var e = rankFor(k);
+    if(!e){ out.pending++; return; }
+    if(rankMiss(e)){ out.none++; return; }
+    exposed.push(e);
+  });
+  exposed.sort(function(a, b){ return Number(a.rank) - Number(b.rank); });
+  out.exposed = exposed.length;
+  out.best = exposed[0] || null;
+  return out;
+}
+function rankNoteText(){
+  var s = rankStats();
+  if(!s.total) return '추적할 발행완료 글이 아직 없어요';
+  var parts = [];
+  if(s.exposed) parts.push('노출 ' + s.exposed + '건');
+  if(s.none) parts.push('30위권 밖 ' + s.none + '건');
+  if(s.pending) parts.push('확인 전 ' + s.pending + '건');
+  return parts.join(' · ');
+}
+function latestCheckedAt(){
+  var at = '';
+  Object.keys(ranks.items || {}).forEach(function(id){
+    var e = ranks.items[id];
+    var s = String((e && e.checkedAt) || '');
+    if(s && s > at) at = s;
+  });
+  return at;
+}
+function renderRankBar(){
+  var bar = document.getElementById('rank-bar');
+  if(!bar) return;
+  bar.hidden = !hasSyncToken();
+  if(bar.hidden) return;
+  var note = document.getElementById('rank-note');
+  var btn = bar.querySelector('[data-act="rank-refresh"]');
+  if(btn) btn.disabled = !!ranks.loading;
+  if(!note) return;
+  if(ranks.loading) note.textContent = '순위를 불러오는 중…';
+  else if(ranks.error) note.textContent = ranks.error;
+  else if(!ranks.loaded) note.textContent = '순위 기록을 불러오면 마지막 확인 시각이 여기 보여요';
+  else {
+    var at = latestCheckedAt();
+    note.textContent = at
+      ? ('마지막 순위 확인 ' + fmtCheckedAt(at) + ' · ' + rankNoteText())
+      : '아직 순위를 확인한 글이 없어요 · 발행완료 글에 URL을 넣으면 추적해요';
+  }
+}
+function renderHomeRank(){
+  var el = document.getElementById('home-rank');
+  if(!el) return;
+  var s = rankStats();
+  if(!ranks.loaded || !s.exposed || !s.best){ el.hidden = true; el.innerHTML = ''; return; }
+  el.hidden = false;
+  el.innerHTML = '발행 글 노출 중 <b>' + s.exposed + '건</b> · 최고 ' + rankEmoji(s.best) + ' <b>' + esc(rankLabel(s.best)) + '</b>';
+}
+async function loadRankings(opts){
+  opts = opts || {};
+  if(!hasSyncToken()){ if(opts.manual) toast('먼저 GitHub 토큰을 넣어 주세요'); renderRankBar(); return false; }
+  if(ranks.loading) return false;
+  if(!/^[\w.-]+\/[\w.-]+$/.test(syncCfg.repo)){ if(opts.manual) toast('저장소를 owner/repo 형식으로 넣어 주세요'); return false; }
+  ranks.loading = true;
+  if(!opts.quiet) ranks.error = '';
+  renderRankBar();
+  try{
+    var res = await fetch(rankFileUrl(true), { method:'GET', headers: ghHeaders(), cache:'no-store' });
+    if(res.status === 404){
+      ranks.items = {}; ranks.at = ''; ranks.blogId = ''; ranks.loaded = true;   /* 아직 체크 전 */
+    }else if(!res.ok){
+      throw new Error(ghErrMsg(res));
+    }else{
+      var j = await res.json();
+      var data = null;
+      try{ data = JSON.parse(fromB64(j.content)); }catch(e){ data = null; }
+      if(!data || typeof data !== 'object' || !data.items || typeof data.items !== 'object'){
+        throw new Error('rankings.json 형식을 읽지 못했어요');
+      }
+      ranks.items = data.items;
+      ranks.at = String(data.updatedAt || '');
+      ranks.blogId = String(data.blogId || '');
+      ranks.loaded = true;
+    }
+    ranks.loading = false;
+    renderRankBar(); renderHome(); if(ui.tab === 'write') renderWrite();
+    if(opts.manual) toast(Object.keys(ranks.items || {}).length ? '순위 기록을 새로 불러왔어요' : '아직 기록된 순위가 없어요');
+    return true;
+  }catch(err){
+    ranks.loading = false;
+    ranks.error = friendlyErr(err);
+    renderRankBar();
+    if(opts.manual) toast(ranks.error);
+    return false;
   }
 }
 
@@ -2318,6 +2516,7 @@ document.addEventListener('click', function(e){
     return;
   }
   if(act === 'publish'){ openPublish(id); return; }
+  if(act === 'rank-refresh'){ loadRankings({ manual:true }); return; }
   if(act === 'unpublish'){
     var uk = byId(id); if(!uk) return;
     uk.status = '채택'; uk.url = ''; uk.publishedAt = ''; uk.updatedAt = new Date().toISOString();
