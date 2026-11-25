@@ -182,12 +182,20 @@ const fmt=n=>n==null||isNaN(n)?'—':Math.round(n).toLocaleString('ko-KR');
 const when=iso=>{try{return new Date(iso).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}catch(e){return ''}};
 
 const STAGES=['후보','분석됨','채택','보류','제외'];
+const PLANS={
+ free:{label:'무료 회원',analysis:3,recommend:0,title:1,list:false},
+ basic:{label:'베이직',analysis:100,recommend:45,title:20,list:false},
+ standard:{label:'스탠다드',analysis:200,recommend:75,title:40,list:true}
+};
+const GRADES=['A','B','C','D','E','F'];
+const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const STEPS={discover:'키워드 발굴',analyze:'키워드 분석',related:'연관 키워드'};
 const DEFAULT_CFG={
  blogUrl:'https://blog.naver.com/beompercar',
  topics:'IT·테크 정보글',
  seeds:'',
  autoMax:10,
+ btPlan:'',
  minVol:30000,
  goodPct:20,
  agents:[
@@ -211,7 +219,7 @@ const ST={
   analyze:{agent:null,paste:'',open:false},
   related:{agent:null,paste:'',open:false}
  },
- manual:'', relManual:'', bt:{disc:'',detail:'',parsed:null}, armed:null, busy:{}, showData:false
+ usage:{}, manual:'', relManual:'', bt:{disc:'',detail:'',parsed:null}, armed:null, busy:{}, showData:false
 };
 let DB=null, SAMPLE=null, composing=false, pendingRender=false;
 
@@ -221,7 +229,7 @@ function normKw(id,d){
  d=d||{};
  return {id:String(id),kw:String(d.kw||''),stage:STAGES.includes(d.stage)?d.stage:'후보',
   src:d.src&&typeof d.src==='object'?{agent:String(d.src.agent||''),step:String(d.src.step||'manual'),from:String(d.src.from||'')}:{agent:'',step:'manual',from:''},
-  pc:numOrNull(d.pc),mo:numOrNull(d.mo),vol:numOrNull(d.vol),pub:numOrNull(d.pub),estVol:numOrNull(d.estVol),bt:normBt(d.bt),req:d.req&&typeof d.req==='object'&&(d.req.blogtalk||d.req.analyze)?{blogtalk:!!d.req.blogtalk,analyze:!!d.req.analyze,at:String(d.req.at||'')}:null,memo:String(d.memo||''),
+  pc:numOrNull(d.pc),mo:numOrNull(d.mo),vol:numOrNull(d.vol),pub:numOrNull(d.pub),estVol:numOrNull(d.estVol),bt:normBt(d.bt),titles:String(d.titles||''),must:String(d.must||''),req:d.req&&typeof d.req==='object'&&(d.req.blogtalk||d.req.analyze)?{blogtalk:!!d.req.blogtalk,analyze:!!d.req.analyze,at:String(d.req.at||'')}:null,memo:String(d.memo||''),
   analyses:Array.isArray(d.analyses)?d.analyses.filter(a=>a&&typeof a==='object').map(a=>({id:String(a.id||newId('a')),agent:String(a.agent||''),at:String(a.at||''),verdict:['추천','보통','비추천'].includes(a.verdict)?a.verdict:'',score:numOrNull(a.score),pc:numOrNull(a.pc),mo:numOrNull(a.mo),pub:numOrNull(a.pub),comp:String(a.comp||''),intent:String(a.intent||''),title:String(a.title||''),why:String(a.why||''),raw:String(a.raw||''),est:!!a.est})):[],
   related:Array.isArray(d.related)?d.related.filter(r=>r&&typeof r==='object').map(r=>({id:String(r.id||newId('r')),kw:String(r.kw||''),vol:numOrNull(r.vol),pub:numOrNull(r.pub),memo:String(r.memo||''),agent:String(r.agent||''),at:String(r.at||''),promoted:String(r.promoted||'')})):[],
   createdAt:String(d.createdAt||''),updatedAt:String(d.updatedAt||'')};
@@ -238,6 +246,7 @@ function normCfg(d){
  if(typeof d.blogUrl==='string')c.blogUrl=d.blogUrl;
  if(typeof d.topics==='string')c.topics=d.topics;
  if(typeof d.seeds==='string')c.seeds=d.seeds;
+ if(PLANS[d.btPlan])c.btPlan=d.btPlan;
  if(numOrNull(d.autoMax)!=null)c.autoMax=Number(d.autoMax);
  if(numOrNull(d.minVol)!=null)c.minVol=Number(d.minVol);
  if(numOrNull(d.goodPct)!=null)c.goodPct=Number(d.goodPct);
@@ -276,6 +285,7 @@ function volCls(t){return t==null?'':t>=ST.cfg.minVol?'good':'bad'}
 function ratioPill(k){const r=ratio(k);return r==null?'':'<span class="pill '+ratioCls(r)+'">포화도 '+pctFmt(r)+'</span>'}
 function verdictCount(k){const c={추천:0,보통:0,비추천:0};k.analyses.forEach(a=>{if(c[a.verdict]!=null)c[a.verdict]++});return c}
 const agentName=id=>{if(id==='blogtalk')return '블로그톡';const a=ST.cfg.agents.find(x=>x.id===id);return a?a.name:(id||'직접')};
+const entryCls=e=>/높음|빠름/.test(e)?'good':/낮음|느림/.test(e)?'bad':'warn';
 const stagePill=s=>'<span class="pill st-'+esc(s)+'">'+esc(s)+'</span>';
 
 /* ---------- parsing pasted agent output ---------- */
@@ -375,7 +385,7 @@ function kwRow(k){
  const dots=k.analyses.length?'<span class="dots" title="분석 판정">'+k.analyses.map(a=>'<i class="dot '+esc(a.verdict)+'"></i>').join('')+'</span>':'';
  return '<button class="kwrow" data-a="open" data-id="'+esc(k.id)+'"><div class="k">'+esc(k.kw)+'</div>'
  +'<div class="v '+(t==null?'muted':'')+'">'+(t==null&&k.estVol!=null?'≈'+fmt(k.estVol)+'<small>예상 검색량</small>':fmt(t)+'<small>월 검색량</small>')+'</div>'
- +'<div class="m">'+stagePill(k.stage)+(k.req?'<span class="pill warn">클로드 대기</span>':'')+(k.bt&&k.bt.grade?'<span class="pill acc">'+esc(k.bt.grade)+'등급</span>':'')+ratioPill(k)+dots+(k.analyses.length?'<span>분석 '+k.analyses.length+(vc.추천?' · 추천 '+vc.추천:'')+'</span>':'')+(k.related.length?'<span>연관 '+k.related.length+'</span>':'')+'</div><div></div></button>';
+ +'<div class="m">'+stagePill(k.stage)+(k.req?'<span class="pill warn">클로드 대기</span>':'')+(k.bt&&k.bt.grade?'<span class="pill acc">'+esc(k.bt.grade)+'등급</span>':'')+(k.bt&&k.bt.entry?'<span class="pill '+entryCls(k.bt.entry)+'">진입 '+esc(k.bt.entry)+'</span>':'')+ratioPill(k)+dots+(k.analyses.length?'<span>분석 '+k.analyses.length+(vc.추천?' · 추천 '+vc.추천:'')+'</span>':'')+(k.related.length?'<span>연관 '+k.related.length+'</span>':'')+'</div><div></div></button>';
 }
 function agentChips(step){
  const j=ST.jobs[step],as=ST.cfg.assign[step];
@@ -455,6 +465,27 @@ function btDiscPanel(){
  +'<p class="small muted">블로그톡에서 키워드를 검색하고 결과 화면을 전체 선택(Ctrl+A)해서 복사한 뒤 붙여 넣으세요. 메인 키워드 숫자와 키워드 맵 표를 같이 읽어요. 기준 검색량을 넘는 키워드는 미리 체크돼 있고, 나머지는 메인 키워드의 연관 키워드로만 저장돼요.</p>'
  +'<textarea id="bt-disc" data-bind="bt.disc" placeholder="블로그톡 결과 붙여 넣기">'+esc(ST.bt.disc)+'</textarea><button class="btn sub" data-a="btRead">읽기</button>'+list+'</section>';
 }
+function writePanel(k){
+ const t=k.bt&&k.bt.top5;
+ const cell=(l,v,sub)=>'<div class="metric"><span>'+l+'</span><b style="font-size:16px">'+v+'</b>'+(sub?'<span class="small muted">'+sub+'</span>':'')+'</div>';
+ return '<section class="panel"><div class="row between"><h2>글쓰기 준비</h2><span class="small muted">상위 5개 글 평균 기준</span></div>'
+ +(t&&t.chars?'<div class="metrics">'+cell('글자 수',fmt(t.chars)+'자 이상')+cell('이미지',(t.images??'-')+'장 이상')+cell('제목 길이','약 '+(t.titleLen??'-')+'자')+cell('키워드 반복',(t.kwCount??'-')+'회')+'</div>'
+  :'<p class="small muted">블로그톡 데이터가 들어오면 상위 글을 이기기 위한 글자 수·이미지·제목 길이 목표가 여기 채워져요.</p>')
+ +'<label class="f">필수 단어 (제목·본문에 꼭 넣을 단어, 쉼표로 구분)<input class="inp" id="m-must" data-kwf="must" value="'+esc(k.must)+'" placeholder="예) 큐알, 코드, 만들기, QR, 스캔"></label>'
+ +'<label class="f">제목 후보 (한 줄에 하나, 블토기 제목 픽이나 에이전트 제안)<textarea id="m-titles" data-kwf="titles" placeholder="큐알코드 스캔 및 QR 코드 만들기 완전 가이드">'+esc(k.titles)+'</textarea></label>'
+ +(k.titles.trim()?'<div class="stack" style="gap:4px">'+k.titles.split('\n').map(x=>x.trim()).filter(Boolean).map(x=>{const n=x.replace(/\s/g,'').length;const tl=t&&t.titleLen;const miss=k.must.split(/[,，]/).map(w=>w.trim()).filter(w=>w&&!x.toLowerCase().includes(w.toLowerCase()));
+   return '<div class="row between small"><span class="grow">'+esc(x)+'</span><span class="pill '+(tl?(Math.abs(n-tl)<=5?'good':'warn'):'')+'">공백 제외 '+n+'자</span>'+(miss.length?'<span class="pill bad">빠짐: '+esc(miss.join(', '))+'</span>':'')+'</div>'}).join('')+'</div>':'')
+ +'</section>';
+}
+function usageV(){
+ const pl=PLANS[ST.cfg.btPlan];
+ if(!pl)return '<section class="stack"><h2>오늘 블로그톡 사용량</h2><div class="note">설정에서 블로그톡 요금제를 골라 주세요. 클로드가 하루 사용 한도를 넘지 않게 조회해요.</div></section>';
+ const u=ST.usage||{};
+ const bar=(l,used,lim)=>{const pct=lim?Math.min(100,Math.round((used||0)/lim*100)):0;return '<div class="stack" style="gap:4px"><div class="row between small"><span>'+l+'</span><span class="num">'+(lim?(used||0)+' / '+lim:'미제공')+'</span></div><div style="height:6px;border-radius:9px;background:var(--sunk);overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+(pct>=90?'var(--bad)':'var(--accent)')+'"></div></div></div>'};
+ return '<section class="stack"><div class="row between"><h2>오늘 블로그톡 사용량</h2><span class="small muted">'+esc(pl.label)+'</span></div><div class="panel">'
+ +bar('키워드 분석',u.analysis,pl.analysis)+bar('키워드 추천',u.recommend,pl.recommend)+bar('블토기 제목 픽',u.title,pl.title)
+ +'<p class="small muted">클로드가 블로그톡을 쓸 때마다 여기 기록해요. 직접 쓴 횟수는 포함되지 않아요.</p></div></section>';
+}
 function btPanel(k){
  const b=k.bt,t=b&&b.top5;
  const cell=(l,v)=>v==null||v===''?'':'<div class="metric"><span>'+l+'</span><b style="font-size:16px">'+esc(v)+'</b></div>';
@@ -480,6 +511,7 @@ function homeV(){
  +syncNote()
  +'<section class="stack"><div class="row between"><h2>키워드 흐름</h2><span class="small muted">기준 월 검색량 '+fmt(ST.cfg.minVol)+'</span></div>'
  +'<div class="pipe">'+STAGES.map(s=>'<button data-a="gostage" data-v="'+s+'"><b>'+c[s]+'</b><span>'+s+'</span></button>').join('')+'</div></section>'
+ +usageV()
  +(()=>{const q=ST.kws.filter(k=>k.req);return q.length?'<section class="stack"><div class="row between"><h2>클로드 작업 대기열 '+q.length+'</h2></div><p class="small muted">맥의 Claude Code에서 /blogtalk-fill 을 실행하면 블로그톡에서 조회해 채워 넣어요.</p><div class="list">'+q.map(kwRow).join('')+'</div></section>':''})()
  +(ST.kws.length?'':'<div class="empty"><b>아직 키워드가 없어요</b><span>발굴 탭에서 에이전트에게 키워드 후보를 찾게 하거나, 알고 있는 키워드를 바로 넣어 보세요.</span><button class="btn" data-a="tab" data-v="discover">키워드 발굴하러 가기</button></div>')
  +(waiting.length?'<section class="stack"><div class="row between"><h2>분석을 기다리는 키워드</h2><button class="btn text" data-a="gostage" data-v="후보">전체 보기</button></div><div class="list">'+waiting.map(kwRow).join('')+'</div></section>':'')
@@ -516,7 +548,7 @@ function listV(){
  return '<div class="stack-lg"><div class="head"><span class="eyebrow">전체 '+ST.kws.length+'개</span><h1>키워드</h1></div>'+syncNote()
  +'<div class="stack"><input class="inp" id="q" type="search" data-bind="filter.q" data-list="1" value="'+esc(f.q)+'" placeholder="키워드 검색">'
  +'<div class="chips"><button class="chip '+(!f.stage?'on':'')+'" data-a="fstage" data-v="">전체</button>'+STAGES.map(s=>'<button class="chip '+(f.stage===s?'on':'')+'" data-a="fstage" data-v="'+s+'">'+s+' <span class="tag">'+c[s]+'</span></button>').join('')+'</div>'
- +'<div class="seg" role="group" aria-label="정렬">'+[['recent','최근'],['vol','검색량'],['ratio','포화도'],['score','추천 많은 순']].map(p=>'<button data-a="fsort" data-v="'+p[0]+'" class="'+(f.sort===p[0]?'on':'')+'">'+p[1]+'</button>').join('')+'</div></div>'
+ +'<div class="seg" role="group" aria-label="정렬">'+[['recent','최근'],['grade','등급'],['vol','검색량'],['ratio','포화도'],['score','추천 많은 순']].map(p=>'<button data-a="fsort" data-v="'+p[0]+'" class="'+(f.sort===p[0]?'on':'')+'">'+p[1]+'</button>').join('')+'</div></div>'
  +(()=>{const n=ST.kws.filter(k=>!k.bt&&!k.req&&(k.stage==='후보'||k.stage==='분석됨')).length;return n?'<button class="btn line sm" style="align-self:flex-start" data-a="reqAll">블로그톡 숫자 없는 키워드 '+n+'개를 클로드에게 맡기기</button>':''})()
  +'<div id="kwlist">'+listBody()+'</div></div>';
 }
@@ -526,6 +558,7 @@ function listBody(){
  const big=-1e15;
  if(f.sort==='vol')l.sort((a,b)=>(total(b)??big)-(total(a)??big));
  else if(f.sort==='ratio')l.sort((a,b)=>(ratio(a)??1e15)-(ratio(b)??1e15));
+ else if(f.sort==='grade'){const gi=k=>{const g=k.bt&&k.bt.grade?GRADES.indexOf(k.bt.grade.charAt(0)):-1;return g<0?99:g};l.sort((a,b)=>gi(a)-gi(b)||(ratio(a)??1e15)-(ratio(b)??1e15))}
  else if(f.sort==='score')l.sort((a,b)=>verdictCount(b).추천-verdictCount(a).추천||(total(b)??big)-(total(a)??big));
  else l.sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)));
  if(!ST.kws.length)return '<div class="empty"><span>키워드가 없어요. 발굴 탭에서 후보를 모아 보세요.</span><button class="btn" data-a="tab" data-v="discover">발굴하러 가기</button></div>';
@@ -540,7 +573,7 @@ function detailV(){
  const anaOpen=ST.jobs.analyze.open, relOpen=ST.jobs.related.open;
  return '<div class="stack-lg">'
  +'<button class="btn text" data-a="back" style="align-self:flex-start;margin-left:-8px">← 키워드 목록</button>'
- +'<div class="head"><span class="eyebrow">'+(k.src.step==='discover'?esc(src):src)+'</span><h1>'+esc(k.kw)+'</h1></div>'
+ +'<div class="head"><span class="eyebrow">'+(k.src.step==='discover'?esc(src):src)+'</span><h1>'+esc(k.kw)+'</h1>'+(k.bt?'<div class="row">'+(k.bt.grade?'<span class="pill acc">'+esc(k.bt.grade)+'등급</span>':'')+(k.bt.entry?'<span class="pill '+entryCls(k.bt.entry)+'">진입 가능성 '+esc(k.bt.entry)+'</span>':'')+(k.bt.speed?'<span class="pill '+entryCls(k.bt.speed)+'">진입 속도 '+esc(k.bt.speed)+'</span>':'')+ratioPill(k)+(k.bt.brief?'<span class="small muted">'+esc(k.bt.brief)+'</span>':'')+'</div>':'')+'</div>'
  +syncNote()
  +'<div class="seg" role="group" aria-label="단계">'+STAGES.map(s=>'<button data-a="setStage" data-v="'+s+'" class="'+(k.stage===s?'on':'')+'">'+s+'</button>').join('')+'</div>'
  +'<section class="stack"><div class="row between"><h2>숫자</h2><span class="small muted">눌러서 고칠 수 있어요</span></div>'
@@ -553,6 +586,7 @@ function detailV(){
  +'</div>'
  +'<div class="links"><a href="https://search.naver.com/search.naver?query='+q+'" target="_blank" rel="noopener">네이버 검색</a><a href="https://search.naver.com/search.naver?ssc=tab.blog.all&amp;query='+q+'" target="_blank" rel="noopener">블로그 탭</a><a href="https://datalab.naver.com/keyword/trendSearch.naver" target="_blank" rel="noopener">데이터랩</a><a href="https://searchad.naver.com/" target="_blank" rel="noopener">검색광고 키워드도구</a><a href="https://beta.blogtalk.io/" target="_blank" rel="noopener">블로그톡</a></div></section>'
  +btPanel(k)
+ +writePanel(k)
  // analysis
  +'<section class="panel"><div class="row between"><h2>분석 '+k.analyses.length+'</h2>'+(k.analyses.length?'<span class="small muted">추천 '+vc.추천+' · 보통 '+vc.보통+' · 비추천 '+vc.비추천+'</span>':'')+'</div>'
  +k.analyses.slice().reverse().map(a=>anaCard(k,a)).join('')
@@ -624,6 +658,9 @@ function settingsV(){
  +'<section class="panel"><h2>내 블로그</h2>'
  +'<label class="f">블로그 주소<input class="inp" id="c-url" data-cfg="blogUrl" value="'+esc(c.blogUrl)+'" inputmode="url"></label>'
  +'<label class="f">블로그 주제 소개 (요청문에 같이 들어가요)<textarea id="c-topics" data-cfg="topics" placeholder="예) IT·테크 정보글. 스마트폰·노트북 설정법, 앱 추천, 신제품 비교. 체험단 리뷰도 씀.">'+esc(c.topics)+'</textarea></label></section>'
+ +'<section class="panel"><h2>블로그톡 요금제</h2><p class="small muted">요금제마다 하루에 쓸 수 있는 횟수가 달라요. 클로드가 이 한도 안에서만 조회해요.</p>'
+ +'<label class="f">내 요금제<select id="c-plan" data-cfg="btPlan"><option value="">골라 주세요</option>'+Object.keys(PLANS).map(k=>'<option value="'+k+'"'+(c.btPlan===k?' selected':'')+'>'+PLANS[k].label+' · 키워드 분석 하루 '+PLANS[k].analysis+'회'+(PLANS[k].recommend?' · 추천 '+PLANS[k].recommend+'개':'')+'</option>').join('')+'</select></label>'
+ +(c.btPlan==='free'?'<div class="note warn">무료 회원은 키워드 분석이 하루 3회라 자동 발굴을 거의 못 해요. 키워드 추천도 쓸 수 없어요.</div>':'')+(c.btPlan&&!PLANS[c.btPlan].list?'<p class="small muted">키워드 리스트(조건으로 골라 쓰기)는 스탠다드에서만 쓸 수 있어요.</p>':'')+'</section>'
  +'<section class="panel"><h2>클로드 자동 발굴</h2><p class="small muted">맥의 Claude Code에서 /blogtalk-fill 을 실행하면, 클로드가 아래 씨앗에서 출발해 블로그톡을 돌며 판정 기준을 통과하는 키워드를 찾아 후보로 넣어요. 비워 두면 블로그 주제를 보고 클로드가 씨앗을 정해요.</p>'
  +'<label class="f">씨앗 키워드·주제 (한 줄에 하나)<textarea id="c-seeds" data-cfg="seeds" placeholder="아이폰 설정&#10;윈도우11 오류&#10;갤럭시 꿀팁&#10;무료 프로그램 추천">'+esc(c.seeds)+'</textarea></label>'
  +'<label class="f">한 번에 넣을 최대 개수<input class="inp num" id="c-automax" data-cfg="autoMax" inputmode="numeric" value="'+esc(c.autoMax)+'"></label></section>'
@@ -807,7 +844,7 @@ document.addEventListener('change',e=>{
  const el=e.target;if(!el.dataset)return;
  if(el.dataset.bind){onBind(el);return}
  if(el.dataset.kwf){const k=editKw(ST.sel);if(!k)return;const f=el.dataset.kwf;
-  if(f==='memo'){if(k.memo===el.value)return;k.memo=el.value}else{const v=el.value.trim()===''?null:parseNum(el.value);if(k[f]===v)return;k[f]=v}
+  if(f==='memo'||f==='titles'||f==='must'){if(k[f]===el.value)return;k[f]=el.value}else{const v=el.value.trim()===''?null:parseNum(el.value);if(k[f]===v)return;k[f]=v}
   saveKw(k);toast('저장했어요');render();return}
  if(el.dataset.cfg){const f=el.dataset.cfg;let v=el.value;if(f==='autoMax'){v=parseNum(v);if(!v)return toast('1 이상의 숫자로 적어 주세요');v=Math.min(v,30)}if(f==='minVol'){v=parseNum(v);if(v==null)return toast('숫자로 적어 주세요')}if(f==='goodPct'){v=parseFloat(v);if(!isFinite(v)||v<=0)return toast('0보다 큰 숫자로 적어 주세요')}
   ST.cfg[f]=v;saveCfg();toast('저장했어요');render();return}
@@ -836,6 +873,7 @@ async function boot(){
   if(!s.metadata.fromCache){clearTimeout(timer);ST.note=''}
   ST.ready=true;render();
  },()=>{clearTimeout(timer);ST.note='저장소 연결이 끊겼어요. 새로고침해 주세요.';render()});
+ db.doc('usage/'+todayKey()).onSnapshot(s=>{ST.usage=s.exists?(s.data()||{}):{};render()},()=>{});
  db.doc('config/main').onSnapshot(s=>{
   ST.cfg=s.exists?normCfg(s.data()):clone(DEFAULT_CFG);
   if(!cfgSeen){cfgSeen=true;if(!ST.jobs.discover.agent)ST.jobs.discover.agent=ST.cfg.assign.discover||null}
