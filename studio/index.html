@@ -185,7 +185,8 @@ const STAGES=['후보','분석됨','채택','보류','제외'];
 const PLANS={
  free:{label:'무료 회원',analysis:3,recommend:0,title:1,list:false},
  basic:{label:'베이직',analysis:100,recommend:45,title:20,list:false},
- standard:{label:'스탠다드',analysis:200,recommend:75,title:40,list:true}
+ standard:{label:'스탠다드',analysis:200,recommend:75,title:40,list:true},
+ unlimited:{label:'무제한',analysis:0,recommend:0,title:0,list:true,unlimited:true}
 };
 const GRADES=['A','B','C','D','E','F'];
 const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
@@ -481,6 +482,7 @@ function usageV(){
  const pl=PLANS[ST.cfg.btPlan];
  if(!pl)return '<section class="stack"><h2>오늘 블로그톡 사용량</h2><div class="note">설정에서 블로그톡 요금제를 골라 주세요. 클로드가 하루 사용 한도를 넘지 않게 조회해요.</div></section>';
  const u=ST.usage||{};
+ if(pl.unlimited)return '<section class="stack"><div class="row between"><h2>오늘 블로그톡 사용량</h2><span class="small muted">무제한</span></div><div class="panel"><div class="row" style="gap:16px"><span>키워드 분석 <b class="num">'+(u.analysis||0)+'</b>회</span><span>추천 <b class="num">'+(u.recommend||0)+'</b>개</span><span>제목 픽 <b class="num">'+(u.title||0)+'</b>회</span></div><p class="small muted">클로드가 오늘 블로그톡을 쓴 횟수예요. 한도는 없지만 계정 보호를 위해 천천히 조회해요.</p></div></section>';
  const bar=(l,used,lim)=>{const pct=lim?Math.min(100,Math.round((used||0)/lim*100)):0;return '<div class="stack" style="gap:4px"><div class="row between small"><span>'+l+'</span><span class="num">'+(lim?(used||0)+' / '+lim:'미제공')+'</span></div><div style="height:6px;border-radius:9px;background:var(--sunk);overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+(pct>=90?'var(--bad)':'var(--accent)')+'"></div></div></div>'};
  return '<section class="stack"><div class="row between"><h2>오늘 블로그톡 사용량</h2><span class="small muted">'+esc(pl.label)+'</span></div><div class="panel">'
  +bar('키워드 분석',u.analysis,pl.analysis)+bar('키워드 추천',u.recommend,pl.recommend)+bar('블토기 제목 픽',u.title,pl.title)
@@ -659,7 +661,7 @@ function settingsV(){
  +'<label class="f">블로그 주소<input class="inp" id="c-url" data-cfg="blogUrl" value="'+esc(c.blogUrl)+'" inputmode="url"></label>'
  +'<label class="f">블로그 주제 소개 (요청문에 같이 들어가요)<textarea id="c-topics" data-cfg="topics" placeholder="예) IT·테크 정보글. 스마트폰·노트북 설정법, 앱 추천, 신제품 비교. 체험단 리뷰도 씀.">'+esc(c.topics)+'</textarea></label></section>'
  +'<section class="panel"><h2>블로그톡 요금제</h2><p class="small muted">요금제마다 하루에 쓸 수 있는 횟수가 달라요. 클로드가 이 한도 안에서만 조회해요.</p>'
- +'<label class="f">내 요금제<select id="c-plan" data-cfg="btPlan"><option value="">골라 주세요</option>'+Object.keys(PLANS).map(k=>'<option value="'+k+'"'+(c.btPlan===k?' selected':'')+'>'+PLANS[k].label+' · 키워드 분석 하루 '+PLANS[k].analysis+'회'+(PLANS[k].recommend?' · 추천 '+PLANS[k].recommend+'개':'')+'</option>').join('')+'</select></label>'
+ +'<label class="f">내 요금제<select id="c-plan" data-cfg="btPlan"><option value="">골라 주세요</option>'+Object.keys(PLANS).map(k=>'<option value="'+k+'"'+(c.btPlan===k?' selected':'')+'>'+PLANS[k].label+(PLANS[k].unlimited?' · 한도 없음':' · 키워드 분석 하루 '+PLANS[k].analysis+'회'+(PLANS[k].recommend?' · 추천 '+PLANS[k].recommend+'개':''))+'</option>').join('')+'</select></label>'
  +(c.btPlan==='free'?'<div class="note warn">무료 회원은 키워드 분석이 하루 3회라 자동 발굴을 거의 못 해요. 키워드 추천도 쓸 수 없어요.</div>':'')+(c.btPlan&&!PLANS[c.btPlan].list?'<p class="small muted">키워드 리스트(조건으로 골라 쓰기)는 스탠다드에서만 쓸 수 있어요.</p>':'')+'</section>'
  +'<section class="panel"><h2>클로드 자동 발굴</h2><p class="small muted">맥의 Claude Code에서 /blogtalk-fill 을 실행하면, 클로드가 아래 씨앗에서 출발해 블로그톡을 돌며 판정 기준을 통과하는 키워드를 찾아 후보로 넣어요. 비워 두면 블로그 주제를 보고 클로드가 씨앗을 정해요.</p>'
  +'<label class="f">씨앗 키워드·주제 (한 줄에 하나)<textarea id="c-seeds" data-cfg="seeds" placeholder="아이폰 설정&#10;윈도우11 오류&#10;갤럭시 꿀팁&#10;무료 프로그램 추천">'+esc(c.seeds)+'</textarea></label>'
