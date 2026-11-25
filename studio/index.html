@@ -219,7 +219,7 @@ function normKw(id,d){
  d=d||{};
  return {id:String(id),kw:String(d.kw||''),stage:STAGES.includes(d.stage)?d.stage:'후보',
   src:d.src&&typeof d.src==='object'?{agent:String(d.src.agent||''),step:String(d.src.step||'manual'),from:String(d.src.from||'')}:{agent:'',step:'manual',from:''},
-  pc:numOrNull(d.pc),mo:numOrNull(d.mo),vol:numOrNull(d.vol),pub:numOrNull(d.pub),estVol:numOrNull(d.estVol),bt:normBt(d.bt),memo:String(d.memo||''),
+  pc:numOrNull(d.pc),mo:numOrNull(d.mo),vol:numOrNull(d.vol),pub:numOrNull(d.pub),estVol:numOrNull(d.estVol),bt:normBt(d.bt),req:d.req&&typeof d.req==='object'&&(d.req.blogtalk||d.req.analyze)?{blogtalk:!!d.req.blogtalk,analyze:!!d.req.analyze,at:String(d.req.at||'')}:null,memo:String(d.memo||''),
   analyses:Array.isArray(d.analyses)?d.analyses.filter(a=>a&&typeof a==='object').map(a=>({id:String(a.id||newId('a')),agent:String(a.agent||''),at:String(a.at||''),verdict:['추천','보통','비추천'].includes(a.verdict)?a.verdict:'',score:numOrNull(a.score),pc:numOrNull(a.pc),mo:numOrNull(a.mo),pub:numOrNull(a.pub),comp:String(a.comp||''),intent:String(a.intent||''),title:String(a.title||''),why:String(a.why||''),raw:String(a.raw||''),est:!!a.est})):[],
   related:Array.isArray(d.related)?d.related.filter(r=>r&&typeof r==='object').map(r=>({id:String(r.id||newId('r')),kw:String(r.kw||''),vol:numOrNull(r.vol),pub:numOrNull(r.pub),memo:String(r.memo||''),agent:String(r.agent||''),at:String(r.at||''),promoted:String(r.promoted||'')})):[],
   createdAt:String(d.createdAt||''),updatedAt:String(d.updatedAt||'')};
@@ -371,7 +371,7 @@ function kwRow(k){
  const dots=k.analyses.length?'<span class="dots" title="분석 판정">'+k.analyses.map(a=>'<i class="dot '+esc(a.verdict)+'"></i>').join('')+'</span>':'';
  return '<button class="kwrow" data-a="open" data-id="'+esc(k.id)+'"><div class="k">'+esc(k.kw)+'</div>'
  +'<div class="v '+(t==null?'muted':'')+'">'+(t==null&&k.estVol!=null?'≈'+fmt(k.estVol)+'<small>예상 검색량</small>':fmt(t)+'<small>월 검색량</small>')+'</div>'
- +'<div class="m">'+stagePill(k.stage)+(k.bt&&k.bt.grade?'<span class="pill acc">'+esc(k.bt.grade)+'등급</span>':'')+ratioPill(k)+dots+(k.analyses.length?'<span>분석 '+k.analyses.length+(vc.추천?' · 추천 '+vc.추천:'')+'</span>':'')+(k.related.length?'<span>연관 '+k.related.length+'</span>':'')+'</div><div></div></button>';
+ +'<div class="m">'+stagePill(k.stage)+(k.req?'<span class="pill warn">클로드 대기</span>':'')+(k.bt&&k.bt.grade?'<span class="pill acc">'+esc(k.bt.grade)+'등급</span>':'')+ratioPill(k)+dots+(k.analyses.length?'<span>분석 '+k.analyses.length+(vc.추천?' · 추천 '+vc.추천:'')+'</span>':'')+(k.related.length?'<span>연관 '+k.related.length+'</span>':'')+'</div><div></div></button>';
 }
 function agentChips(step){
  const j=ST.jobs[step],as=ST.cfg.assign[step];
@@ -459,7 +459,9 @@ function btPanel(k){
   +((b.season||b.yoy||b.trend)?'<dl class="kv">'+(b.category?'<dt>분류</dt><dd>'+esc(b.category)+'</dd>':'')+(b.season?'<dt>성수기</dt><dd>'+esc(b.season)+(b.peakNow?' · 지금 성수기 대비 '+esc(b.peakNow):'')+'</dd>':'')+(b.yoy?'<dt>전년 동월</dt><dd>'+esc(b.yoy)+'</dd>':'')+(b.trend?'<dt>24개월 추세</dt><dd>'+esc(b.trend)+'</dd>':'')+'</dl>':'')
   +(t&&t.chars?'<h3>상위 5개 글 평균 (이만큼은 써야 해요)</h3><div class="metrics">'+cell('글자 수',fmt(t.chars)+'자')+cell('이미지',(t.images??'-')+'장')+cell('제목 길이',(t.titleLen??'-')+'자')+cell('키워드 수',(t.kwCount??'-')+'개')+cell('블로그 레벨',t.level)+cell('발행일',t.age)+'</div>':'')
  :'<p class="small muted">블로그톡에서 이 키워드를 검색한 결과 화면을 붙여 넣으면 숫자, 등급, 상위 글 평균이 채워지고 키워드 맵은 연관 키워드로 들어가요.</p>')
- +'<textarea id="bt-detail" data-bind="bt.detail" placeholder="블로그톡 결과 붙여 넣기">'+esc(ST.bt.detail)+'</textarea><button class="btn sub" data-a="btDetail">'+(b?'다시 반영':'반영')+'</button></section>';
+ +(k.req?'<div class="note">클로드 작업 대기 중: '+(k.req.blogtalk?'블로그톡 조회':'')+(k.req.blogtalk&&k.req.analyze?' + ':'')+(k.req.analyze?'분석':'')+'. 맥에서 /blogtalk-fill 을 실행하면 처리돼요. <button class="btn text sm" data-a="reqCancel">취소</button></div>'
+  :'<div class="row"><button class="btn line sm" data-a="req" data-v="bt">클로드에게 블로그톡 조회 맡기기</button><button class="btn line sm" data-a="req" data-v="both">조회 + 분석 맡기기</button></div>')
+ +'<p class="small muted">직접 붙여 넣어도 돼요.</p><textarea id="bt-detail" data-bind="bt.detail" placeholder="블로그톡 결과 붙여 넣기">'+esc(ST.bt.detail)+'</textarea><button class="btn sub" data-a="btDetail">'+(b?'다시 반영':'반영')+'</button></section>';
 }
 
 /* ---------- views ---------- */
@@ -474,6 +476,7 @@ function homeV(){
  +syncNote()
  +'<section class="stack"><div class="row between"><h2>키워드 흐름</h2><span class="small muted">기준 월 검색량 '+fmt(ST.cfg.minVol)+'</span></div>'
  +'<div class="pipe">'+STAGES.map(s=>'<button data-a="gostage" data-v="'+s+'"><b>'+c[s]+'</b><span>'+s+'</span></button>').join('')+'</div></section>'
+ +(()=>{const q=ST.kws.filter(k=>k.req);return q.length?'<section class="stack"><div class="row between"><h2>클로드 작업 대기열 '+q.length+'</h2></div><p class="small muted">맥의 Claude Code에서 /blogtalk-fill 을 실행하면 블로그톡에서 조회해 채워 넣어요.</p><div class="list">'+q.map(kwRow).join('')+'</div></section>':''})()
  +(ST.kws.length?'':'<div class="empty"><b>아직 키워드가 없어요</b><span>발굴 탭에서 에이전트에게 키워드 후보를 찾게 하거나, 알고 있는 키워드를 바로 넣어 보세요.</span><button class="btn" data-a="tab" data-v="discover">키워드 발굴하러 가기</button></div>')
  +(waiting.length?'<section class="stack"><div class="row between"><h2>분석을 기다리는 키워드</h2><button class="btn text" data-a="gostage" data-v="후보">전체 보기</button></div><div class="list">'+waiting.map(kwRow).join('')+'</div></section>':'')
  +(adopted.length?'<section class="stack"><h2>채택한 키워드</h2><div class="list">'+adopted.slice(0,8).map(kwRow).join('')+'</div>'+(needRel.length?'<p class="small muted">연관 키워드가 3개 안 되는 채택 키워드가 '+needRel.length+'개 있어요. 키워드를 눌러 연관 키워드를 찾아 두세요.</p>':'')+'</section>':'')
@@ -510,6 +513,7 @@ function listV(){
  +'<div class="stack"><input class="inp" id="q" type="search" data-bind="filter.q" data-list="1" value="'+esc(f.q)+'" placeholder="키워드 검색">'
  +'<div class="chips"><button class="chip '+(!f.stage?'on':'')+'" data-a="fstage" data-v="">전체</button>'+STAGES.map(s=>'<button class="chip '+(f.stage===s?'on':'')+'" data-a="fstage" data-v="'+s+'">'+s+' <span class="tag">'+c[s]+'</span></button>').join('')+'</div>'
  +'<div class="seg" role="group" aria-label="정렬">'+[['recent','최근'],['vol','검색량'],['ratio','포화도'],['score','추천 많은 순']].map(p=>'<button data-a="fsort" data-v="'+p[0]+'" class="'+(f.sort===p[0]?'on':'')+'">'+p[1]+'</button>').join('')+'</div></div>'
+ +(()=>{const n=ST.kws.filter(k=>!k.bt&&!k.req&&(k.stage==='후보'||k.stage==='분석됨')).length;return n?'<button class="btn line sm" style="align-self:flex-start" data-a="reqAll">블로그톡 숫자 없는 키워드 '+n+'개를 클로드에게 맡기기</button>':''})()
  +'<div id="kwlist">'+listBody()+'</div></div>';
 }
 function listBody(){
@@ -774,6 +778,9 @@ document.addEventListener('click',e=>{
    if(p.hasMain)btApply(k,p.main);
    const n=addRelated(k,p.rows.filter(x=>dupKey(x.kw)!==dupKey(k.kw)).map(x=>({kw:x.kw,vol:x.vol,pub:x.pub,memo:btMemo(x)})),'blogtalk');
    saveKw(k);ST.bt.detail='';toast((p.hasMain?'블로그톡 숫자를 반영했어요':'')+(n?(p.hasMain?' · ':'')+'연관 키워드 '+n+'개 추가':''));break}
+  case 'req':{const k=editKw(ST.sel);if(!k)return;k.req={blogtalk:true,analyze:el.dataset.v==='both',at:nowIso()};saveKw(k);toast('클로드 작업 대기열에 넣었어요');break}
+  case 'reqCancel':{const k=editKw(ST.sel);if(!k)return;k.req=null;saveKw(k);break}
+  case 'reqAll':{let n=0;ST.kws.filter(k=>!k.bt&&!k.req&&(k.stage==='후보'||k.stage==='분석됨')).forEach(k0=>{const k=clone(k0);k.req={blogtalk:true,analyze:false,at:nowIso()};saveKw(k);n++});toast(n+'개를 클로드 작업 대기열에 넣었어요');break}
   case 'toggleData':ST.showData=!ST.showData;break;
   case 'copyDump':copyFrom('dump','데이터를 복사했어요');return;
  }
