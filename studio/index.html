@@ -1381,7 +1381,12 @@ function buildRecPrompt(it){
   var posts = recPosts(it);
   if(posts.length){
     lines.push(''); lines.push('[상위 글]');
-    posts.forEach(function(p){ lines.push('- ' + (p.title ? p.title + ' ' : '') + p.url); });
+    posts.forEach(function(p){
+      lines.push('- ' + (p.title ? p.title + ' ' : '') + p.url);
+      var hs = Array.isArray(p.headings) ? p.headings.filter(function(h){ return String(h||'').trim(); }) : [];
+      if (hs.length) lines.push('  소제목: ' + hs.join(' / '));
+      if (String(p.summary||'').trim()) lines.push('  요약: ' + String(p.summary).trim());
+    });
   }
   return lines.join('\n');
 }
