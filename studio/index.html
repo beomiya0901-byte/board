@@ -187,7 +187,7 @@ const DEFAULT_CFG={
  blogUrl:'https://blog.naver.com/beompercar',
  topics:'IT·테크 정보글',
  minVol:30000,
- goodRatio:1,
+ goodPct:20,
  agents:[
   {id:'pickle',name:'피클',note:''},
   {id:'muse',name:'뮤즈',note:''},
@@ -209,7 +209,7 @@ const ST={
   analyze:{agent:null,paste:'',open:false},
   related:{agent:null,paste:'',open:false}
  },
- manual:'', relManual:'', armed:null, busy:{}, showData:false
+ manual:'', relManual:'', bt:{disc:'',detail:'',parsed:null}, armed:null, busy:{}, showData:false
 };
 let DB=null, SAMPLE=null, composing=false, pendingRender=false;
 
@@ -219,17 +219,24 @@ function normKw(id,d){
  d=d||{};
  return {id:String(id),kw:String(d.kw||''),stage:STAGES.includes(d.stage)?d.stage:'후보',
   src:d.src&&typeof d.src==='object'?{agent:String(d.src.agent||''),step:String(d.src.step||'manual'),from:String(d.src.from||'')}:{agent:'',step:'manual',from:''},
-  pc:numOrNull(d.pc),mo:numOrNull(d.mo),docs:numOrNull(d.docs),estVol:numOrNull(d.estVol),memo:String(d.memo||''),
-  analyses:Array.isArray(d.analyses)?d.analyses.filter(a=>a&&typeof a==='object').map(a=>({id:String(a.id||newId('a')),agent:String(a.agent||''),at:String(a.at||''),verdict:['추천','보통','비추천'].includes(a.verdict)?a.verdict:'',score:numOrNull(a.score),pc:numOrNull(a.pc),mo:numOrNull(a.mo),docs:numOrNull(a.docs),comp:String(a.comp||''),intent:String(a.intent||''),title:String(a.title||''),why:String(a.why||''),raw:String(a.raw||''),est:!!a.est})):[],
-  related:Array.isArray(d.related)?d.related.filter(r=>r&&typeof r==='object').map(r=>({id:String(r.id||newId('r')),kw:String(r.kw||''),vol:numOrNull(r.vol),memo:String(r.memo||''),agent:String(r.agent||''),at:String(r.at||''),promoted:String(r.promoted||'')})):[],
+  pc:numOrNull(d.pc),mo:numOrNull(d.mo),vol:numOrNull(d.vol),pub:numOrNull(d.pub),estVol:numOrNull(d.estVol),bt:normBt(d.bt),memo:String(d.memo||''),
+  analyses:Array.isArray(d.analyses)?d.analyses.filter(a=>a&&typeof a==='object').map(a=>({id:String(a.id||newId('a')),agent:String(a.agent||''),at:String(a.at||''),verdict:['추천','보통','비추천'].includes(a.verdict)?a.verdict:'',score:numOrNull(a.score),pc:numOrNull(a.pc),mo:numOrNull(a.mo),pub:numOrNull(a.pub),comp:String(a.comp||''),intent:String(a.intent||''),title:String(a.title||''),why:String(a.why||''),raw:String(a.raw||''),est:!!a.est})):[],
+  related:Array.isArray(d.related)?d.related.filter(r=>r&&typeof r==='object').map(r=>({id:String(r.id||newId('r')),kw:String(r.kw||''),vol:numOrNull(r.vol),pub:numOrNull(r.pub),memo:String(r.memo||''),agent:String(r.agent||''),at:String(r.at||''),promoted:String(r.promoted||'')})):[],
   createdAt:String(d.createdAt||''),updatedAt:String(d.updatedAt||'')};
+}
+function normBt(b){
+ if(!b||typeof b!=='object')return null;
+ const o={};['grade','entry','speed','ad','season','peakNow','yoy','trend','brief','category','at'].forEach(k=>{if(b[k]!=null&&b[k]!=='')o[k]=String(b[k]).slice(0,80)});
+ ['cum','slots'].forEach(k=>{const n=numOrNull(b[k]);if(n!=null)o[k]=n});
+ if(b.top5&&typeof b.top5==='object'){const t={};['titleLen','chars','kwCount','images','visitors'].forEach(k=>{const n=numOrNull(b.top5[k]);if(n!=null)t[k]=n});['level','age'].forEach(k=>{if(b.top5[k])t[k]=String(b.top5[k]).slice(0,30)});o.top5=t}
+ return Object.keys(o).length?o:null;
 }
 function normCfg(d){
  d=d||{};const c=clone(DEFAULT_CFG);
  if(typeof d.blogUrl==='string')c.blogUrl=d.blogUrl;
  if(typeof d.topics==='string')c.topics=d.topics;
  if(numOrNull(d.minVol)!=null)c.minVol=Number(d.minVol);
- if(numOrNull(d.goodRatio)!=null)c.goodRatio=Number(d.goodRatio);
+ if(numOrNull(d.goodPct)!=null)c.goodPct=Number(d.goodPct);
  if(Array.isArray(d.agents)&&d.agents.length)c.agents=d.agents.filter(a=>a&&a.id).map(a=>({id:String(a.id),name:String(a.name||a.id),note:String(a.note||'')}));
  if(d.assign&&typeof d.assign==='object')Object.keys(c.assign).forEach(k=>{c.assign[k]=String(d.assign[k]||'')});
  return c;
@@ -257,13 +264,14 @@ const getKw=id=>ST.kws.find(k=>k.id===id)||null;
 const editKw=id=>{const k=getKw(id);return k?clone(k):null};
 
 /* ---------- metrics ---------- */
-function total(k){return k.pc==null&&k.mo==null?null:(k.pc||0)+(k.mo||0)}
-function ratio(k){const t=total(k);return k.docs==null||!t?null:k.docs/t}
-function ratioCls(r){if(r==null)return '';const g=ST.cfg.goodRatio;return r<=g?'good':r<=g*3?'warn':'bad'}
+function total(k){return k.pc==null&&k.mo==null?(k.vol??null):(k.pc||0)+(k.mo||0)}
+function ratio(k){const t=total(k);return k.pub==null||!t?null:k.pub/t*100}
+const pctFmt=r=>r==null?'—':(r>=100?'100%↑':(r<10?r.toFixed(1):Math.round(r))+'%');
+function ratioCls(r){if(r==null)return '';const g=ST.cfg.goodPct;return r<=g?'good':r<=g*3?'warn':'bad'}
 function volCls(t){return t==null?'':t>=ST.cfg.minVol?'good':'bad'}
-function ratioPill(k){const r=ratio(k);return r==null?'':'<span class="pill '+ratioCls(r)+'">포화도 '+r.toFixed(2)+'</span>'}
+function ratioPill(k){const r=ratio(k);return r==null?'':'<span class="pill '+ratioCls(r)+'">포화도 '+pctFmt(r)+'</span>'}
 function verdictCount(k){const c={추천:0,보통:0,비추천:0};k.analyses.forEach(a=>{if(c[a.verdict]!=null)c[a.verdict]++});return c}
-const agentName=id=>{const a=ST.cfg.agents.find(x=>x.id===id);return a?a.name:(id||'직접')};
+const agentName=id=>{if(id==='blogtalk')return '블로그톡';const a=ST.cfg.agents.find(x=>x.id===id);return a?a.name:(id||'직접')};
 const stagePill=s=>'<span class="pill st-'+esc(s)+'">'+esc(s)+'</span>';
 
 /* ---------- parsing pasted agent output ---------- */
@@ -301,7 +309,7 @@ function parseAnalysis(text){
   score:parseNum(field(text,['점수','score'])),
   pc:parseNum(field(text,['월\\s*검색량\\s*\\(?PC\\)?','PC\\s*검색량','PC'])),
   mo:parseNum(field(text,['월\\s*검색량\\s*\\(?모바일\\)?','모바일\\s*검색량','모바일','MO'])),
-  docs:parseNum(field(text,['블로그\\s*문서\\s*수','문서\\s*수','발행량'])),
+  pub:parseNum(field(text,['월\\s*발행량(?:\\s*\\([^)]*\\))?','발행량'])),
   comp:field(text,['경쟁(?:도|강도)?']),
   intent:field(text,['검색\\s*의도','의도']),
   title:field(text,['노릴 만한 제목(?: 예시)?','제목(?: 예시)?']),
@@ -319,13 +327,22 @@ function promptDiscover(forJson){
  +(forJson?'JSON 배열로만 답해. 형식: [{"kw":"키워드","vol":예상월검색량숫자,"why":"고른 이유 한 줄"}]. 검색량을 모르면 vol은 null.'
  :'\n아래 형식으로만, 한 줄에 하나씩 답해줘. 다른 설명은 빼줘.\n키워드 | 예상 월검색량(숫자) | 고른 이유');
 }
-function kwFacts(k){const f=[];if(k.pc!=null)f.push('PC 월검색량 '+fmt(k.pc));if(k.mo!=null)f.push('모바일 월검색량 '+fmt(k.mo));if(k.docs!=null)f.push('블로그 문서수 '+fmt(k.docs));return f.length?'\n내가 확인한 숫자: '+f.join(', '):''}
+function kwFacts(k){
+ const f=[],t=total(k),b=k.bt||{};
+ if(t!=null)f.push('월 검색량 '+fmt(t)+(k.pc!=null||k.mo!=null?' (PC '+fmt(k.pc)+', 모바일 '+fmt(k.mo)+')':''));
+ if(k.pub!=null)f.push('월 발행량 '+fmt(k.pub));
+ if(ratio(k)!=null)f.push('콘텐츠 포화도 '+pctFmt(ratio(k)));
+ if(b.grade)f.push('키워드 등급 '+b.grade);if(b.entry)f.push('진입 가능성 '+b.entry);if(b.speed)f.push('진입 속도 '+b.speed);if(b.ad)f.push('광고 경쟁 '+b.ad);if(b.slots!=null)f.push('블로그 노출 자리 '+b.slots+'칸');
+ if(b.trend)f.push('24개월 추세 '+b.trend);if(b.yoy)f.push('전년 동월 대비 '+b.yoy);
+ if(b.top5&&b.top5.chars)f.push('상위 5개 글 평균: 글자수 '+fmt(b.top5.chars)+', 이미지 '+(b.top5.images??'-')+'장, 제목 '+(b.top5.titleLen??'-')+'자');
+ return f.length?'\n내가 블로그톡 등에서 확인한 실제 데이터: '+f.join(', '):'';
+}
 function promptAnalyze(k,forJson){
  const c=ST.cfg;
  return '너는 네이버 블로그 키워드 분석가야.\n'+blogLine()+'\n분석할 키워드: '+k.kw+kwFacts(k)
- +'\n\n이 키워드로 네이버 블로그 글을 쓸 가치가 있는지 분석해줘. 기준: 월간 검색량(PC+모바일) '+fmt(c.minVol)+' 이상, 블로그 문서수가 검색량에 비해 적을수록 좋음, 내 블로그 주제와 맞는지.\n'
- +(forJson?'JSON 객체로만 답해. 형식: {"verdict":"추천|보통|비추천","score":0~100,"pc":숫자|null,"mo":숫자|null,"docs":숫자|null,"comp":"낮음|중간|높음","intent":"검색 의도","title":"노릴 만한 제목 예시","why":"근거 2~3문장"}. 실시간 데이터를 볼 수 없으니 숫자는 추정치로 넣고 모르면 null.'
- :'\n아래 형식 그대로 채워서 답해줘.\n판정: 추천 / 보통 / 비추천 중 하나\n점수: 0~100\n월검색량 PC: 숫자\n월검색량 모바일: 숫자\n블로그 문서수: 숫자\n경쟁: 낮음 / 중간 / 높음\n검색 의도: \n노릴 만한 제목 예시: \n근거: \n\n확실하지 않은 숫자는 뒤에 (추정)이라고 붙여줘.');
+ +'\n\n이 키워드로 네이버 블로그 글을 쓸 가치가 있는지 분석해줘. 기준: 월간 검색량(PC+모바일) '+fmt(c.minVol)+' 이상, 콘텐츠 포화도(월 발행량÷월 검색량)가 '+c.goodPct+'% 이하면 좋음, 내 블로그 주제와 맞는지. 실제 데이터가 주어졌으면 그 숫자를 그대로 쓰고 판단에 집중해.\n'
+ +(forJson?'JSON 객체로만 답해. 형식: {"verdict":"추천|보통|비추천","score":0~100,"pc":숫자|null,"mo":숫자|null,"pub":월발행량숫자|null,"comp":"낮음|중간|높음","intent":"검색 의도","title":"노릴 만한 제목 예시","why":"근거 2~3문장"}. 실시간 데이터를 볼 수 없으니 숫자는 추정치로 넣고 모르면 null.'
+ :'\n아래 형식 그대로 채워서 답해줘.\n판정: 추천 / 보통 / 비추천 중 하나\n점수: 0~100\n월검색량 PC: 숫자\n월검색량 모바일: 숫자\n월 발행량(최근 30일 블로그 발행 수): 숫자\n경쟁: 낮음 / 중간 / 높음\n검색 의도: \n노릴 만한 제목 예시: \n근거: \n\n확실하지 않은 숫자는 뒤에 (추정)이라고 붙여줘.');
 }
 function promptRelated(k,forJson){
  return '너는 네이버 블로그 키워드 리서처야.\n'+blogLine()+'\n기준 키워드: '+k.kw
@@ -354,7 +371,7 @@ function kwRow(k){
  const dots=k.analyses.length?'<span class="dots" title="분석 판정">'+k.analyses.map(a=>'<i class="dot '+esc(a.verdict)+'"></i>').join('')+'</span>':'';
  return '<button class="kwrow" data-a="open" data-id="'+esc(k.id)+'"><div class="k">'+esc(k.kw)+'</div>'
  +'<div class="v '+(t==null?'muted':'')+'">'+(t==null&&k.estVol!=null?'≈'+fmt(k.estVol)+'<small>예상 검색량</small>':fmt(t)+'<small>월 검색량</small>')+'</div>'
- +'<div class="m">'+stagePill(k.stage)+ratioPill(k)+dots+(k.analyses.length?'<span>분석 '+k.analyses.length+(vc.추천?' · 추천 '+vc.추천:'')+'</span>':'')+(k.related.length?'<span>연관 '+k.related.length+'</span>':'')+'</div><div></div></button>';
+ +'<div class="m">'+stagePill(k.stage)+(k.bt&&k.bt.grade?'<span class="pill acc">'+esc(k.bt.grade)+'등급</span>':'')+ratioPill(k)+dots+(k.analyses.length?'<span>분석 '+k.analyses.length+(vc.추천?' · 추천 '+vc.추천:'')+'</span>':'')+(k.related.length?'<span>연관 '+k.related.length+'</span>':'')+'</div><div></div></button>';
 }
 function agentChips(step){
  const j=ST.jobs[step],as=ST.cfg.assign[step];
@@ -374,6 +391,75 @@ function jobBody(step,k){
  +'<div class="step"><div><h3>'+name+' 앱에 붙여 넣고 답을 받아요</h3></div></div>'
  +'<div class="step"><div><h3>받은 답을 여기에 붙여 넣기</h3><textarea id="paste-'+step+'" data-bind="jobs.'+step+'.paste" placeholder="'+name+'의 답을 그대로 붙여 넣으세요">'+esc(j.paste)+'</textarea><button class="btn" data-a="readPaste" data-step="'+step+'">'+(step==='discover'?'후보 읽기':step==='analyze'?'분석 저장':'연관 키워드 저장')+'</button></div></div>'
  +'</div>';
+}
+
+/* ---------- 블로그톡 붙여넣기 ---------- */
+const AD=/^(높음|중간|낮음)$/, isNumTok=x=>/^[\d,]+$/.test(x), isPctTok=x=>/^[\d.]+%\s*↑?$/.test(x);
+function btRows(text){
+ const out=[],seen={};
+ const push=(kw,vol,pub,sat,ad)=>{kw=String(kw).replace(/^[☐□✓✔☑\s]+/,'').trim();
+  if(!kw||kw.length>40||/[:：]/.test(kw)||/^(키워드|월|검색량|발행량|콘텐츠|포화도|광고|경쟁)$/.test(kw))return;
+  const d=dupKey(kw);if(seen[d])return;seen[d]=1;out.push({kw,vol:parseNum(vol),pub:parseNum(pub),sat:String(sat).replace(/\s/g,''),ad})};
+ String(text).split(/\r?\n/).forEach(l=>{const m=l.trim().match(/^(.+?)\s+([\d,]+)\s+([\d,]+)\s+([\d.]+%\s*↑?)\s+(높음|중간|낮음)\b/);if(m)push(m[1],m[2],m[3],m[4],m[5])});
+ const t=[];String(text).split(/[\r\n\t]+/).map(x=>x.trim()).filter(Boolean).forEach(x=>{if(/^↑$/.test(x)&&t.length)t[t.length-1]+='↑';else t.push(x)});
+ for(let i=0;i+4<t.length;i++){if(!isNumTok(t[i])&&!isPctTok(t[i])&&!AD.test(t[i])&&isNumTok(t[i+1])&&isNumTok(t[i+2])&&isPctTok(t[i+3])&&AD.test(t[i+4])){push(t[i],t[i+1],t[i+2],t[i+3],t[i+4]);i+=4}}
+ return out;
+}
+function btMain(text){
+ const s=String(text||'').replace(/[?ⓘ]/g,' ').replace(/\s+/g,' ');
+ const g=re=>{const m=s.match(re);return m?m[1].trim():''};
+ const r={};
+ r.kw=g(/['‘’"“”]([^'‘’"“”]{1,40})['‘’"“”]\s*분석 결과/);
+ r.vol=parseNum(g(/월간? 검색량\s*([\d,]+)/));
+ r.mo=parseNum(g(/모바일\s*([\d,]+)\s*\(/));r.pc=parseNum(g(/PC\s*([\d,]+)\s*\(/));
+ r.pub=parseNum(g(/월간? (?:콘텐츠 )?발행량\s*([\d,]+)/));
+ r.cum=parseNum(g(/누적\s*([\d,]+)/));
+ r.slots=parseNum(g(/블로그 자리\s*(\d+)\s*칸/));
+ r.grade=g(/키워드 등급\s*([A-F][+-]?)(?![A-Za-z가-힣])/);
+ r.entry=g(/진입 가능성\s*(높음|보통|중간|낮음)/);
+ r.speed=g(/진입 속도\s*(빠름|보통|느림)/);
+ r.ad=g(/광고 경쟁\s*(높음|중간|낮음)/);
+ r.season=g(/성수기 구간\s*(.{1,20}?)\s*성수기 대비/);
+ r.peakNow=g(/성수기 대비 지금\s*(\d+%)/);
+ r.yoy=g(/전년 동월 대비\s*([+\-−]?\s*\d+(?:\.\d+)?%)/);
+ r.trend=g(/24개월 추세\s*((?:▲|▼)?\s*(?:증가|감소|유지)?\s*\d+(?:\.\d+)?%)/);
+ r.brief=g(/블토기 브리핑\s*(.{2,30}?)\s*(?:키워드 분석|💡|이런 점)/);
+ r.category=g(/분석 결과\s*(?:저장\s*)?([가-힣A-Za-z]+[·ㆍ][가-힣A-Za-z]+)/);
+ const re=/블로그 레벨\s*(Lv\s?\d+|없음)\s*유효키워드 수\s*([\d,]+)개\s*전체 순위\s*(\S+)\s*발행일\s*(.{1,12}?)\s*제목 길이\s*(\d+)자\s*글자 수\s*([\d,]+)자\s*키워드 수\s*(\d+)개\s*이미지 수\s*(\d+)장\s*방문자 수\s*([\d,]+)명/g;
+ let m,best=null;while((m=re.exec(s))){if(parseNum(m[6])>0)best=m}
+ if(best)r.top5={level:best[1],age:best[4],titleLen:+best[5],chars:parseNum(best[6]),kwCount:+best[7],images:+best[8],visitors:parseNum(best[9])};
+ return r;
+}
+function btParse(text){const main=btMain(text);return {main,hasMain:main.vol!=null||!!main.grade||main.pub!=null,rows:btRows(text)}}
+function btApply(k,r){
+ if(r.pc!=null)k.pc=r.pc;if(r.mo!=null)k.mo=r.mo;if(r.vol!=null)k.vol=r.vol;if(r.pub!=null)k.pub=r.pub;
+ const b=Object.assign({},r);delete b.kw;delete b.vol;delete b.pc;delete b.mo;delete b.pub;b.at=nowIso();
+ k.bt=normBt(b);
+}
+function btMemo(x){return [x.pub!=null?'발행 '+fmt(x.pub):'',x.sat?'포화도 '+x.sat:'',x.ad?'광고 '+x.ad:''].filter(Boolean).join(' · ')}
+function btDiscPanel(){
+ const P=ST.bt.parsed;
+ let list='';
+ if(P){const on=P.items.filter(x=>x.on).length;
+  list='<div class="row between"><h3>읽은 키워드 '+P.items.length+'개</h3><button class="btn text" data-a="btClear">지우기</button></div>'
+  +(P.main?'<p class="small muted">「'+esc(P.items[0]&&P.items[0].main?P.items[0].kw:'')+'」 '+[P.main.grade?P.main.grade+'등급':'',P.main.entry?'진입 '+P.main.entry:'',P.main.vol!=null?'검색 '+fmt(P.main.vol):''].filter(Boolean).join(' · ')+'. 나머지는 이 키워드의 연관 키워드로도 저장돼요.</p>':'')
+  +'<div class="parsed">'+P.items.map((x,i)=>{const sat=x.main&&P.main&&x.vol&&x.pub!=null?pctFmt(x.pub/x.vol*100):x.sat;
+   return '<label><input type="checkbox" id="bp-'+i+'" data-a="btPick" data-i="'+i+'"'+(x.on?' checked':'')+(x.dup&&!x.main?' disabled':'')+'><span>'+esc(x.kw)+(x.main?' <span class="pill acc">메인</span>':'')+'<small>'+esc([x.pub!=null?'발행 '+fmt(x.pub):'',sat?'포화도 '+sat:'',x.ad?'광고 '+x.ad:''].filter(Boolean).join(' · '))+(x.dup?(x.main?' · 이미 있음, 숫자만 갱신':' · 이미 있는 키워드'):'')+'</small></span><span class="num small">'+fmt(x.vol)+'</span></label>'}).join('')+'</div>'
+  +'<button class="btn block" data-a="btAdd" '+(on?'':'disabled')+'>선택한 '+on+'개 넣기</button>';
+ }
+ return '<section class="panel"><div class="row between"><h2>블로그톡에서 가져오기</h2><a class="small" href="https://beta.blogtalk.io/" target="_blank" rel="noopener">블로그톡 열기</a></div>'
+ +'<p class="small muted">블로그톡에서 키워드를 검색하고 결과 화면을 전체 선택(Ctrl+A)해서 복사한 뒤 붙여 넣으세요. 메인 키워드 숫자와 키워드 맵 표를 같이 읽어요. 기준 검색량을 넘는 키워드는 미리 체크돼 있고, 나머지는 메인 키워드의 연관 키워드로만 저장돼요.</p>'
+ +'<textarea id="bt-disc" data-bind="bt.disc" placeholder="블로그톡 결과 붙여 넣기">'+esc(ST.bt.disc)+'</textarea><button class="btn sub" data-a="btRead">읽기</button>'+list+'</section>';
+}
+function btPanel(k){
+ const b=k.bt,t=b&&b.top5;
+ const cell=(l,v)=>v==null||v===''?'':'<div class="metric"><span>'+l+'</span><b style="font-size:16px">'+esc(v)+'</b></div>';
+ return '<section class="panel"><div class="row between"><h2>블로그톡 데이터</h2>'+(b&&b.at?'<span class="small muted">'+esc(when(b.at))+' 가져옴</span>':'<a class="small" href="https://beta.blogtalk.io/" target="_blank" rel="noopener">블로그톡 열기</a>')+'</div>'
+ +(b?(b.brief?'<p><b>'+esc(b.brief)+'</b></p>':'')+'<div class="metrics">'+cell('키워드 등급',b.grade)+cell('진입 가능성',b.entry)+cell('진입 속도',b.speed)+cell('광고 경쟁',b.ad)+cell('블로그 자리',b.slots!=null?b.slots+'칸':null)+cell('누적 발행',b.cum!=null?fmt(b.cum):null)+'</div>'
+  +((b.season||b.yoy||b.trend)?'<dl class="kv">'+(b.category?'<dt>분류</dt><dd>'+esc(b.category)+'</dd>':'')+(b.season?'<dt>성수기</dt><dd>'+esc(b.season)+(b.peakNow?' · 지금 성수기 대비 '+esc(b.peakNow):'')+'</dd>':'')+(b.yoy?'<dt>전년 동월</dt><dd>'+esc(b.yoy)+'</dd>':'')+(b.trend?'<dt>24개월 추세</dt><dd>'+esc(b.trend)+'</dd>':'')+'</dl>':'')
+  +(t&&t.chars?'<h3>상위 5개 글 평균 (이만큼은 써야 해요)</h3><div class="metrics">'+cell('글자 수',fmt(t.chars)+'자')+cell('이미지',(t.images??'-')+'장')+cell('제목 길이',(t.titleLen??'-')+'자')+cell('키워드 수',(t.kwCount??'-')+'개')+cell('블로그 레벨',t.level)+cell('발행일',t.age)+'</div>':'')
+ :'<p class="small muted">블로그톡에서 이 키워드를 검색한 결과 화면을 붙여 넣으면 숫자, 등급, 상위 글 평균이 채워지고 키워드 맵은 연관 키워드로 들어가요.</p>')
+ +'<textarea id="bt-detail" data-bind="bt.detail" placeholder="블로그톡 결과 붙여 넣기">'+esc(ST.bt.detail)+'</textarea><button class="btn sub" data-a="btDetail">'+(b?'다시 반영':'반영')+'</button></section>';
 }
 
 /* ---------- views ---------- */
@@ -414,6 +500,7 @@ function discoverV(){
  +'<label class="f">개수<select id="d-n" data-bind="jobs.discover.n">'+['10','15','20','30'].map(n=>'<option'+(j.n===n?' selected':'')+'>'+n+'</option>').join('')+'</select></label></div></section>'
  +'<section class="panel"><div class="row between"><h2>누구에게 맡길까요</h2></div>'+agentChips('discover')+jobBody('discover',null)+'</section>'
  +parsed
+ +btDiscPanel()
  +'<section class="panel"><div class="row between"><h2>직접 넣기</h2><a class="small" href="https://beta.blogtalk.io/" target="_blank" rel="noopener">블로그톡 열기</a></div><p class="small muted">이미 아는 키워드는 한 줄에 하나씩 적으세요. 「키워드 | 검색량」으로 적으면 검색량도 같이 들어가요. 블로그톡 같은 도구에서 표를 복사해 붙여 넣어도 돼요.</p><textarea id="manual" data-bind="manual" placeholder="아이폰 배터리 성능 확인&#10;윈도우11 업데이트 끄기 | 12000">'+esc(ST.manual)+'</textarea><button class="btn sub" data-a="addManual">후보로 추가</button></section>'
  +'</div>';
 }
@@ -450,13 +537,14 @@ function detailV(){
  +'<div class="seg" role="group" aria-label="단계">'+STAGES.map(s=>'<button data-a="setStage" data-v="'+s+'" class="'+(k.stage===s?'on':'')+'">'+s+'</button>').join('')+'</div>'
  +'<section class="stack"><div class="row between"><h2>숫자</h2><span class="small muted">눌러서 고칠 수 있어요</span></div>'
  +'<div class="metrics">'
- +'<label class="metric"><span>PC 월 검색량</span><input id="m-pc" inputmode="numeric" data-kwf="pc" value="'+(k.pc??'')+'" placeholder="—"></label>'
+ +(k.pc==null&&k.mo==null&&k.vol!=null?'<div class="metric"><span>월 검색량 (블로그톡)</span><b>'+fmt(k.vol)+'</b></div>':'')+'<label class="metric"><span>PC 월 검색량</span><input id="m-pc" inputmode="numeric" data-kwf="pc" value="'+(k.pc??'')+'" placeholder="—"></label>'
  +'<label class="metric"><span>모바일 월 검색량</span><input id="m-mo" inputmode="numeric" data-kwf="mo" value="'+(k.mo??'')+'" placeholder="—"></label>'
- +'<label class="metric"><span>블로그 문서수</span><input id="m-docs" inputmode="numeric" data-kwf="docs" value="'+(k.docs??'')+'" placeholder="—"></label>'
+ +'<label class="metric"><span>월 발행량</span><input id="m-pub" inputmode="numeric" data-kwf="pub" value="'+(k.pub??'')+'" placeholder="—"></label>'
  +'<div class="metric"><span>합계 검색량</span><b>'+fmt(t)+'</b>'+(t==null&&k.estVol!=null?'<span class="small muted">에이전트 예상 ≈'+fmt(k.estVol)+'</span>':'')+(t!=null?'<span class="pill '+volCls(t)+'" style="align-self:flex-start">'+(t>=ST.cfg.minVol?'기준 넘음':'기준 미달')+'</span>':'')+'</div>'
- +'<div class="metric"><span>포화도 (문서수÷검색량)</span><b>'+(r==null?'—':r.toFixed(2))+'</b>'+(r!=null?'<span class="pill '+ratioCls(r)+'" style="align-self:flex-start">'+(ratioCls(r)==='good'?'여유 있음':ratioCls(r)==='warn'?'경쟁 있음':'포화')+'</span>':'')+'</div>'
+ +'<div class="metric"><span>콘텐츠 포화도</span><b>'+pctFmt(r)+'</b>'+(r!=null?'<span class="pill '+ratioCls(r)+'" style="align-self:flex-start">'+(ratioCls(r)==='good'?'여유 있음':ratioCls(r)==='warn'?'경쟁 있음':'포화')+'</span>':'')+'</div>'
  +'</div>'
  +'<div class="links"><a href="https://search.naver.com/search.naver?query='+q+'" target="_blank" rel="noopener">네이버 검색</a><a href="https://search.naver.com/search.naver?ssc=tab.blog.all&amp;query='+q+'" target="_blank" rel="noopener">블로그 탭</a><a href="https://datalab.naver.com/keyword/trendSearch.naver" target="_blank" rel="noopener">데이터랩</a><a href="https://searchad.naver.com/" target="_blank" rel="noopener">검색광고 키워드도구</a><a href="https://beta.blogtalk.io/" target="_blank" rel="noopener">블로그톡</a></div></section>'
+ +btPanel(k)
  // analysis
  +'<section class="panel"><div class="row between"><h2>분석 '+k.analyses.length+'</h2>'+(k.analyses.length?'<span class="small muted">추천 '+vc.추천+' · 보통 '+vc.보통+' · 비추천 '+vc.비추천+'</span>':'')+'</div>'
  +k.analyses.slice().reverse().map(a=>anaCard(k,a)).join('')
@@ -480,12 +568,12 @@ function anaCard(k,a){
  const rows=[];
  const t=a.pc==null&&a.mo==null?null:(a.pc||0)+(a.mo||0);
  if(t!=null)rows.push(['검색량',fmt(t)+(a.pc!=null||a.mo!=null?' (PC '+fmt(a.pc)+' · 모바일 '+fmt(a.mo)+')':'')]);
- if(a.docs!=null)rows.push(['문서수',fmt(a.docs)]);
+ if(a.pub!=null)rows.push(['월 발행량',fmt(a.pub)]);
  if(a.comp)rows.push(['경쟁',a.comp]);
  if(a.intent)rows.push(['검색 의도',a.intent]);
  if(a.title)rows.push(['제목 예시',a.title]);
  if(a.why)rows.push(['근거',a.why]);
- const hasNums=a.pc!=null||a.mo!=null||a.docs!=null;
+ const hasNums=a.pc!=null||a.mo!=null||a.pub!=null;
  return '<div class="ana"><div class="row between"><div class="row"><b>'+esc(agentName(a.agent))+'</b>'+(a.verdict?'<span class="pill '+vp+'">'+a.verdict+'</span>':'<span class="pill">판정 없음</span>')+(a.score!=null?'<span class="num small">'+a.score+'점</span>':'')+(a.est?'<span class="pill">추정치</span>':'')+'</div><span class="small muted">'+esc(when(a.at))+'</span></div>'
  +(rows.length?'<dl class="kv">'+rows.map(r=>'<dt>'+r[0]+'</dt><dd>'+esc(r[1])+'</dd>').join('')+'</dl>':'')
  +(a.raw?'<details><summary>받은 답 원문</summary><pre>'+esc(a.raw)+'</pre></details>':'')
@@ -530,8 +618,8 @@ function settingsV(){
  +'<label class="f">블로그 주제 소개 (요청문에 같이 들어가요)<textarea id="c-topics" data-cfg="topics" placeholder="예) IT·테크 정보글. 스마트폰·노트북 설정법, 앱 추천, 신제품 비교. 체험단 리뷰도 씀.">'+esc(c.topics)+'</textarea></label></section>'
  +'<section class="panel"><h2>판정 기준</h2><div class="two">'
  +'<label class="f">기준 월 검색량 (PC+모바일)<input class="inp num" id="c-min" data-cfg="minVol" inputmode="numeric" value="'+esc(c.minVol)+'"></label>'
- +'<label class="f">포화도 기준 (문서수÷검색량)<input class="inp num" id="c-ratio" data-cfg="goodRatio" inputmode="decimal" value="'+esc(c.goodRatio)+'"></label></div>'
- +'<p class="small muted">포화도가 기준 이하면 「여유 있음」, 기준의 3배까지는 「경쟁 있음」, 그 위는 「포화」로 표시돼요. 숫자가 낮을수록 글을 올렸을 때 노출될 자리가 많다는 뜻이에요.</p></section>'
+ +'<label class="f">콘텐츠 포화도 기준 (%)<input class="inp num" id="c-ratio" data-cfg="goodPct" inputmode="decimal" value="'+esc(c.goodPct)+'"></label></div>'
+ +'<p class="small muted">콘텐츠 포화도는 블로그톡과 같은 계산이에요 (월 발행량 ÷ 월 검색량). 기준 이하면 「여유 있음」, 기준의 3배까지는 「경쟁 있음」, 그 위는 「포화」로 표시돼요. 낮을수록 검색하는 사람에 비해 새 글이 적다는 뜻이에요.</p></section>'
  +'<section class="panel"><h2>데이터</h2><p class="small">'+(ST.mode==='db'?'claude.ai에 저장되고 있어요. 같은 계정으로 폰과 PC에서 열면 똑같이 보여요.':'이 기기 브라우저에만 저장되고 있어요.')+'</p>'
  +'<p class="small muted">키워드 '+ST.kws.length+'개 · 분석 '+ST.kws.reduce((s,k)=>s+k.analyses.length,0)+'개 · 연관 키워드 '+ST.kws.reduce((s,k)=>s+k.related.length,0)+'개</p>'
  +'<button class="btn sub" data-a="toggleData">'+(ST.showData?'데이터 숨기기':'전체 데이터 보기 (백업용 복사)')+'</button>'
@@ -553,7 +641,7 @@ function render(){
 }
 function go(view){ST.view=view;ST.armed=null;window.scrollTo(0,0);render()}
 function openKw(id){
- if(ST.sel!==id){ST.jobs.analyze={agent:ST.cfg.assign.analyze||null,paste:'',open:false};ST.jobs.related={agent:ST.cfg.assign.related||null,paste:'',open:false};ST.relManual=''}
+ if(ST.sel!==id){ST.jobs.analyze={agent:ST.cfg.assign.analyze||null,paste:'',open:false};ST.jobs.related={agent:ST.cfg.assign.related||null,paste:'',open:false};ST.relManual='';ST.bt.detail=''}
  ST.sel=id;go('detail');
 }
 
@@ -568,13 +656,14 @@ function makeKw(kw,src,vol,memo){
 function addAnalysis(k,a,agent,raw){
  const x=Object.assign({id:newId('a'),agent:agent,at:nowIso(),raw:raw||''},a);
  k.analyses.push(normKw('t',{analyses:[x]}).analyses[0]);
- if(k.pc==null&&k.mo==null&&k.docs==null){if(x.pc!=null)k.pc=x.pc;if(x.mo!=null)k.mo=x.mo;if(x.docs!=null)k.docs=x.docs}
+ if(k.pc==null&&k.mo==null&&k.vol==null){if(x.pc!=null)k.pc=x.pc;if(x.mo!=null)k.mo=x.mo}
+ if(k.pub==null&&x.pub!=null)k.pub=x.pub;
  if(k.stage==='후보')k.stage='분석됨';
 }
 function addRelated(k,items,agent){
  let n=0;const have={};k.related.forEach(r=>have[dupKey(r.kw)]=1);have[dupKey(k.kw)]=1;
  items.forEach(it=>{const d=dupKey(it.kw);if(!it.kw||have[d])return;have[d]=1;const ex=findByKw(it.kw);
-  k.related.push({id:newId('r'),kw:it.kw,vol:it.vol??null,memo:it.memo||'',agent:agent,at:nowIso(),promoted:ex?ex.id:''});n++});
+  k.related.push({id:newId('r'),kw:it.kw,vol:it.vol??null,pub:it.pub??null,memo:it.memo||'',agent:agent,at:nowIso(),promoted:ex?ex.id:''});n++});
  return n;
 }
 function markDups(list){return list.map(p=>Object.assign(p,{dup:!!findByKw(p.kw),on:!findByKw(p.kw)}))}
@@ -616,7 +705,7 @@ async function runClaude(step){
   }else if(step==='analyze'){
    const kk=editKw(k.id);if(!kk)throw {code:'gone'};
    const r=res&&typeof res==='object'?res:{};
-   addAnalysis(kk,{verdict:normVerdict(r.verdict),score:numOrNull(r.score),pc:numOrNull(r.pc),mo:numOrNull(r.mo),docs:numOrNull(r.docs),comp:String(r.comp||''),intent:String(r.intent||''),title:String(r.title||''),why:String(r.why||''),est:true},'claude','');
+   addAnalysis(kk,{verdict:normVerdict(r.verdict),score:numOrNull(r.score),pc:numOrNull(r.pc),mo:numOrNull(r.mo),pub:numOrNull(r.pub),comp:String(r.comp||''),intent:String(r.intent||''),title:String(r.title||''),why:String(r.why||''),est:true},'claude','');
    saveKw(kk);ST.jobs.analyze.open=false;toast('클로드 분석을 저장했어요');
   }else{
    const kk=editKw(k.id);if(!kk)throw {code:'gone'};
@@ -653,16 +742,38 @@ document.addEventListener('click',e=>{
   case 'addManual':{const items=parseList(ST.manual);let n=0;items.slice().reverse().forEach(p=>{if(findByKw(p.kw))return;const k=makeKw(p.kw,{agent:'',step:'manual',from:''},null,p.memo);if(p.vol!=null)k.mo=p.vol;saveKw(k);n++});
    if(!items.length)return toast('키워드를 한 줄에 하나씩 적어 주세요');ST.manual='';toast(n?n+'개를 후보로 넣었어요':'모두 이미 있는 키워드예요');break}
   case 'setStage':{const k=editKw(ST.sel);if(!k||k.stage===el.dataset.v)return;k.stage=el.dataset.v;saveKw(k);break}
-  case 'applyNums':{const k=editKw(ST.sel);if(!k)return;const x=k.analyses.find(y=>y.id===id);if(!x)return;if(x.pc!=null)k.pc=x.pc;if(x.mo!=null)k.mo=x.mo;if(x.docs!=null)k.docs=x.docs;saveKw(k);toast(agentName(x.agent)+'의 숫자로 바꿨어요');break}
+  case 'applyNums':{const k=editKw(ST.sel);if(!k)return;const x=k.analyses.find(y=>y.id===id);if(!x)return;if(x.pc!=null)k.pc=x.pc;if(x.mo!=null)k.mo=x.mo;if(x.pub!=null)k.pub=x.pub;saveKw(k);toast(agentName(x.agent)+'의 숫자로 바꿨어요');break}
   case 'delAna':{if(wasArmed!=='ana:'+id){ST.armed='ana:'+id;break}ST.armed=null;const k=editKw(ST.sel);if(!k)return;k.analyses=k.analyses.filter(y=>y.id!==id);if(!k.analyses.length&&k.stage==='분석됨')k.stage='후보';saveKw(k);toast('분석을 지웠어요');break}
   case 'delKw':{if(wasArmed!=='kw:'+ST.sel){ST.armed='kw:'+ST.sel;break}ST.armed=null;removeKw(ST.sel);toast('키워드를 지웠어요');go('list');return}
   case 'promote':{const k=editKw(ST.sel);if(!k)return;const r=k.related.find(y=>y.id===id);if(!r)return;const ex=findByKw(r.kw);
-   if(ex){r.promoted=ex.id}else{const nk=makeKw(r.kw,{agent:r.agent,step:'related',from:k.id},r.vol,r.memo);saveKw(nk);r.promoted=nk.id}
+   if(ex){r.promoted=ex.id}else{const real=r.agent==='blogtalk';const nk=makeKw(r.kw,{agent:r.agent,step:'related',from:k.id},real?null:r.vol,r.memo);if(real){nk.vol=r.vol;nk.pub=r.pub}saveKw(nk);r.promoted=nk.id}
    saveKw(k);toast('후보에 넣었어요: '+r.kw);break}
   case 'delRel':{const k=editKw(ST.sel);if(!k)return;k.related=k.related.filter(y=>y.id!==id);saveKw(k);break}
   case 'addRelManual':{const k=editKw(ST.sel);if(!k)return;const items=parseList(ST.relManual);if(!items.length)return toast('연관 키워드를 적어 주세요');const n=addRelated(k,items,'');saveKw(k);ST.relManual='';toast(n?'추가했어요':'이미 있는 키워드예요');break}
   case 'addAgent':{const ag={id:newId('g'),name:'새 에이전트',note:''};ST.cfg.agents.push(ag);saveCfg();break}
   case 'delAgent':{if(wasArmed!=='agent:'+id){ST.armed='agent:'+id;break}ST.armed=null;ST.cfg.agents=ST.cfg.agents.filter(x=>x.id!==id);Object.keys(ST.cfg.assign).forEach(s=>{if(ST.cfg.assign[s]===id)ST.cfg.assign[s]=''});Object.keys(ST.jobs).forEach(s=>{if(ST.jobs[s].agent===id)ST.jobs[s].agent=null});saveCfg();break}
+  case 'btRead':{const txt=ST.bt.disc.trim();if(!txt)return toast('블로그톡 화면을 복사해서 붙여 넣어 주세요');const p=btParse(txt);
+   const items=[];if(p.main.kw&&p.hasMain)items.push({kw:p.main.kw,vol:p.main.vol,pub:p.main.pub,ad:p.main.ad,main:true});
+   p.rows.forEach(x=>{if(!items.some(y=>dupKey(y.kw)===dupKey(x.kw)))items.push(x)});
+   items.forEach(x=>{const ex=findByKw(x.kw);x.dup=!!ex;x.on=x.main?true:(!ex&&x.vol!=null&&x.vol>=ST.cfg.minVol)});
+   ST.bt.parsed={main:p.hasMain?p.main:null,items};if(!items.length)toast('읽을 수 있는 키워드가 없었어요');break}
+  case 'btPick':{const it=ST.bt.parsed&&ST.bt.parsed.items[+el.dataset.i];if(it&&!(it.dup&&!it.main))it.on=el.checked;const on=ST.bt.parsed.items.filter(x=>x.on).length;const b=document.querySelector('[data-a="btAdd"]');if(b){b.disabled=!on;b.textContent='선택한 '+on+'개 넣기'}return}
+  case 'btClear':ST.bt.parsed=null;break;
+  case 'btAdd':{const P=ST.bt.parsed;if(!P)return;let mainK=null,n=0,up=0;
+   const mainIt=P.items.find(x=>x.main);
+   if(mainIt&&P.main){const ex=findByKw(mainIt.kw);mainK=ex?clone(ex):makeKw(mainIt.kw,{agent:'blogtalk',step:'discover',from:''},null,'');if(mainIt.on||ex){btApply(mainK,P.main);if(ex)up++;else n++}else mainK=null}
+   const rows=P.items.filter(x=>!x.main);
+   if(mainK){addRelated(mainK,rows.map(x=>({kw:x.kw,vol:x.vol,pub:x.pub,memo:btMemo(x)})),'blogtalk')}
+   rows.filter(x=>x.on&&!findByKw(x.kw)).slice().reverse().forEach(x=>{const nk=makeKw(x.kw,mainK?{agent:'blogtalk',step:'related',from:mainK.id}:{agent:'blogtalk',step:'discover',from:''},null,'');nk.vol=x.vol;nk.pub=x.pub;if(x.ad)nk.bt={ad:x.ad,at:nowIso()};saveKw(nk);n++;
+    if(mainK){const r=mainK.related.find(y=>dupKey(y.kw)===dupKey(x.kw));if(r)r.promoted=nk.id}});
+   if(mainK)saveKw(mainK);
+   ST.bt.parsed=null;ST.bt.disc='';toast((n?n+'개를 후보로 넣었어요':'')+(up?(n?' · ':'')+'기존 키워드 데이터를 갱신했어요':'')||'넣을 키워드가 없었어요');break}
+  case 'btDetail':{const k=editKw(ST.sel);if(!k)return;const txt=ST.bt.detail.trim();if(!txt)return toast('블로그톡 화면을 복사해서 붙여 넣어 주세요');const p=btParse(txt);
+   if(p.hasMain&&p.main.kw&&dupKey(p.main.kw)!==dupKey(k.kw))return toast('「'+p.main.kw+'」의 결과예요. 이 키워드를 검색한 화면을 붙여 넣어 주세요');
+   if(!p.hasMain&&!p.rows.length)return toast('블로그톡 숫자를 찾지 못했어요. 분석 결과 화면 전체를 복사해 주세요');
+   if(p.hasMain)btApply(k,p.main);
+   const n=addRelated(k,p.rows.filter(x=>dupKey(x.kw)!==dupKey(k.kw)).map(x=>({kw:x.kw,vol:x.vol,pub:x.pub,memo:btMemo(x)})),'blogtalk');
+   saveKw(k);ST.bt.detail='';toast((p.hasMain?'블로그톡 숫자를 반영했어요':'')+(n?(p.hasMain?' · ':'')+'연관 키워드 '+n+'개 추가':''));break}
   case 'toggleData':ST.showData=!ST.showData;break;
   case 'copyDump':copyFrom('dump','데이터를 복사했어요');return;
  }
@@ -684,7 +795,7 @@ document.addEventListener('change',e=>{
  if(el.dataset.kwf){const k=editKw(ST.sel);if(!k)return;const f=el.dataset.kwf;
   if(f==='memo'){if(k.memo===el.value)return;k.memo=el.value}else{const v=el.value.trim()===''?null:parseNum(el.value);if(k[f]===v)return;k[f]=v}
   saveKw(k);toast('저장했어요');render();return}
- if(el.dataset.cfg){const f=el.dataset.cfg;let v=el.value;if(f==='minVol'){v=parseNum(v);if(v==null)return toast('숫자로 적어 주세요')}if(f==='goodRatio'){v=parseFloat(v);if(!isFinite(v)||v<=0)return toast('0보다 큰 숫자로 적어 주세요')}
+ if(el.dataset.cfg){const f=el.dataset.cfg;let v=el.value;if(f==='minVol'){v=parseNum(v);if(v==null)return toast('숫자로 적어 주세요')}if(f==='goodPct'){v=parseFloat(v);if(!isFinite(v)||v<=0)return toast('0보다 큰 숫자로 적어 주세요')}
   ST.cfg[f]=v;saveCfg();toast('저장했어요');render();return}
  if(el.dataset.agentf){const ag=ST.cfg.agents.find(x=>x.id===el.dataset.id);if(!ag)return;const v=el.value.trim();if(el.dataset.agentf==='name'&&!v){el.value=ag.name;return}ag[el.dataset.agentf]=v;saveCfg();toast('저장했어요');render();return}
  if(el.dataset.assign){ST.cfg.assign[el.dataset.assign]=el.value;if(!ST.jobs[el.dataset.assign].agent)ST.jobs[el.dataset.assign].agent=el.value||null;saveCfg();toast(el.value?STEPS[el.dataset.assign]+'은 '+agentName(el.value)+'에게 맡겨요':'미정으로 바꿨어요');render();return}
