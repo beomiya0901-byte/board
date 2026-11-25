@@ -224,7 +224,7 @@ main{padding:14px 0 8px}
 .rank-bar[hidden]{display:none}
 .rank-bar .rank-note{flex:1 1 130px;min-width:0;font-size:11.5px;font-weight:650;color:var(--text-3);line-height:1.45;overflow-wrap:anywhere}
 .hero-rank{margin-top:9px;font-size:12.5px;font-weight:650;color:var(--text-2)}
-#pub-url-hint{display:block;margin:2px 0 8px;line-height:1.5}
+#pub-url-hint{display:block;margin-top:6px;line-height:1.5}
 .hero-rank[hidden]{display:none}
 .hero-rank b{color:var(--text);font-weight:800}
 .status-chip{
@@ -1408,11 +1408,20 @@ function buildRecPrompt(it){
   lines.push('- ' + it.keyword + ' · ' + it.grade + ' · 월 검색 ' + num(it.monthlySearch) +
     (it.monthlyPublish != null ? ' · 월 발행 ' + num(it.monthlyPublish) : '') + ' · 포화도 ' + recPct(it.saturation));
   if(it.reason) lines.push('- 블톡 메모: ' + it.reason);
+  var bf = it.briefing || {};
+  var bChecks = recList(bf.checks), bStrat = recList(bf.strategy);
+  if(String(bf.verdict||'').trim() || bChecks.length || bStrat.length){
+    lines.push('');
+    lines.push('[블토기 브리핑]');
+    if(String(bf.verdict||'').trim()) lines.push('- 판정: ' + String(bf.verdict).trim());
+    bChecks.forEach(function(c){ lines.push('- 살펴본 점: ' + c); });
+    bStrat.forEach(function(c){ lines.push('- 전략: ' + c); });
+  }
   var subs = recSubs(it);
   if(subs.length){
     lines.push('');
     lines.push('[세부 키워드 · 월 검색량]');
-    subs.forEach(function(s){ lines.push('- ' + s.keyword + (s.monthlySearch != null ? ' ' + num(s.monthlySearch) : '')); });
+    subs.forEach(function(s){ lines.push('- ' + s.keyword + (s.monthlySearch != null ? ' ' + num(s.monthlySearch) : '') + (s.saturation != null && s.saturation !== '' ? ' · 포화도 ' + recPct(s.saturation) + (Number(s.saturation) >= 100 ? '↑' : '') : '')); });
   }
   var ac = recList(it.autocomplete);
   if(ac.length){ lines.push(''); lines.push('[네이버 자동완성]'); lines.push('- ' + ac.join(', ')); }
