@@ -397,6 +397,94 @@ main{padding:14px 0 8px}
 .set-note b{color:var(--text-2)}
 .about{font-size:11.5px;color:var(--text-3);text-align:center;padding:8px 0 20px;line-height:1.7}
 
+/* ── 슬림 개편: 폼 입력 넘침 방지 (390px 모바일 다크모드 포함) ── */
+.field input,.field select,.field textarea{
+  box-sizing:border-box;width:100%;max-width:100%;min-width:0;
+}
+input[type="date"]{
+  box-sizing:border-box;width:100%;max-width:100%;min-width:0;
+  -webkit-appearance:none;appearance:none;display:block;
+  text-align:left;line-height:normal;padding-right:10px;
+}
+input[type="date"]::-webkit-date-and-time-value{text-align:left;margin:0}
+input[type="date"]::-webkit-calendar-picker-indicator{margin-left:0;opacity:.55}
+.wc-grid > *,.wc-body,.wc-body .field{min-width:0;max-width:100%}
+
+/* ── 홈: 순위 하이라이트 · 빠른 이동 ───── */
+.quick-links{display:flex;gap:8px;margin-top:14px}
+.quick-links .btn{flex:1 1 0;min-width:0}
+.rank-empty{
+  border:1px dashed var(--line);border-radius:14px;background:var(--surface);
+  padding:14px 16px;font-size:12.5px;color:var(--text-3);text-align:center;line-height:1.55;
+}
+.top-row.rank-top{min-height:58px;padding:10px 12px;border-radius:14px}
+.rank-top .top-main strong{font-size:14px}
+.rank-top .rank-badge{flex:none}
+
+/* ── 키워드: 보류 목록 ─────────────────── */
+.kw-head-top{align-items:center}
+.head-tools{display:flex;gap:6px;flex:none}
+.toolbar.kw-tools{flex-direction:row;align-items:center;gap:8px;margin:0 0 12px;flex-wrap:nowrap}
+.toolbar.kw-tools .search-wrap{flex:1 1 auto;min-width:0}
+.toolbar.kw-tools .sort-select{flex:0 0 auto;max-width:44%}
+.kw-line{display:flex;flex-wrap:wrap;gap:2px 10px;font-size:12px;color:var(--text-3);font-weight:650}
+.kw-line b{color:var(--text-2);font-weight:800;font-variant-numeric:tabular-nums}
+.rec-top .rec-kw{flex:1 1 auto}
+.rec-flag{
+  flex:none;font-size:10.5px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;
+  border-radius:999px;padding:3px 8px;border:1px solid var(--line);
+  background:var(--surface-2);color:var(--text-2);
+}
+.rec-flag.hold{background:var(--hold-bg);color:var(--hold);border-color:var(--gold-line)}
+.rec-flag.adopt{background:var(--adopt-bg);color:var(--adopt);border-color:var(--good-line)}
+.rec-flag.done{background:var(--done-bg);color:var(--done);border-color:var(--line)}
+
+/* ── 글감: 세그먼트 알약 탭 ─────────────── */
+.seg-row{margin:2px 0 12px}
+.seg-pill-group{
+  display:flex;gap:4px;padding:4px;border-radius:15px;
+  background:var(--surface-2);border:1px solid var(--line);
+}
+.seg-pill{
+  flex:1 1 0;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:42px;padding:0 10px;border:0;border-radius:11px;background:transparent;
+  color:var(--text-2);font-size:13px;font-weight:750;letter-spacing:-.02em;white-space:nowrap;
+  transition:background .15s ease,color .15s ease,box-shadow .15s ease;
+}
+.seg-pill b{
+  font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums;
+  color:var(--text-3);background:var(--surface-3);border-radius:999px;padding:1px 7px;
+}
+.seg-pill.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(16,24,40,.10)}
+.seg-pill.active b{background:var(--brand-soft);color:var(--brand)}
+
+/* ── 글감: 슬림 아코디언 카드 ───────────── */
+.write-card.slim{padding:0;gap:0;overflow:hidden}
+.wc-head{
+  display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;
+  border:0;background:none;padding:12px 14px 8px;color:inherit;font:inherit;
+}
+.wc-lead{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:3px}
+.wc-title{
+  font-size:15px;font-weight:750;letter-spacing:-.02em;line-height:1.35;
+  overflow-wrap:anywhere;
+}
+.wc-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11.5px;color:var(--text-3);font-weight:650}
+.wc-has-title{font-style:normal;font-size:10.5px;font-weight:800;color:var(--brand);background:var(--brand-soft);border-radius:6px;padding:1px 5px}
+.wc-chev{flex:none;width:20px;height:20px;margin-top:3px;display:grid;place-items:center;color:var(--text-3);transition:transform .18s ease}
+.wc-chev svg{width:16px;height:16px}
+.write-card.open .wc-chev{transform:rotate(180deg)}
+.wc-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:0 12px 12px}
+.wc-bar .btn{min-height:38px;padding:0 12px;font-size:12.5px;border-radius:11px}
+.wc-bar .wc-edit{margin-left:auto;color:var(--text-2)}
+.wc-caret{font-size:10px;color:var(--text-3)}
+.wc-body{
+  display:flex;flex-direction:column;gap:10px;
+  padding:12px 14px 14px;border-top:1px solid var(--line-2);background:var(--surface);
+}
+.wc-extra{display:flex;justify-content:flex-start}
+.wc-extra .link-btn{font-size:12px;color:var(--text-3)}
+
 /* ── bottom nav ────────────────────────── */
 .tabbar{
   position:fixed;left:0;right:0;bottom:0;z-index:40;
@@ -489,7 +577,11 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
 .rec-badge.a{background:var(--good-bg);color:var(--good);border-color:var(--good-line)}
 .rec-metrics{display:flex;flex-wrap:wrap;gap:3px 12px;font-size:12.5px;color:var(--text-2)}
 .rec-metrics b{color:var(--text);font-weight:800;font-variant-numeric:tabular-nums}
-.rec-reason{margin:0;font-size:12.5px;line-height:1.55;color:var(--text-2)}
+.rec-reason{
+  margin:0;font-size:12.5px;line-height:1.55;color:var(--text-2);
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;
+}
+.rec-section .section-head{margin-top:2px}
 .rec-extra{display:flex;flex-wrap:wrap;gap:5px}
 .rec-tag{font-size:11px;font-weight:700;color:var(--text-3);background:var(--surface-2);border:1px solid var(--line-2);border-radius:8px;padding:3px 7px;white-space:nowrap}
 .rec-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
@@ -506,6 +598,7 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
 .rec-hidden{grid-column:1/-1;margin:2px 0 0;font-size:12px;color:var(--text-3);line-height:1.5}
 .rec-state strong{display:block;color:var(--text);font-weight:800;margin-bottom:4px}
 @media (min-width:880px){
+  .seg-pill-group{max-width:420px}
   .rec-grid{grid-template-columns:1fr 1fr;gap:12px}
 }
 
@@ -657,7 +750,7 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
     <!-- 홈 -->
     <section class="view active" id="view-home" role="tabpanel" aria-label="홈">
       <div class="card hero">
-        <div>
+        <div class="hero-main">
           <p class="eyebrow">내 블로그</p>
           <h1 id="home-blog">범도리의 IT 이모저모</h1>
           <p class="hero-basis">
@@ -669,11 +762,68 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
         <div class="hero-actions">
           <button class="btn primary" data-act="open-add">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            키워드 빠르게 추가
+            키워드 추가
           </button>
           <button class="btn ghost" data-act="open-bulk">일괄 붙여넣기</button>
         </div>
       </div>
+
+      <div class="stats" id="home-stats"></div>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>발행 글 순위</h2>
+            <p id="home-rank-sub">노출 중인 글이 위에서부터 보여요</p>
+          </div>
+          <button class="link-btn" data-act="tab" data-tab="write" data-seg="done">전체 순위</button>
+        </div>
+        <div class="top-list" id="home-rank-list"></div>
+      </section>
+
+      <div class="quick-links">
+        <button class="btn soft" data-act="tab" data-tab="keywords">키워드 고르기</button>
+        <button class="btn soft" data-act="tab" data-tab="write">글감 보기</button>
+      </div>
+    </section>
+
+    <!-- 키워드 -->
+    <section class="view" id="view-keywords" role="tabpanel" aria-label="키워드 고르기">
+      <div class="section-head kw-head-top">
+        <div>
+          <h2>키워드 고르기</h2>
+          <p>블톡 추천에서 고르거나 직접 담아 두세요</p>
+        </div>
+        <div class="head-tools">
+          <button class="btn ghost sm" data-act="open-bulk">일괄</button>
+          <button class="btn primary sm" data-act="open-add">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            추가
+          </button>
+        </div>
+      </div>
+
+      <section class="section" id="hold-section" hidden>
+        <div class="section-head">
+          <div>
+            <h2>보류 키워드</h2>
+            <p>아직 채택하지 않은 후보예요</p>
+          </div>
+          <span class="count-label" id="kw-count">0개</span>
+        </div>
+        <div class="toolbar kw-tools">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+            <input id="kw-search" type="search" placeholder="키워드 · 메모 검색" autocomplete="off" aria-label="키워드 검색">
+          </div>
+          <select class="sort-select" id="kw-sort" aria-label="정렬">
+            <option value="new">최신순</option>
+            <option value="vol">검색량 높은순</option>
+            <option value="comp">경쟁강도 낮은순</option>
+          </select>
+        </div>
+        <div class="list" id="kw-list"></div>
+      </section>
 
       <!-- 블톡 추천 키워드 -->
       <section class="rec-section" aria-labelledby="rec-title">
@@ -692,60 +842,18 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
         </div>
         <div class="rec-grid" id="rec-list" aria-live="polite"></div>
       </section>
-
-      <div class="stats" id="home-stats"></div>
-
-      <section class="section">
-        <div class="section-head">
-          <div>
-            <h2>오늘의 추천 황금 키워드</h2>
-            <p>채택한 키워드 중 경쟁강도가 낮은 순 TOP 5</p>
-          </div>
-          <button class="link-btn" data-act="tab" data-tab="keywords">전체 보기</button>
-        </div>
-        <div class="top-list" id="home-top"></div>
-      </section>
-    </section>
-
-    <!-- 키워드 -->
-    <section class="view" id="view-keywords" role="tabpanel" aria-label="키워드 보관함">
-      <div class="section-head">
-        <div>
-          <h2>키워드 보관함</h2>
-          <p>모은 키워드의 경쟁강도를 계산해 등급을 매겨요</p>
-        </div>
-      </div>
-      <div class="toolbar">
-        <div class="search-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
-          <input id="kw-search" type="search" placeholder="키워드 · 메모 검색" autocomplete="off" aria-label="키워드 검색">
-        </div>
-        <div class="chips" id="kw-chips" role="group" aria-label="상태 필터"></div>
-      </div>
-      <div class="toolbar-row">
-        <span class="count-label" id="kw-count">0개</span>
-        <div style="display:flex;gap:8px;align-items:center">
-          <select class="sort-select" id="kw-sort" aria-label="정렬">
-            <option value="new">최신순</option>
-            <option value="vol">검색량 높은순</option>
-            <option value="comp">경쟁강도 낮은순</option>
-          </select>
-          <button class="btn ghost sm" data-act="open-bulk" aria-label="일괄 붙여넣기">일괄</button>
-          <button class="btn primary sm" data-act="open-add">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            추가
-          </button>
-        </div>
-      </div>
-      <div class="list" id="kw-list" style="margin-top:12px"></div>
     </section>
 
     <!-- 글감·발행 -->
     <section class="view" id="view-write" role="tabpanel" aria-label="글감과 발행">
-      <div class="section-head">
-        <div>
-          <h2>글감 · 발행</h2>
-          <p>제목과 일정을 잡고, 글쓰기 프롬프트를 복사해요</p>
+      <div class="seg-row">
+        <div class="seg-pill-group" role="tablist" aria-label="글감 보기">
+          <button class="seg-pill active" role="tab" data-act="write-seg" data-seg="wait" aria-selected="true">
+            작성 대기 <b id="seg-wait-count">0</b>
+          </button>
+          <button class="seg-pill" role="tab" data-act="write-seg" data-seg="done" aria-selected="false">
+            발행 완료 · 순위 <b id="seg-done-count">0</b>
+          </button>
         </div>
       </div>
       <div class="rank-bar" id="rank-bar" hidden>
@@ -940,10 +1048,10 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
           <input id="add-docs" type="text" inputmode="numeric" placeholder="3,100" autocomplete="off">
         </div>
         <div class="field">
-          <label for="add-status">상태</label>
+          <label for="add-status">담을 곳</label>
           <select id="add-status">
-            <option value="채택">채택</option>
-            <option value="보류">보류</option>
+            <option value="보류">보류 · 키워드 탭에 모아두기</option>
+            <option value="채택">채택 · 바로 글감으로</option>
             <option value="제외">제외</option>
           </select>
         </div>
@@ -1055,7 +1163,7 @@ var DEFAULT_CFG = {
 var GRADE_CLASS = { '황금':'gold', '양호':'good', '보통':'mid', '포화':'bad', '미정':'plain' };
 
 var state = load();
-var ui = { q:'', filter:'전체', sort:'new', tab:'home' };
+var ui = { q:'', filter:'보류', sort:'new', tab:'home', writeSeg:'wait', open:{} };
 var bulkRows = [];
 var pendingPubId = null;
 var confirmAction = null;
@@ -1196,8 +1304,9 @@ function toggleTheme(){
 }
 
 /* ── 화면 전환 ────────────────────────── */
-function setTab(name){
+function setTab(name, seg){
   if(!document.getElementById('view-' + name)) return;
+  if(name === 'write' && (seg === 'wait' || seg === 'done')) ui.writeSeg = seg;
   ui.tab = name;
   document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
   document.getElementById('view-' + name).classList.add('active');
@@ -1233,31 +1342,47 @@ function renderHome(){
     statHtml('발행대기', waiting.length, '제목·일정 입력됨', false),
     statHtml('발행완료', doneMerged().total, '블로그에 올림', false)
   ].join('');
-
-  var pool = adopted.slice().sort(function(a,b){
-    var ca = comp(a), cb = comp(b);
-    if(ca == null && cb == null) return 0;
-    if(ca == null) return 1;
-    if(cb == null) return -1;
-    return ca - cb;
-  }).slice(0,5);
-
-  var box = document.getElementById('home-top');
-  if(!pool.length){
-    box.innerHTML = '<div class="empty" style="grid-column:1/-1">' +
-      '<div class="e-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.2 5.3 5.8.5-4.4 3.8 1.3 5.6L12 15.6 7.1 18.2l1.3-5.6L4 8.8l5.8-.5z"/></svg></div>' +
-      '<strong>아직 채택한 키워드가 없어요</strong>' +
-      '<p>키워드를 추가하고 <b>채택</b>으로 바꾸면<br>여기에 추천 순서로 보여드려요.</p>' +
-      '<button class="btn primary" data-act="open-add">키워드 추가하기</button></div>';
+  renderHomeRankList();
+}
+/* 홈 하이라이트: 30위권 안에 든 발행 글을 순위 순으로 */
+function homeRankRows(){
+  var rows = [];
+  rankTargets().forEach(function(k){
+    var e = rankFor(k);
+    if(!e || rankMiss(e)) return;
+    rows.push({ kw:k.kw, title:String(k.title || '').trim(), e:e });
+  });
+  rows.sort(function(a,b){ return Number(a.e.rank) - Number(b.e.rank); });
+  return rows;
+}
+function renderHomeRankList(){
+  var box = document.getElementById('home-rank-list');
+  if(!box) return;
+  if(!ranks.loaded){
+    box.innerHTML = '<div class="rank-empty">' +
+      (ranks.loading ? '순위 기록을 불러오는 중…'
+        : hasSyncToken() ? '순위 기록을 불러오면 노출된 글이 여기 보여요'
+        : '설정에서 GitHub 토큰을 넣으면 발행 글 순위를 추적해요') + '</div>';
     return;
   }
-  box.innerHTML = pool.map(function(k, i){
-    var g = gradeOf(k);
-    return '<button class="top-row" data-act="kw-edit" data-id="' + k.id + '">' +
+  var total = rankTargets().length;
+  var rows = homeRankRows();
+  if(!rows.length){
+    box.innerHTML = '<div class="rank-empty">' + (total
+      ? '확인한 ' + total + '편 모두 아직 30위권 밖이에요'
+      : '발행 완료 글에 URL을 넣으면 순위를 확인해요') + '</div>';
+    return;
+  }
+  box.innerHTML = rows.slice(0, 5).map(function(r, i){
+    var e = r.e;
+    var cls = Number(e.rank) <= 3 ? 'top' : 'mid';
+    return '<div class="top-row rank-top">' +
       '<span class="rank">' + (i+1) + '</span>' +
-      '<span class="top-main"><strong>' + esc(k.kw) + '</strong>' +
-      '<em>월 ' + num(vol(k)) + '회 · 문서 ' + num(k.docs) + ' · 경쟁 ' + compText(k) + '</em></span>' +
-      badge(g) + '</button>';
+      '<span class="top-main"><strong>' + esc(r.title || r.kw) + '</strong>' +
+        '<em>' + esc(r.kw) + '</em></span>' +
+      '<span class="rank-badge ' + cls + '">' + rankEmoji(e) + ' ' + esc(rankLabel(e)) + '</span>' +
+      deltaHtml(e) +
+    '</div>';
   }).join('');
 }
 function statHtml(label, value, sub, accent){
@@ -1373,23 +1498,36 @@ function renderRecs(){
   }
   if(!rec.data) return;
   var d = rec.data;
-  var shown = [], hidden = [];
-  d.items.forEach(function(it, i){ (writtenHit(it.keyword) ? hidden : shown).push({ it:it, i:i }); });
-  var sCount = shown.filter(function(x){ return String(x.it.grade).indexOf('S') === 0; }).length;
-  var aCount = shown.length - sCount;
+  var items = d.items.map(function(it, i){ return { it:it, i:i }; });
+  var sCount = items.filter(function(x){ return String(x.it.grade).indexOf('S') === 0; }).length;
+  var aCount = items.length - sCount;
+  var flagN = { '담김':0, '글감':0, '작성됨':0 };
+  items.forEach(function(x){ var f = recFlag(x.it); if(flagN[f] != null) flagN[f]++; });
   meta.innerHTML = '마지막 업데이트 <b>' + esc(d.updatedAt || '—') + '</b> · ' + esc(d.source) +
-    ' · ' + shown.length + '개 (S급 ' + sCount + ' · A급 ' + aCount + ')';
-  var html = shown.map(function(x){ return recCard(x.it, x.i); }).join('');
-  if(!shown.length) html = '<div class="rec-state"><strong>새로 쓸 추천 키워드가 없어요</strong>추천 키워드가 모두 이미 쓴 글과 겹쳐요. <b>키워드 찾기 요청</b>을 눌러 주세요.</div>';
-  if(hidden.length){
-    html += '<p class="rec-hidden">이미 쓴 글과 겹쳐서 숨긴 키워드 ' + hidden.length + '개: ' +
-      hidden.map(function(x){ return esc(x.it.keyword); }).join(', ') + '</p>';
-  }
+    ' · ' + items.length + '개 (S급 ' + sCount + ' · A급 ' + aCount + ')' +
+    (flagN['글감'] ? ' · 글감 ' + flagN['글감'] : '') +
+    (flagN['담김'] ? ' · 담김 ' + flagN['담김'] : '');
+  var html = items.map(function(x){ return recCard(x.it, x.i); }).join('');
+  if(!items.length) html = '<div class="rec-state"><strong>새로 쓸 추천 키워드가 없어요</strong>추천 키워드가 모두 이미 쓴 글과 겹쳐요. <b>키워드 찾기 요청</b>을 눌러 주세요.</div>';
   box.innerHTML = html;
+}
+/* 추천 카드 상태 = 담김(보류 보관함) · 글감(채택) · 작성됨(발행 글과 겹침) */
+function recFlag(it){
+  var n = String(it.keyword || '').toLowerCase(), k = null;
+  for(var i=0;i<state.kws.length;i++){ if(String(state.kws[i].kw).toLowerCase() === n){ k = state.kws[i]; break; } }
+  if(k){
+    if(k.status === '발행완료') return '작성됨';
+    if(k.status === '채택') return '글감';
+    if(k.status === '보류') return '담김';
+  }
+  if(writtenHit(it.keyword)) return '작성됨';
+  return '';
 }
 function recCard(it, i){
   var g = String(it.grade || '');
   var cls = g.indexOf('S') === 0 ? 's' : 'a';
+  var flag = recFlag(it);
+  var flagCls = flag === '담김' ? 'hold' : flag === '글감' ? 'adopt' : 'done';
   var tags = [];
   if(it.entry) tags.push('진입 가능성 ' + it.entry);
   if(it.speed) tags.push('진입 속도 ' + it.speed);
@@ -1397,6 +1535,7 @@ function recCard(it, i){
   if(it.adComp && it.adComp !== '-') tags.push('광고 경쟁 ' + it.adComp);
   return '<article class="rec-card">' +
     '<div class="rec-top"><strong class="rec-kw">' + esc(it.keyword) + '</strong>' +
+      (flag ? '<span class="rec-flag ' + flagCls + '">' + esc(flag) + '</span>' : '') +
       '<span class="rec-badge ' + cls + '">' + esc(g) + '</span></div>' +
     '<div class="rec-metrics"><span>검색량 월 <b>' + num(it.monthlySearch) + '</b>회</span>' +
       (it.monthlyPublish != null ? '<span>발행 <b>' + num(it.monthlyPublish) + '</b>건</span>' : '') +
@@ -1484,7 +1623,7 @@ function recSave(i){
   var search = Number(it.monthlySearch) || 0;
   var publish = (it.monthlyPublish != null) ? Number(it.monthlyPublish) || 0 : Math.round(search * (Number(it.saturation) || 0) / 100);
   var item = normKw({
-    id: nid(), kw: it.keyword, vol: search, docs: publish, status:'채택',
+    id: nid(), kw: it.keyword, vol: search, docs: publish, status:'보류',
     memo: '블톡 ' + it.grade + ' · 포화도 ' + recPct(it.saturation) + (it.reason ? ' · ' + it.reason : ''),
     createdAt: new Date().toISOString()
   });
@@ -1502,25 +1641,13 @@ function recRequest(){
 
 /* ── 키워드 ───────────────────────────── */
 function renderKw(){
-  renderChips();
   renderKwList();
 }
-function renderChips(){
-  var all = state.kws;
-  var defs = [['전체', all.length]];
-  STATUSES.forEach(function(s){
-    defs.push([s, all.filter(function(k){ return k.status === s; }).length]);
-  });
-  document.getElementById('kw-chips').innerHTML = defs.map(function(d){
-    var on = ui.filter === d[0];
-    return '<button class="chip' + (on ? ' active' : '') + '" data-act="filter" data-status="' + esc(d[0]) + '" aria-pressed="' + on + '">' +
-      esc(d[0]) + ' <b>' + d[1] + '</b></button>';
-  }).join('');
-}
+/* 키워드 탭 = 고르기 전용. 아직 채택하지 않은 '보류'만 보여준다. */
+function holdKws(){ return state.kws.filter(function(k){ return k.status === '보류'; }); }
 function visibleKws(){
   var q = ui.q.trim().toLowerCase();
-  var list = state.kws.filter(function(k){
-    if(ui.filter !== '전체' && k.status !== ui.filter) return false;
+  var list = holdKws().filter(function(k){
     if(!q) return true;
     return k.kw.toLowerCase().indexOf(q) >= 0 || (k.memo || '').toLowerCase().indexOf(q) >= 0;
   });
@@ -1539,20 +1666,17 @@ function visibleKws(){
   return list;
 }
 function renderKwList(){
-  var list = visibleKws();
   var box = document.getElementById('kw-list');
-  document.getElementById('kw-count').textContent = list.length + '개' + (list.length !== state.kws.length ? ' / 전체 ' + state.kws.length + '개' : '');
-  if(!state.kws.length){
-    box.innerHTML = '<div class="empty" style="grid-column:1/-1">' +
-      '<div class="e-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10M7 12h7M7 17h4"/><rect x="3" y="3" width="18" height="18" rx="4"/></svg></div>' +
-      '<strong>보관함이 비어 있어요</strong>' +
-      '<p>키워드를 하나씩 넣거나, 표에서 복사해<br>한 번에 붙여넣을 수 있어요.</p>' +
-      '<button class="btn primary" data-act="open-bulk">일괄 붙여넣기로 시작</button></div>';
-    return;
-  }
+  var sec = document.getElementById('hold-section');
+  var all = holdKws();
+  var list = visibleKws();
+  if(sec) sec.hidden = all.length === 0;
+  var cnt = document.getElementById('kw-count');
+  if(cnt) cnt.textContent = (list.length === all.length ? all.length : list.length + ' / ' + all.length) + '개';
+  if(!box) return;
+  if(!all.length){ box.innerHTML = ''; return; }
   if(!list.length){
-    box.innerHTML = '<div class="empty" style="grid-column:1/-1">' +
-      '<strong>조건에 맞는 키워드가 없어요</strong><p>검색어나 상태 필터를 바꿔 보세요.</p></div>';
+    box.innerHTML = '<div class="empty"><strong>조건에 맞는 보류 키워드가 없어요</strong><p>검색어를 지우거나 바꿔 보세요.</p></div>';
     return;
   }
   box.innerHTML = list.map(kwCard).join('');
@@ -1565,10 +1689,11 @@ function kwCard(k){
       '<button class="kw-name" data-act="kw-edit" data-id="' + k.id + '" title="키워드 수정">' + esc(k.kw) + fitMark(k) + '</button>' +
       badge(g) +
     '</div>' +
-    '<div class="kw-metrics">' +
-      '<div class="metric"><span>월 검색량</span><strong>' + num(vol(k)) + '</strong><em>' + volLine(k) + '</em></div>' +
-      '<div class="metric"><span>블로그 문서</span><strong>' + num(k.docs) + '</strong><em>총 발행량</em></div>' +
-      '<div class="metric"><span>경쟁강도</span><strong>' + compText(k) + '</strong><em>문서 ÷ 검색량</em></div>' +
+    '<div class="kw-line">' +
+      '<span>월 <b>' + num(vol(k)) + '</b>회</span>' +
+      '<span>문서 <b>' + num(k.docs) + '</b></span>' +
+      '<span>경쟁 <b>' + compText(k) + '</b></span>' +
+      '<span>' + volLine(k) + '</span>' +
     '</div>' +
     (k.memo ? '<p class="kw-memo">' + esc(k.memo) + '</p>' : '') +
     '<div class="kw-foot">' +
@@ -1613,74 +1738,97 @@ function doneMerged(){
   });
   return { local: local, posts: posts, total: local.length + posts.length };
 }
-function renderWrite(){
+function waitKws(){
   var wait = state.kws.filter(function(k){ return k.status === '채택'; });
-  var done = doneMerged();
   wait.sort(function(a,b){
     var da = isDate(a.dueDate) ? a.dueDate : '9999-99-99';
     var db = isDate(b.dueDate) ? b.dueDate : '9999-99-99';
     if(da !== db) return da < db ? -1 : 1;
     return String(b.updatedAt).localeCompare(String(a.updatedAt));
   });
-
-  var html = '';
-  if(!state.kws.length && !done.total){
-    html += '<div class="empty">' +
-      '<div class="e-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10a2.5 2.5 0 0 0-3.5-3.5L4.5 16.5z"/><path d="M13.5 6.5L17.5 10.5"/></svg></div>' +
-      '<strong>아직 글감이 없어요</strong><p>키워드 탭에서 채택한 키워드가<br>여기에 글감 카드로 모여요.</p>' +
-      '<button class="btn primary" data-act="tab" data-tab="keywords">키워드 탭으로</button></div>';
-  } else if(wait.length){
-    html += '<div class="section-head" style="margin-top:2px"><div><h2 style="font-size:15px">발행 대기</h2>' +
-      '<p>제목과 일정을 채우면 발행대기로 집계돼요</p></div><span class="count-label">' + wait.length + '개</span></div>';
-    html += '<div class="write-grid">' + wait.map(writeCard).join('') + '</div>';
-  } else if(!done.total){
-    html += '<div class="empty"><strong>발행 대기 중인 글감이 없어요</strong>' +
-      '<p>키워드 탭에서 <b>글감으로</b>를 누르거나<br>상태를 <b>채택</b>으로 바꿔 보세요.</p>' +
-      '<button class="btn primary" data-act="tab" data-tab="keywords">키워드 보기</button></div>';
-  }
-
-  if(done.total){
-    var shown = writtenMore.open ? done.posts : done.posts.slice(0, WRITTEN_PAGE);
-    var rest = done.posts.length - shown.length;
-    html += '<section class="section"><div class="section-head"><div><h2 style="font-size:15px">발행 완료</h2>' +
-      '<p>올린 글을 기록해 두면 나중에 찾기 쉬워요</p></div><span class="count-label">' + done.total + '개</span></div>' +
-      '<div class="write-grid">' + done.local.map(doneCard).join('') + shown.map(writtenCard).join('') + '</div>';
-    if(!rec.written) html += '<p class="more-note">' +
-      (rec.writtenErr ? 'written.json 발행 기록을 불러오지 못했어요' : 'written.json 발행 기록을 불러오는 중…') + '</p>';
-    if(rest > 0){
-      html += '<div class="more-wrap"><button class="btn ghost sm" data-act="written-more">나머지 ' + rest + '편 더 보기</button></div>';
-    }else if(writtenMore.open && done.posts.length > WRITTEN_PAGE){
-      html += '<div class="more-wrap"><button class="btn ghost sm" data-act="written-more">접기</button></div>';
-    }
-    html += '</section>';
-  }
-  document.getElementById('write-body').innerHTML = html;
+  return wait;
+}
+function renderWrite(){
+  var wait = waitKws();
+  var done = doneMerged();
+  var seg = (ui.writeSeg === 'done') ? 'done' : 'wait';
+  var wc = document.getElementById('seg-wait-count');
+  var dc = document.getElementById('seg-done-count');
+  if(wc) wc.textContent = wait.length;
+  if(dc) dc.textContent = done.total;
+  document.querySelectorAll('.seg-pill').forEach(function(b){
+    var on = b.dataset.seg === seg;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  document.getElementById('write-body').innerHTML = (seg === 'done') ? htmlDone(done) : htmlWait(wait);
   renderRankBar();
 }
+function htmlWait(wait){
+  if(!wait.length){
+    return '<div class="empty">' +
+      '<div class="e-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10a2.5 2.5 0 0 0-3.5-3.5L4.5 16.5z"/><path d="M13.5 6.5L17.5 10.5"/></svg></div>' +
+      '<strong>작성 대기 중인 글감이 없어요</strong>' +
+      '<p>키워드 탭에서 <b>글감으로</b>를 누르거나<br>블톡 추천에서 키워드를 담아 보세요.</p>' +
+      '<button class="btn primary" data-act="tab" data-tab="keywords">키워드 고르기</button></div>';
+  }
+  return '<div class="section-head" style="margin-top:2px"><div><h2 style="font-size:15px">작성 대기</h2>' +
+    '<p>카드를 눌러 제목·일정을 펼쳐 적을 수 있어요</p></div><span class="count-label">' + wait.length + '개</span></div>' +
+    '<div class="write-grid">' + wait.map(writeCard).join('') + '</div>';
+}
+function htmlDone(done){
+  if(!done.total){
+    return '<div class="empty"><strong>아직 발행 완료한 글이 없어요</strong>' +
+      '<p><b>발행 완료</b>로 표시한 글과 written.json 기록이<br>여기에 순위와 함께 모여요.</p>' +
+      '<button class="btn primary" data-act="write-seg" data-seg="wait">작성 대기 보기</button></div>';
+  }
+  var shown = writtenMore.open ? done.posts : done.posts.slice(0, WRITTEN_PAGE);
+  var rest = done.posts.length - shown.length;
+  var html = '<div class="section-head" style="margin-top:2px"><div><h2 style="font-size:15px">발행 완료</h2>' +
+    '<p>올린 글의 검색 노출 순위까지 함께 봐요</p></div><span class="count-label">' + done.total + '개</span></div>' +
+    '<div class="write-grid">' + done.local.map(doneCard).join('') + shown.map(writtenCard).join('') + '</div>';
+  if(!rec.written) html += '<p class="more-note">' +
+    (rec.writtenErr ? 'written.json 발행 기록을 불러오지 못했어요' : 'written.json 발행 기록을 불러오는 중…') + '</p>';
+  if(rest > 0){
+    html += '<div class="more-wrap"><button class="btn ghost sm" data-act="written-more">나머지 ' + rest + '편 더 보기</button></div>';
+  }else if(writtenMore.open && done.posts.length > WRITTEN_PAGE){
+    html += '<div class="more-wrap"><button class="btn ghost sm" data-act="written-more">접기</button></div>';
+  }
+  return html;
+}
+/* 작성 대기 카드 = 기본 접힌 슬림 상태, [편집]에서만 입력칸이 펼쳐진다 */
 function writeCard(k){
   var d = dday(k.dueDate);
   var g = gradeOf(k);
-  return '<article class="card write-card" data-id="' + k.id + '">' +
-    '<div class="wc-head">' +
-      '<div style="flex:1;min-width:0"><h3>' + esc(k.kw) + '</h3>' +
-        '<div class="wc-meta">월 ' + num(vol(k)) + '회 · 경쟁 ' + compText(k) + ' ' + badge(g) + '</div></div>' +
+  var open = !!ui.open[k.id];
+  var hasTitle = !!String(k.title || '').trim();
+  return '<article class="card write-card slim' + (open ? ' open' : '') + '" data-id="' + k.id + '">' +
+    '<button type="button" class="wc-head" data-act="wc-toggle" data-id="' + k.id + '" aria-expanded="' + (open ? 'true' : 'false') + '">' +
+      '<span class="wc-lead"><span class="wc-title">' + esc(k.kw) + '</span>' +
+        '<span class="wc-meta">월 ' + num(vol(k)) + '회 · 경쟁 ' + compText(k) + ' ' + badge(g) +
+        (hasTitle ? ' <em class="wc-has-title">제목 있음</em>' : '') + '</span></span>' +
       ddayHtml(d) +
+      '<span class="wc-chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>' +
+    '</button>' +
+    '<div class="wc-bar">' +
+      '<button class="btn soft sm" data-act="copy-prompt" data-id="' + k.id + '">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>프롬프트 복사</button>' +
+      '<button class="btn ghost sm" data-act="publish" data-id="' + k.id + '">발행 완료</button>' +
+      '<button class="btn ghost sm wc-edit" data-act="wc-toggle" data-id="' + k.id + '">편집 <span class="wc-caret">' + (open ? '▴' : '▾') + '</span></button>' +
     '</div>' +
-    '<div class="field"><label>제목 아이디어</label>' +
-      '<textarea rows="2" data-field="title" data-id="' + k.id + '" placeholder="예: 아이폰 배터리 성능 확인 3초 만에 끝내기" maxlength="200">' + esc(k.title) + '</textarea>' +
-    '</div>' +
-    '<div class="wc-grid">' +
-      '<div class="field"><label>발행 예정일</label>' +
-        '<input type="date" data-field="dueDate" data-id="' + k.id + '" value="' + esc(k.dueDate) + '"></div>' +
-      '<div class="field"><label>메모</label>' +
-        '<input type="text" data-field="memo" data-id="' + k.id + '" value="' + esc(k.memo) + '" placeholder="준비물·참고" maxlength="300"></div>' +
+    '<div class="wc-body"' + (open ? '' : ' hidden') + '>' +
+      '<div class="field"><label>제목 아이디어</label>' +
+        '<textarea rows="2" data-field="title" data-id="' + k.id + '" placeholder="예: 아이폰 배터리 성능 확인 3초 만에 끝내기" maxlength="200">' + esc(k.title) + '</textarea>' +
+      '</div>' +
+      '<div class="wc-grid">' +
+        '<div class="field"><label>발행 예정일</label>' +
+          '<input type="date" data-field="dueDate" data-id="' + k.id + '" value="' + esc(k.dueDate) + '"></div>' +
+        '<div class="field"><label>메모</label>' +
+          '<input type="text" data-field="memo" data-id="' + k.id + '" value="' + esc(k.memo) + '" placeholder="준비물·참고" maxlength="300"></div>' +
+      '</div>' +
+      '<div class="wc-extra"><button class="link-btn" data-act="to-hold" data-id="' + k.id + '">보류로 되돌리기</button></div>' +
     '</div>' +
     (String(k.url || '').trim() ? rankRowHtml(k) : '') +
-    '<div class="wc-actions">' +
-      '<button class="btn primary" data-act="copy-prompt" data-id="' + k.id + '">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>AI 프롬프트 복사</button>' +
-      '<button class="btn ghost" data-act="publish" data-id="' + k.id + '">발행 완료</button>' +
-    '</div>' +
   '</article>';
 }
 function doneCard(k){
@@ -1748,7 +1896,7 @@ function openAdd(){
   document.getElementById('form-add').reset();
   delete document.getElementById('form-add').dataset.editId;
   document.getElementById('dlg-add-title').textContent = '키워드 추가';
-  document.getElementById('add-status').value = '채택';
+  document.getElementById('add-status').value = '보류';
   updateAddPreview();
   openDlg('dlg-add');
   setTimeout(function(){ document.getElementById('add-kw').focus(); }, 60);
@@ -2007,6 +2155,7 @@ function submitPublish(e){
   k.url = url;
   k.publishedAt = document.getElementById('pub-date').value || todayStr();
   k.updatedAt = new Date().toISOString();
+  delete ui.open[k.id];
   save(); closeDlg('dlg-publish'); pendingPubId = null;
   refresh();
   toast('발행 완료로 옮겼어요');
@@ -2465,7 +2614,7 @@ function latestCheckedAt(){
 function renderRankBar(){
   var bar = document.getElementById('rank-bar');
   if(!bar) return;
-  bar.hidden = !hasSyncToken();
+  bar.hidden = !(hasSyncToken() && ui.writeSeg === 'done');
   if(bar.hidden) return;
   var note = document.getElementById('rank-note');
   var btn = bar.querySelector('[data-act="rank-refresh"]');
@@ -2487,8 +2636,15 @@ function renderRankBar(){
 }
 function renderHomeRank(){
   var el = document.getElementById('home-rank');
-  if(!el) return;
+  var sub = document.getElementById('home-rank-sub');
   var s = rankStats();
+  if(sub){
+    if(!ranks.loaded) sub.textContent = '순위 기록을 불러오면 노출 순위가 보여요';
+    else if(!s.total) sub.textContent = '발행 완료 글을 모으면 순위를 추적해요';
+    else sub.textContent = '추적 ' + s.total + '편 · 노출 ' + s.exposed + '편' +
+      (s.none ? ' · 30위권 밖 ' + s.none + '편' : '') + (s.pending ? ' · 확인 전 ' + s.pending + '편' : '');
+  }
+  if(!el) return;
   if(!ranks.loaded || !s.exposed || !s.best){ el.hidden = true; el.innerHTML = ''; return; }
   el.hidden = false;
   el.innerHTML = '발행 글 노출 중 <b>' + s.exposed + '건</b> · 최고 ' + rankEmoji(s.best) + ' <b>' + esc(rankLabel(s.best)) + '</b>';
@@ -2554,6 +2710,21 @@ function refresh(includeSettings){
   if(ac) ac.textContent = state.kws.length;
 }
 function byId(id){ for(var i=0;i<state.kws.length;i++){ if(state.kws[i].id === id) return state.kws[i]; } return null; }
+/* 작성 대기 카드 아코디언: DOM만 토글해 입력 중인 값이 사라지지 않게 한다 */
+function toggleWc(id){
+  var cards = document.querySelectorAll('.write-card'), card = null;
+  for(var i=0;i<cards.length;i++){ if(cards[i].dataset.id === id){ card = cards[i]; break; } }
+  if(!card) return;
+  var open = !ui.open[id];
+  if(open) ui.open[id] = true; else delete ui.open[id];
+  card.classList.toggle('open', open);
+  var head = card.querySelector('.wc-head');
+  if(head) head.setAttribute('aria-expanded', open ? 'true' : 'false');
+  var body = card.querySelector('.wc-body');
+  if(body) body.hidden = !open;
+  var caret = card.querySelector('.wc-caret');
+  if(caret) caret.textContent = open ? '▴' : '▾';
+}
 
 /* ── 이벤트 ───────────────────────────── */
 document.addEventListener('click', function(e){
@@ -2561,7 +2732,17 @@ document.addEventListener('click', function(e){
   if(!el) return;
   var act = el.dataset.act, id = el.dataset.id;
 
-  if(act === 'tab'){ setTab(el.dataset.tab); return; }
+  if(act === 'tab'){ setTab(el.dataset.tab, el.dataset.seg); return; }
+  if(act === 'write-seg'){ ui.writeSeg = (el.dataset.seg === 'done') ? 'done' : 'wait'; renderWrite(); return; }
+  if(act === 'wc-toggle'){ toggleWc(id); return; }
+  if(act === 'to-hold'){
+    var hk = byId(id); if(!hk) return;
+    hk.status = '보류'; hk.updatedAt = new Date().toISOString();
+    delete ui.open[id];
+    save(); refresh();
+    toast('“' + hk.kw + '” 보류로 되돌렸어요', { action:'키워드 탭 열기', duration:4200, onAction:function(){ setTab('keywords'); } });
+    return;
+  }
   if(act === 'theme'){ toggleTheme(); return; }
   if(act === 'open-add'){ openAdd(); return; }
   if(act === 'open-bulk'){
@@ -2586,11 +2767,10 @@ document.addEventListener('click', function(e){
     updateAddPreview();
     return;
   }
-  if(act === 'filter'){ ui.filter = el.dataset.status; renderKw(); return; }
   if(act === 'to-write'){
     var kw = byId(id); if(!kw) return;
     kw.status = '채택'; kw.updatedAt = new Date().toISOString();
-    save(); refresh(); setTab('write');
+    save(); refresh(); setTab('write', 'wait');
     toast('글감으로 옮겼어요');
     return;
   }
