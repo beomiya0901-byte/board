@@ -345,7 +345,7 @@ main{padding:14px 0 8px}
 }
 .wc-url svg{width:14px;height:14px;flex:none}
 .done-card{padding:14px 15px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.done-card .dc-main{flex:1;min-width:0}
+.done-card .dc-main{flex:1;min-width:0;flex-basis:60%}
 .done-card h3{font-size:14.5px;font-weight:700;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .done-card p{font-size:12px;color:var(--text-3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
@@ -485,6 +485,10 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
   .toast{bottom:28px}
   dialog{margin:auto}
   .sheet-body{max-height:64dvh}
+}
+@media (max-width:600px){
+  .done-card .dc-main{flex-basis:100%}
+  .done-card .wc-url{flex:1;justify-content:center}
 }
 @media (max-width:560px){
   dialog{position:fixed;inset:auto 0 0 0;width:100%;margin:0}
