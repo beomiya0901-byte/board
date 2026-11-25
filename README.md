@@ -28,3 +28,52 @@
 - 주소가 바뀌면 저장 공간도 새로 시작합니다. 기존 데이터는 이전 주소에서 **설정 → 백업 파일 저장** 후
   새 주소에서 **설정 → 백업 불러오기**로 옮기면 됩니다.
 - 아이폰 사파리: 공유 → 홈 화면에 추가 하면 전체 화면 앱처럼 실행됩니다.
+
+## 키워드 스튜디오 (`studio/`) 데이터 규칙
+
+추천 키워드를 올리는 에이전트는 아래 형식을 지켜 주세요.
+
+### `studio/recommendations.json`
+
+```json
+{
+  "updatedAt": "2026-11-25 20:34",
+  "source": "블톡",
+  "items": [
+    {
+      "keyword": "미리캔버스",
+      "grade": "S급",
+      "monthlySearch": 2155200,
+      "monthlyPublish": 9900,
+      "saturation": 0.46,
+      "entry": "매우 높음",
+      "speed": "1~2일",
+      "adComp": "낮음",
+      "blogSlots": 10,
+      "reason": "블토기 브리핑 요약",
+      "subKeywords": [
+        { "keyword": "미리캔버스 무료", "monthlySearch": 5400 },
+        { "keyword": "미리캔버스 템플릿", "monthlySearch": 2100 }
+      ],
+      "autocomplete": ["미리캔버스 무료", "미리캔버스 사용법"],
+      "topPosts": [
+        { "title": "상위 글 제목", "url": "https://blog.naver.com/..." }
+      ]
+    }
+  ]
+}
+```
+
+- `subKeywords`: 블톡 키워드 맵의 2차 키워드와 확장 키워드를 모두 넣고, 월 검색량 30 미만은 빼 주세요.
+- `autocomplete`: 네이버 자동완성(`https://ac.search.naver.com/nx/ac?q=키워드&r_format=json&st=100`) 결과를 넣어 주세요.
+- `topPosts`: 최근 1개월 네이버 블로그 검색 상위 글 5~6개를 넣어 주세요(내 블로그 `beompercar` 글은 빼 주세요).
+- 세 칸은 없어도 화면은 동작하지만, 있으면 원고 작성 때 블톡을 다시 열지 않아도 돼요.
+- 이미 쓴 키워드는 올리지 말아 주세요. `studio/written.json`(Claude가 갱신)의 `keywords`와 같거나 `titles`에 들어 있는 키워드는 화면에서 자동으로 숨겨져요.
+
+### `studio/written.json`
+
+- Claude가 블로그 기록(`data/post-index.jsonl`)과 노션 기작성 아카이브로 만드는 기작성 목록이에요. 직접 고치지 말아 주세요.
+
+### 작성 프롬프트
+
+- `이 키워드로 작성하기`는 키워드 정보만 담은 짧은 요청을 복사해요. 말투·분량·제목·구성 같은 작성 규칙은 Claude 쪽 `CLAUDE.md`가 정하니 프롬프트에 넣지 마세요.
