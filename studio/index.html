@@ -2388,9 +2388,13 @@ function renderRankBar(){
   else if(!ranks.loaded) note.textContent = '순위 기록을 불러오면 마지막 확인 시각이 여기 보여요';
   else {
     var at = latestCheckedAt();
-    note.textContent = at
-      ? ('마지막 순위 확인 ' + fmtCheckedAt(at) + ' · ' + rankNoteText())
-      : '아직 순위를 확인한 글이 없어요 · 발행완료 글에 URL을 넣으면 추적해요';
+    if(at) note.textContent = '마지막 순위 확인 ' + fmtCheckedAt(at) + ' · ' + rankNoteText();
+    else {
+      var s = rankStats();
+      note.textContent = s.total
+        ? ('추적 중인 발행 글 ' + s.total + '건 · 아직 순위를 확인하지 않았어요')
+        : '아직 추적할 글이 없어요 · 발행완료 글에 URL을 넣으면 순위를 확인해요';
+    }
   }
 }
 function renderHomeRank(){
