@@ -57,7 +57,12 @@
       ],
       "autocomplete": ["미리캔버스 무료", "미리캔버스 사용법"],
       "topPosts": [
-        { "title": "상위 글 제목", "url": "https://blog.naver.com/..." }
+        {
+          "title": "상위 글 제목",
+          "url": "https://blog.naver.com/...",
+          "headings": ["소제목1", "소제목2"],
+          "summary": "본문 핵심 한 줄"
+        }
       ]
     }
   ]
@@ -67,6 +72,9 @@
 - `subKeywords`: 블톡 키워드 맵의 2차 키워드와 확장 키워드를 모두 넣고, 월 검색량 30 미만은 빼 주세요.
 - `autocomplete`: 네이버 자동완성(`https://ac.search.naver.com/nx/ac?q=키워드&r_format=json&st=100`) 결과를 넣어 주세요.
 - `topPosts`: 최근 1개월 네이버 블로그 검색 상위 글 5~6개를 넣어 주세요(내 블로그 `beompercar` 글은 빼 주세요).
+  - `headings`: 그 글의 소제목(목차)을 순서대로 적어 주세요. 소제목이 없으면 본문 단락의 주제를 짧게 적어 주세요.
+  - `summary`: 본문을 읽고 핵심 내용을 한 줄(80자 이내)로 적어 주세요. 제목을 반복하지 말고 본문에서 실제로 다룬 내용(무료 범위, 설치 순서, 가격 등)을 적어 주세요.
+  - 본문을 못 읽은 글은 `headings`와 `summary`를 빈 값으로 두고, 지어내지 마세요.
 - 세 칸은 없어도 화면은 동작하지만, 있으면 원고 작성 때 블톡을 다시 열지 않아도 돼요.
 - 이미 쓴 키워드는 올리지 말아 주세요. `studio/written.json`(Claude가 갱신)의 `keywords`와 같거나 `titles`에 들어 있는 키워드는 화면에서 자동으로 숨겨져요.
 
