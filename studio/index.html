@@ -2356,7 +2356,7 @@ function loadSyncCfg(){
 function saveSyncCfg(){ try{ localStorage.setItem(SYNC_KEY, JSON.stringify(syncCfg)); }catch(e){ toast('이 브라우저에 토큰을 저장하지 못했어요'); } }
 
 function isoNow(){ return new Date().toISOString(); }
-function itemTime(k){ var t = Date.parse(k && (k.updatedAt || k.createdAt)); return isFinite(t) ? t : 0; }
+function itemTime(k){ var t = Date.parse(k && (k.updatedAt || k.createdAt)); if(!isFinite(t)) return 0; var now = Date.now(); return t > now ? now : t; }
 function markRemovedIds(oldKws, newKws){
   var keep = {};
   (newKws || []).forEach(function(k){ if(k && k.id) keep[k.id] = 1; });
