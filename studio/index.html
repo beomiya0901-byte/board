@@ -216,6 +216,9 @@ main{padding:14px 0 8px}
 .rank-delta.down{color:var(--bad)}
 .rank-delta.new{color:var(--brand)}
 .rank-time{font-size:11px;color:var(--text-3);font-weight:600}
+.rank-legend{margin-top:9px;font-size:11px;line-height:1.5;color:var(--text-3);font-weight:650;letter-spacing:-.01em}
+.rank-legend b{color:var(--text-2);font-weight:800}
+.rank-legend[hidden]{display:none}
 .src-tag{font-size:10.5px;font-weight:700;color:var(--text-3);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:3px 6px;white-space:nowrap}
 .more-wrap{display:flex;justify-content:center;margin-top:10px}
 .more-note{font-size:11.5px;color:var(--text-3);margin-top:8px;text-align:center}
@@ -774,11 +777,12 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
         <div class="section-head">
           <div>
             <h2>발행 글 순위</h2>
-            <p id="home-rank-sub">노출 중인 글이 위에서부터 보여요</p>
+            <p id="home-rank-sub">통합검색 블록 순서대로 위에서부터 보여요</p>
           </div>
           <button class="link-btn" data-act="tab" data-tab="write" data-seg="done">전체 순위</button>
         </div>
         <div class="top-list" id="home-rank-list"></div>
+        <p class="rank-legend" id="home-rank-legend" hidden><b>N블록 N위</b> = 통합검색 위에서 N번째 블록의 N번째 글 · <b>블로그탭 N위</b> = 블로그 탭 순위</p>
       </section>
 
       <div class="quick-links">
@@ -1352,13 +1356,15 @@ function homeRankRows(){
     if(!e || rankMiss(e)) return;
     rows.push({ kw:k.kw, title:String(k.title || '').trim(), e:e });
   });
-  rows.sort(function(a,b){ return Number(a.e.rank) - Number(b.e.rank); });
+  rows.sort(function(a,b){ return rankCmp(a.e, b.e); });
   return rows;
 }
 function renderHomeRankList(){
   var box = document.getElementById('home-rank-list');
   if(!box) return;
+  var legend = document.getElementById('home-rank-legend');
   if(!ranks.loaded){
+    if(legend) legend.hidden = true;
     box.innerHTML = '<div class="rank-empty">' +
       (ranks.loading ? '순위 기록을 불러오는 중…'
         : hasSyncToken() ? '순위 기록을 불러오면 노출된 글이 여기 보여요'
@@ -1367,6 +1373,7 @@ function renderHomeRankList(){
   }
   var total = rankTargets().length;
   var rows = homeRankRows();
+  if(legend) legend.hidden = !rows.length;
   if(!rows.length){
     box.innerHTML = '<div class="rank-empty">' + (total
       ? '확인한 ' + total + '편 모두 아직 30위권 밖이에요'
@@ -1375,7 +1382,7 @@ function renderHomeRankList(){
   }
   box.innerHTML = rows.slice(0, 5).map(function(r, i){
     var e = r.e;
-    var cls = Number(e.rank) <= 3 ? 'top' : 'mid';
+    var cls = rankTop(e) ? 'top' : 'mid';
     return '<div class="top-row rank-top">' +
       '<span class="rank">' + (i+1) + '</span>' +
       '<span class="top-main"><strong>' + esc(r.title || r.kw) + '</strong>' +
@@ -2538,16 +2545,36 @@ function fmtCheckedAt(s){
   return m ? (m[2] + '-' + m[3] + ' ' + m[4] + ':' + m[5]) : '';
 }
 function rankMiss(e){ return !e || e.section === '미노출' || e.rank == null || e.rank === ''; }
+function rankTop(e){
+  if(rankMiss(e)) return false;
+  if(e.section === '블로그탭') return Number(e.rank) === 1;
+  return Number(e.block) === 1 && Number(e.rank) === 1;
+}
 function rankEmoji(e){
   if(rankMiss(e)) return '⚪';
-  return Number(e.rank) === 1 ? '🏆' : '🟢';
+  return rankTop(e) ? '🏆' : '🟢';
 }
+/* 블톡 방식: 통합검색은 `N블록 N위`, 블로그탭은 `블로그탭 N위` */
 function rankLabel(e){
-  var lbl = String((e && e.label) || '').trim();
-  if(lbl) return lbl;
   if(rankMiss(e)) return '30위권 밖';
-  return (e.section === '블로그탭' ? '블로그 ' : e.section === '스마트블록' ? '스마트블록 ' : '통합 ') + e.rank + '위';
+  var n = Number(e.rank);
+  if(e.section === '블로그탭') return '블로그탭 ' + n + '위';
+  var b = Number(e.block);
+  if(isFinite(b) && b > 0 && e.block !== null && e.block !== undefined) return b + '블록 ' + n + '위';
+  var lbl = String((e && e.label) || '').trim();      /* 블록 정보 없는 옛 기록 호환 */
+  if(lbl) return lbl;
+  return (e.section === '스마트블록' ? '스마트블록 ' : '통합 ') + n + '위';
 }
+/* 위에서부터의 순서: 블록 → 블록 안 순위, 블로그탭은 그 뒤 */
+function rankOrderKey(e){
+  if(rankMiss(e)) return 1e9;
+  var n = Number(e.rank);
+  if(e.section === '블로그탭') return 100000 + n;
+  var b = Number(e.block);
+  if(isFinite(b) && b > 0) return b * 100 + n;
+  return 90000 + n;
+}
+function rankCmp(a, b){ return rankOrderKey(a) - rankOrderKey(b); }
 function deltaHtml(e){
   if(!e || e.delta === null || e.delta === undefined) return '<span class="rank-delta new">NEW</span>';
   var n = Number(e.delta);
@@ -2561,9 +2588,10 @@ function rankRowHtml(k){
     return '<div class="rank-row"><span class="rank-badge pending" title="아직 순위를 확인하지 않았어요">⏳ 순위 확인 전</span></div>';
   }
   var miss = rankMiss(e);
-  var cls = miss ? 'none' : (Number(e.rank) <= 3 ? 'top' : 'mid');
+  var cls = miss ? 'none' : (rankTop(e) ? 'top' : 'mid');
   var t = fmtCheckedAt(e.checkedAt);
-  var tip = [e.section || '', t ? t + ' 기준' : ''].filter(Boolean).join(' · ');
+  var where = e.section === '블로그탭' ? '블로그탭' : e.section === '스마트블록' ? '통합검색 스마트블록' : '통합검색';
+  var tip = [miss ? '' : where, t ? t + ' 기준' : ''].filter(Boolean).join(' · ');
   return '<div class="rank-row">' +
     '<span class="rank-badge ' + cls + '" title="' + esc(tip) + '">' + rankEmoji(e) + ' ' + esc(rankLabel(e)) + '</span>' +
     (miss ? '' : deltaHtml(e)) +
@@ -2588,7 +2616,7 @@ function rankStats(){
     if(rankMiss(e)){ out.none++; return; }
     exposed.push(e);
   });
-  exposed.sort(function(a, b){ return Number(a.rank) - Number(b.rank); });
+  exposed.sort(rankCmp);
   out.exposed = exposed.length;
   out.best = exposed[0] || null;
   return out;
