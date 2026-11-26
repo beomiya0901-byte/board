@@ -10,7 +10,7 @@
 <!-- 배포할 때마다 이 값을 현재 시각으로 올려 주세요. [새로고침] 버튼이 이 값으로 새 HTML을 판별한다 -->
 <meta name="studio-build" content="2026-11-26T22:15:00+09:00">
 <title>키워드 스튜디오</title>
-<meta name="description" content="블로그 키워드를 모으고, 경쟁강도를 계산하고, 글감과 발행까지 관리하는 개인용 키워드 스튜디오.">
+<meta name="description" content="블로그 키워드를 모으고, 경쟁강도를 계산하고, 보관함과 발행까지 관리하는 개인용 키워드 스튜디오.">
 <meta name="theme-color" content="#f3f4f7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -778,7 +778,7 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
     <nav class="tabs" role="tablist" aria-label="주요 화면">
       <button role="tab" data-act="tab" data-tab="home" class="active" aria-selected="true">홈</button>
       <button role="tab" data-act="tab" data-tab="keywords" aria-selected="false">키워드</button>
-      <button role="tab" data-act="tab" data-tab="write" aria-selected="false">글감·발행</button>
+      <button role="tab" data-act="tab" data-tab="write" aria-selected="false">보관함·발행</button>
       <button role="tab" data-act="tab" data-tab="settings" aria-selected="false">설정</button>
     </nav>
     <div class="top-actions">
@@ -833,7 +833,7 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
 
       <div class="quick-links">
         <button class="btn soft" data-act="tab" data-tab="keywords">키워드 고르기</button>
-        <button class="btn soft" data-act="tab" data-tab="write">글감 보기</button>
+        <button class="btn soft" data-act="tab" data-tab="write">보관함 보기</button>
       </div>
     </section>
 
@@ -895,9 +895,9 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
     </section>
 
     <!-- 글감·발행 -->
-    <section class="view" id="view-write" role="tabpanel" aria-label="글감과 발행">
+    <section class="view" id="view-write" role="tabpanel" aria-label="보관함과 발행">
       <div class="seg-row">
-        <div class="seg-pill-group" role="tablist" aria-label="글감 보기">
+        <div class="seg-pill-group" role="tablist" aria-label="보관함 보기">
           <button class="seg-pill active" role="tab" data-act="write-seg" data-seg="wait" aria-selected="true">
             작성 대기 <b id="seg-wait-count">0</b>
           </button>
@@ -927,7 +927,7 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
       <div class="settings">
         <div class="card set-card">
           <h3>내 블로그</h3>
-          <p>글감 프롬프트와 화면에 이 이름이 쓰여요</p>
+          <p>프롬프트와 화면에 이 이름이 쓰여요</p>
           <div class="field">
             <label for="cfg-blog">블로그명</label>
             <input id="cfg-blog" type="text" maxlength="40" placeholder="범도리의 IT 이모저모">
@@ -1065,7 +1065,7 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
   </button>
   <button data-act="tab" data-tab="write" aria-selected="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10a2.5 2.5 0 0 0-3.5-3.5L4.5 16.5z"/><path d="M13.5 6.5L17.5 10.5"/></svg>
-    글감
+    보관함
   </button>
   <button data-act="tab" data-tab="settings" aria-selected="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
@@ -1098,7 +1098,7 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
         <label for="add-status">담을 곳</label>
         <select id="add-status">
           <option value="보류">보류 · 키워드 탭에 모아두기</option>
-          <option value="채택">채택 · 바로 글감으로</option>
+          <option value="채택">채택 · 바로 보관함으로</option>
           <option value="제외">제외</option>
         </select>
       </div>
@@ -1634,7 +1634,7 @@ function renderRecs(){
   items.forEach(function(x){ var f = recFlag(x.it); if(flagN[f] != null) flagN[f]++; });
   meta.innerHTML = '마지막 업데이트 <b>' + esc(d.updatedAt || '—') + '</b> · ' + esc(d.source) +
     ' · ' + items.length + '개 (S급 ' + sCount + ' · A급 ' + aCount + ')' +
-    (flagN['글감'] ? ' · 글감 ' + flagN['글감'] : '') +
+    (flagN['글감'] ? ' · 보관함 ' + flagN['글감'] : '') +
     (flagN['담김'] ? ' · 담김 ' + flagN['담김'] : '');
   var html = items.map(function(x){ return recCard(x.it, x.i); }).join('');
   if(!items.length) html = '<div class="rec-state"><strong>새로 쓸 추천 키워드가 없어요</strong>추천 키워드가 모두 이미 쓴 글과 겹쳐요. <b>키워드 찾기 요청</b>을 눌러 주세요.</div>';
@@ -1856,7 +1856,7 @@ function kwCard(k){
     '<div class="kw-foot">' +
       '<select class="status-select" data-act="set-status" data-id="' + k.id + '" data-status="' + k.status + '" aria-label="상태 변경">' + opts + '</select>' +
       '<span class="spacer"></span>' +
-      '<button class="btn soft sm" data-act="to-write" data-id="' + k.id + '">글감으로</button>' +
+      '<button class="btn soft sm" data-act="to-write" data-id="' + k.id + '">보관함으로</button>' +
       '<button class="del-btn" data-act="kw-del" data-id="' + k.id + '" aria-label="' + esc(k.kw) + ' 삭제">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M10 11v6M14 11v6"/></svg>' +
       '</button>' +
@@ -1931,8 +1931,8 @@ function htmlWait(wait){
   if(!wait.length){
     return '<div class="empty">' +
       '<div class="e-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10a2.5 2.5 0 0 0-3.5-3.5L4.5 16.5z"/><path d="M13.5 6.5L17.5 10.5"/></svg></div>' +
-      '<strong>작성 대기 중인 글감이 없어요</strong>' +
-      '<p>키워드 탭에서 <b>글감으로</b>를 누르거나<br>블톡 추천에서 키워드를 담아 보세요.</p>' +
+      '<strong>보관함에 작성 대기 중인 글이 없어요</strong>' +
+      '<p>키워드 탭에서 <b>보관함으로</b>를 누르거나<br>블톡 추천에서 키워드를 담아 보세요.</p>' +
       '<button class="btn primary" data-act="tab" data-tab="keywords">키워드 고르기</button></div>';
   }
   return '<div class="section-head" style="margin-top:2px"><div><h2 style="font-size:15px">작성 대기</h2>' +
@@ -3147,7 +3147,7 @@ document.addEventListener('click', function(e){
     var kw = byId(id); if(!kw) return;
     kw.status = '채택'; kw.updatedAt = new Date().toISOString();
     save(); refresh(); setTab('write', 'wait');
-    toast('글감으로 옮겼어요');
+    toast('보관함으로 옮겼어요');
     return;
   }
   if(act === 'kw-del'){
