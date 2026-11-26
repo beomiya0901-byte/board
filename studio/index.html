@@ -1293,6 +1293,11 @@ function normKw(k){
     createdAt: k.createdAt || new Date().toISOString(),
     updatedAt: k.updatedAt || k.createdAt || new Date().toISOString()
   };
+  var __now = Date.now();
+  if(Date.parse(o.updatedAt) > __now + 1800000){
+    var __c = Date.parse(o.createdAt);
+    if(isFinite(__c) && __c <= __now + 1800000) o.updatedAt = o.createdAt;
+  }
   if(k.vol != null && !isNaN(Number(k.vol))) o.vol = toNum(k.vol);
   if(typeof k.analysisPending === 'boolean') o.analysisPending = k.analysisPending;
   ['saturation','briefing','subKeywords','autocomplete','topPosts'].forEach(function(f){
@@ -2365,7 +2370,7 @@ function loadSyncCfg(){
 function saveSyncCfg(){ try{ localStorage.setItem(SYNC_KEY, JSON.stringify(syncCfg)); }catch(e){ toast('이 브라우저에 토큰을 저장하지 못했어요'); } }
 
 function isoNow(){ return new Date().toISOString(); }
-function itemTime(k){ var t = Date.parse(k && (k.updatedAt || k.createdAt)); if(!isFinite(t)) return 0; var now = Date.now(); return t > now ? now : t; }
+function itemTime(k){ var t = Date.parse(k && (k.updatedAt || k.createdAt)); if(!isFinite(t)) return 0; var now = Date.now(); if(t > now + 1800000){ var c = Date.parse(k && k.createdAt); return (isFinite(c) && c <= now + 1800000) ? c : 0; } return t; }
 function markRemovedIds(oldKws, newKws){
   var keep = {};
   (newKws || []).forEach(function(k){ if(k && k.id) keep[k.id] = 1; });
