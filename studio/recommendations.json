@@ -1,1195 +1,1651 @@
 {
-  "updatedAt": "2026-11-25 22:04",
-  "source": "블톡",
-  "sourceUrl": "https://beta.blogtalk.io/service/keyword-analysis",
-  "sourceNote": "블톡 키워드 분석(카테고리 IT·컴퓨터, 최근 30일 집계) 2026-11-25 재수집 · 기작성 키워드 제외 후 S급 4·A급 10",
-  "blog": "범도리의 IT 이모저모",
-  "items": [
+ "updatedAt": "2026-11-26 17:44",
+ "source": "블톡",
+ "items": [
+  {
+   "keyword": "듀오링고가격",
+   "grade": "S급",
+   "monthlySearch": 20750,
+   "monthlyPublish": 1592,
+   "saturation": 7.67,
+   "entry": "매우 높음",
+   "speed": "1~2일",
+   "adComp": "중간",
+   "blogSlots": 15,
+   "reason": "월 20,750 검색에 한 달 발행 1,592건, 포화도 8%예요. 검색량 대비 발행량이 적고, 상위 블로그들의 레벨 분포가 넓어 비집고 들어갈 자리가 보여요 무료 버전과 슈퍼, 패밀리 요금제의 차이를 표로 나누고 1인당 실제 체감 가격을 계산해 보세요.",
+   "briefing": {
+    "verdict": "지금 바로 도전해 볼 만해요",
+    "checks": [
+     "상위 평균은 Lv3이고 Lv8인 나보다 레벨이 낮은 블로그가 대부분이에요",
+     "앞서 있는 글 절반 이상이 오늘 쓰인 글이라 지금 바로 새 글을 올려볼 만해요",
+     "상위 블로그 중 10개는 유효키워드가 나보다 적어 경쟁 부담이 크지 않아요"
+    ],
+    "strategy": [
+     "무료 버전과 슈퍼, 패밀리 요금제의 차이를 표로 나누고 1인당 실제 체감 가격을 계산해 보세요",
+     "가족이나 친구와 공유할 때 필요한 초대 방법과 주의사항을 유형별로 구분해서 정리해 보세요"
+    ]
+   },
+   "subKeywords": [
     {
-      "keyword": "adsp시험일정",
-      "grade": "S급",
-      "monthlySearch": 31520,
-      "monthlyPublish": 925,
-      "saturation": 2.93,
-      "entry": "매우 높음",
-      "speed": "빠름",
-      "adComp": "높음",
-      "blogSlots": 9,
-      "reason": "월 3만 1천 검색에 한 달 발행은 925건, 포화도 2.93%예요. 상위 평균이 Lv5인데 Lv1~Lv3 블로그가 다수라 지금 레벨로도 붙을 수 있고, 모바일 비중 77%에 7~9월이 성수기예요. 2027년 예상 일정과 51·52회 결과를 표로 정리하고 SQLD와 함께 준비하는 순서를 붙이면 검색 의도를 그대로 잡아요.",
-      "subKeywords": [
-        {
-          "keyword": "adsp 시험일정 2027",
-          "monthlySearch": 4330
-        },
-        {
-          "keyword": "adsp 시험일정 2026",
-          "monthlySearch": 900
-        },
-        {
-          "keyword": "2027 adsp 시험일정",
-          "monthlySearch": 400
-        },
-        {
-          "keyword": "adsp 시험일정 시간",
-          "monthlySearch": 160
-        },
-        {
-          "keyword": "adsp 시험일정 2025",
-          "monthlySearch": 150
-        },
-        {
-          "keyword": "2027년 adsp 시험일정",
-          "monthlySearch": 150
-        },
-        {
-          "keyword": "adsp 시험일정 52회",
-          "monthlySearch": 40
-        },
-        {
-          "keyword": "27년 adsp 시험일정",
-          "monthlySearch": 40
-        },
-        {
-          "keyword": "adsp 자격증 시험일정 2027",
-          "monthlySearch": 170
-        }
-      ],
-      "autocomplete": [
-        "adsp 시험일정",
-        "adsp 시험일정 2027",
-        "adsp 시험일정 2026",
-        "adsp 시험일정 2025",
-        "2027 adsp 시험일정",
-        "adsp 시험일정 결과",
-        "adsp 시험일정 2024",
-        "adsp 시험일정 장소",
-        "adsp 시험일정 합격률",
-        "adsp 시험일정 2027년"
-      ],
-      "topPosts": [
-        {
-          "title": "2027 ADsP 시험일정 예상ㅣ제 52회 원서접수 및 시험일",
-          "url": "https://blog.naver.com/nj_diary/224484593552"
-        },
-        {
-          "title": "ADsP·SQLD 2027 시험일정, 아직 공고 전인 지금 1월 5일 첫 접수 흐름으로 준비 순서 잡기",
-          "url": "https://blog.naver.com/chan63078/224480262066"
-        },
-        {
-          "title": "\"비전공자도 딸 수 있다던데\" 2027년 빅데이터분석기사 ADsP 시험일정 응시자격 차이 총정리",
-          "url": "https://blog.naver.com/wjdrb5482/224483262874"
-        },
-        {
-          "title": "[ADsP] 데이터분석 준전문가 자격증 총정리｜접수 꿀팁, 2027 시험일정, 난이도, 응시료, 합격기준, 유효기간｜무조건 접수 빨리 해야하는 이유",
-          "url": "https://blog.naver.com/chanranhan01/224483059990"
-        },
-        {
-          "title": "ADsP 결과 발표 2026 마지막 회차, 합격률·과락 기준",
-          "url": "https://blog.naver.com/dodopang5/224481862166"
-        },
-        {
-          "title": "ADsP 자격증 시험일정 합격률 독학 유효기간, 올해 마지막 51회 끝난 지금 2027년 준비 이렇게 시작하세요",
-          "url": "https://blog.naver.com/comidefer/224489050897"
-        }
-      ]
+     "keyword": "듀오링고패밀리",
+     "monthlySearch": 28410,
+     "saturation": 2.1
     },
     {
-      "keyword": "애니데스크",
-      "grade": "S급",
-      "monthlySearch": 26880,
-      "monthlyPublish": 1059,
-      "saturation": 3.94,
-      "entry": "매우 높음",
-      "speed": "빠름",
-      "adComp": "높음",
-      "blogSlots": 11,
-      "reason": "월 2만 6천 검색에 발행 1,059건으로 포화도 3.94%예요. PC 유입이 94%라 표와 단계별 설명이 잘 먹히고, 상위 글 절반이 2주 안에 올라온 만큼 새 글도 노출될 여지가 있어요. 무료·사용법·다운로드 같은 2차 키워드(월 340~570)로 설치부터 무인 접속까지 순서대로 담으면 좋아요.",
-      "subKeywords": [
-        {
-          "keyword": "애니데스크 무료",
-          "monthlySearch": 570
-        },
-        {
-          "keyword": "애니데스크 사용법",
-          "monthlySearch": 540
-        },
-        {
-          "keyword": "애니데스크 다운로드",
-          "monthlySearch": 340
-        },
-        {
-          "keyword": "애니데스크 원격",
-          "monthlySearch": 310
-        },
-        {
-          "keyword": "애니데스크 가격",
-          "monthlySearch": 90
-        },
-        {
-          "keyword": "NE데스크",
-          "monthlySearch": 90
-        },
-        {
-          "keyword": "애니데스크 유료",
-          "monthlySearch": 60
-        },
-        {
-          "keyword": "애니데스크 설치",
-          "monthlySearch": 60
-        },
-        {
-          "keyword": "엔이데스크",
-          "monthlySearch": 60
-        },
-        {
-          "keyword": "에니데스크",
-          "monthlySearch": 60
-        }
-      ],
-      "autocomplete": [
-        "애니데스크",
-        "애니데스크 사용법",
-        "애니데스크 원격",
-        "애니데스크 무료",
-        "애니데스크 가격",
-        "애니데스크 보이스피싱",
-        "애니데스크 유료",
-        "애니데스크 자동승인",
-        "애니데스크뜻",
-        "애니데스크 모바일"
-      ],
-      "topPosts": [
-        {
-          "title": "애니데스크 무료 다운로드 사용법 설치",
-          "url": "https://blog.naver.com/w8imocb7xvox6o/224482265463"
-        },
-        {
-          "title": "애니데스크 무료 설치방법 사용법",
-          "url": "https://blog.naver.com/sunhyowon52/224472254841"
-        },
-        {
-          "title": "애니데스크 해킹 사건 정리: 2024년 공식 발표와 이용자 보안 점검",
-          "url": "https://blog.naver.com/airdesk-remote/224490278498"
-        },
-        {
-          "title": "원격 지원 프로그램 설치 방법, 러스트데스크·애니데스크·울트라뷰어 다운로드 링크와 윈도우 XP 지원 정리",
-          "url": "https://blog.naver.com/mjtech1028/224474820185"
-        },
-        {
-          "title": "애니데스크 사용법 무료 다운로드 설치",
-          "url": "https://blog.naver.com/roekiqqx5b/224491479835"
-        },
-        {
-          "title": "겟스크린미(Getscreen.me) vs 애니데스크(AnyDesk) 가격 비교｜기업용 원격지원 프로그램 선택 가이드",
-          "url": "https://blog.naver.com/getscreenme/224481900373"
-        }
-      ]
+     "keyword": "듀오링고슈퍼",
+     "monthlySearch": 15290,
+     "saturation": 5.3
     },
     {
-      "keyword": "삼성파인드",
-      "grade": "S급",
-      "monthlySearch": 20450,
-      "monthlyPublish": 642,
-      "saturation": 3.14,
-      "entry": "매우 높음",
-      "speed": "1~2일",
-      "adComp": "낮음",
-      "blogSlots": 10,
-      "reason": "월 2만 450 검색에 발행 642건, 포화도 3.14%예요. 상위 평균 Lv5에 Lv1 블로그도 자리를 지키고, 상위 글 절반 이상이 오늘 올라올 만큼 회전이 빨라요. 삼성파인드앱(월 1,780)으로 쪼개 분실 직후 설정부터 위치 확인·분실 모드 해제까지 순서대로 쓰면 좋아요.",
-      "subKeywords": [
-        {
-          "keyword": "삼성파인드앱",
-          "monthlySearch": 1780
-        },
-        {
-          "keyword": "삼성파인드 웹사이트",
-          "monthlySearch": 150
-        },
-        {
-          "keyword": "삼성파인드씽",
-          "monthlySearch": 50
-        },
-        {
-          "keyword": "삼성파인드마이모바일",
-          "monthlySearch": 50
-        },
-        {
-          "keyword": "삼성파인드 위치 정확도",
-          "monthlySearch": 30
-        },
-        {
-          "keyword": "삼성파인드 분실모드 해제",
-          "monthlySearch": 30
-        },
-        {
-          "keyword": "삼성파인드 아이폰",
-          "monthlySearch": 30
-        },
-        {
-          "keyword": "삼성파인드 주변기기가 발견함",
-          "monthlySearch": 30
-        },
-        {
-          "keyword": "삼성 파인드 앱 설치",
-          "monthlySearch": 100
-        },
-        {
-          "keyword": "삼성 파인드 앱 사용방법",
-          "monthlySearch": 30
-        }
-      ],
-      "autocomplete": [
-        "삼성파인드",
-        "삼성파인드앱",
-        "삼성 파인드 위치추적",
-        "삼성 파인드 기기등록",
-        "삼성파인드씽",
-        "삼성 파인드 정확도",
-        "삼성 파인드 위치",
-        "삼성 파인드 분실모드",
-        "삼성 파인드 알림",
-        "삼성 파인드 위치공유"
-      ],
-      "topPosts": [
-        {
-          "title": "갤럭시 휴대폰 잃어버리기 전 확인할 설정, 삼성 파인드 사용법",
-          "url": "https://blog.naver.com/rsc0303/224483190521"
-        },
-        {
-          "title": "삼성 파인드 사용법, 갤럭시 분실 전 설정과 위치 찾기",
-          "url": "https://blog.naver.com/gunbbang_com/224474607059"
-        },
-        {
-          "title": "휴대폰 잃어버렸을 때 대처법｜아이폰 나의 찾기·갤럭시 삼성 파인드 순서대로",
-          "url": "https://blog.naver.com/tjdwls7198/224485011247"
-        },
-        {
-          "title": "스마트폰 분실 시 위치 추적 및 원격 잠금·데이터 초기화 방법 총정리 (삼성 파인드 · 애플 나의 찾기 3분 대응)",
-          "url": "https://blog.naver.com/sstt03/224479858116"
-        },
-        {
-          "title": "갤럭시 분실폰 찾기｜삼성 파인드 설정·위치 확인·분실 모드",
-          "url": "https://blog.naver.com/cheolit/224473179988"
-        },
-        {
-          "title": "스마트폰 분실 시 위치 찾기! 삼성 파인드·구글로 휴대폰 원격 잠금하는 방법",
-          "url": "https://blog.naver.com/winner-84/224480452626"
-        }
-      ]
+     "keyword": "듀오링고무료",
+     "monthlySearch": 6650,
+     "saturation": 38.3
     },
     {
-      "keyword": "아이러브피디에프",
-      "grade": "S급",
-      "monthlySearch": 10920,
-      "monthlyPublish": 40,
-      "saturation": 0.37,
-      "entry": "매우 높음",
-      "speed": "보통",
-      "adComp": "낮음",
-      "blogSlots": 10,
-      "reason": "검색은 월 1만 920인데 한 달 발행이 40건뿐이라 포화도가 0.37%예요. 상위 평균은 Lv3이고 Lv1 블로그도 있어 지금 레벨로 충분하고, PC 검색이 94%예요. 설치 없이 PDF 합치기·용량 줄이기·잠금 해제하는 순서를 표로 정리하면 바로 노출될 만해요.",
-      "subKeywords": [
-        {
-          "keyword": "아이러브피디에프 무료",
-          "monthlySearch": 80
-        },
-        {
-          "keyword": "아이러브피디에프 사이트",
-          "monthlySearch": 60
-        }
-      ],
-      "autocomplete": [
-        "아이러브피디에프",
-        "아이러브피디에프 무료",
-        "아이러브피디에프 사이트"
-      ],
-      "topPosts": [
-        {
-          "title": "PDF 용량 줄이기 무료 방법 총정리: 사이트별 제한 횟수 비교부터 모바일·보안 문서 오프라인 압축까지",
-          "url": "https://blog.naver.com/workdesk_911/224486959868"
-        },
-        {
-          "title": "프로그램 설치 없이 10초 해결! 직장인·대학생 무료 PDF 편집 및 변환 사이트 베스트 3!",
-          "url": "https://blog.naver.com/youareluck7/224478044595"
-        },
-        {
-          "title": "PDF 파일 합치는 무료 방법! 프로그램 설치 없이 1분 만에 병합하는 꿀팁 총정리 ✨",
-          "url": "https://blog.naver.com/oopp121203/224454773493"
-        },
-        {
-          "title": "무료 PDF 파일 변환 및 페이지 분할 프로그램 웹사이트 비교 정리",
-          "url": "https://blog.naver.com/qwertui12/224472359053"
-        },
-        {
-          "title": "무료 PDF 압축•변환 사이트 TOP 3 비교",
-          "url": "https://blog.naver.com/purelife599/224481299129"
-        },
-        {
-          "title": "무료 jpg pdf 변환 방법 사이트 컴퓨터 PC 모바일",
-          "url": "https://blog.naver.com/sinnam88/224475736309"
-        }
-      ]
+     "keyword": "듀오링고맥스",
+     "monthlySearch": 6460,
+     "saturation": 5.2
     },
     {
-      "keyword": "미리캔버스",
-      "grade": "A급",
-      "monthlySearch": 2188600,
-      "monthlyPublish": 10276,
-      "saturation": 0.47,
-      "entry": "매우 높음",
-      "speed": "1~2일",
-      "adComp": "낮음",
-      "blogSlots": 10,
-      "reason": "월 218만 검색인데 포화도는 0.47%로 거의 비어 있어요. 상위 글 절반 이상이 이틀 안에 올라온 회전 빠른 자리라, 디자인허브(월 5만 2천)·허브(월 1만 9,560) 같은 2차 키워드로 쪼개 카드뉴스·썸네일 제작 순서를 정리하는 게 유리해요.",
-      "subKeywords": [
-        {
-          "keyword": "미리캔버스 디자인허브",
-          "monthlySearch": 52000
-        },
-        {
-          "keyword": "미리캔버스 허브",
-          "monthlySearch": 19560
-        },
-        {
-          "keyword": "미리캔버스 기여자",
-          "monthlySearch": 14490
-        },
-        {
-          "keyword": "미리캔버스사이트",
-          "monthlySearch": 4330
-        },
-        {
-          "keyword": "미리캔버스 ai",
-          "monthlySearch": 3530
-        },
-        {
-          "keyword": "미리캔버스 공동작업",
-          "monthlySearch": 3180
-        },
-        {
-          "keyword": "미리캔버스 청첩장",
-          "monthlySearch": 3030
-        },
-        {
-          "keyword": "미리캔버스 무료",
-          "monthlySearch": 1090
-        },
-        {
-          "keyword": "미리캔버스 수익",
-          "monthlySearch": 870
-        },
-        {
-          "keyword": "미리캔버스 표 만들기",
-          "monthlySearch": 750
-        }
-      ],
-      "autocomplete": [
-        "미리캔버스",
-        "미리캔버스 디자인허브",
-        "미리캔버스 해지",
-        "미리캔버스 ai",
-        "미리캔버스 기여자",
-        "미리캔버스 허브",
-        "미리캔버스 공동작업",
-        "미리캔버스 환불",
-        "미리캔버스 청첩장",
-        "미리캔버스 무료"
-      ],
-      "topPosts": [
-        {
-          "title": "셀프 청첩장 만들기 | 미리캔버스 비즈하우스 뽕뽑아 무료로 만든 꿀팁",
-          "url": "https://blog.naver.com/joo8534/224488953188"
-        },
-        {
-          "title": "미리캔버스 무료 사용법 2026｜블로그 썸네일·카드뉴스 만들기부터 PNG 저장까지",
-          "url": "https://blog.naver.com/supia_love1004/224482091523"
-        },
-        {
-          "title": "미리캔버스 PPT 다운로드가 안 보이면 새로운 에디터인지 보세요, 남에게 보낼 땐 통 이미지로",
-          "url": "https://blog.naver.com/tech-nam/224479749213"
-        },
-        {
-          "title": "셀프 청첩장 만들기 1탄｜미리캔버스로 청첩장 인쇄용 파일 만들기",
-          "url": "https://blog.naver.com/coeurchaud/224487506979"
-        },
-        {
-          "title": "가성비 셀프 종이청첩장 제작 | 미리캔버스 비즈하우스로 만들기",
-          "url": "https://blog.naver.com/lemon-world/224489046385"
-        },
-        {
-          "title": "미리캔버스 상업적 이용 | 무료·Pro 같은 계약, 광고물은 되고 디자인을 파는 건 안 됩니다",
-          "url": "https://blog.naver.com/tech-nam/224479676993"
-        }
-      ]
+     "keyword": "슈퍼듀오링고",
+     "monthlySearch": 3660,
+     "saturation": 3.6
     },
     {
-      "keyword": "띄어쓰기검사기",
-      "grade": "A급",
-      "monthlySearch": 585600,
-      "monthlyPublish": 479,
-      "saturation": 0.08,
-      "entry": "높음",
-      "speed": "빠름",
-      "adComp": "높음",
-      "blogSlots": 15,
-      "reason": "월 58만 검색에 포화도는 0.08%, 블로그 자리도 15칸으로 넉넉해요. 상위 평균 레벨은 높지만 Lv1 블로그도 섞여 있고, 상위 글이 대부분 2주 안에 쓰였어요. 무료 검사기 5곳 비교표와 300자 제한 대처법, 자주 틀리는 맞춤법을 함께 정리하면 좋아요.",
-      "subKeywords": [
-        {
-          "keyword": "한글맞춤법검사기",
-          "monthlySearch": 88800
-        },
-        {
-          "keyword": "영어이름변환기",
-          "monthlySearch": 31400
-        },
-        {
-          "keyword": "영어문법검사기",
-          "monthlySearch": 10170
-        },
-        {
-          "keyword": "한국어맞춤법검사기",
-          "monthlySearch": 8330
-        },
-        {
-          "keyword": "맞춤법띄어쓰기검사기",
-          "monthlySearch": 5370
-        },
-        {
-          "keyword": "네이버맞춤법 띄어쓰기 검사기",
-          "monthlySearch": 5170
-        },
-        {
-          "keyword": "영어맞춤법검사기",
-          "monthlySearch": 2930
-        },
-        {
-          "keyword": "영문법검사기",
-          "monthlySearch": 2000
-        },
-        {
-          "keyword": "전공학점계산기",
-          "monthlySearch": 1530
-        },
-        {
-          "keyword": "띄워쓰기검사기",
-          "monthlySearch": 510
-        },
-        {
-          "keyword": "바른한글 맞춤법 검사기",
-          "monthlySearch": 500
-        },
-        {
-          "keyword": "한글 맞춤법 검사기 사용법",
-          "monthlySearch": 120
-        },
-        {
-          "keyword": "고등학교졸업년도계산기",
-          "monthlySearch": 50
-        },
-        {
-          "keyword": "한글 맞춤법 검사기 끄는법",
-          "monthlySearch": 50
-        },
-        {
-          "keyword": "한글 맞춤법 검사기 띄어쓰기",
-          "monthlySearch": 30
-        },
-        {
-          "keyword": "한글 맞춤법 검사기 단축키",
-          "monthlySearch": 30
-        }
-      ],
-      "autocomplete": [
-        "띄어쓰기 검사기",
-        "네이버 띄어쓰기 검사기",
-        "맞춤법 띄어쓰기 검사기",
-        "띄어쓰기 검사기 사이트",
-        "띄어쓰기 검사기 맞춤법",
-        "띄어쓰기 검사기 오류",
-        "다음 띄어쓰기 검사기",
-        "띄어쓰기 검사기 어플",
-        "띄어쓰기 검사기 추천",
-        "띄어쓰기 검사기 한글"
-      ],
-      "topPosts": [
-        {
-          "title": "띄어쓰기 검사기 사용법｜네이버·바른한글로 맞춤법까지 확인하는 방법",
-          "url": "https://blog.naver.com/digital_fixnote/224476388207"
-        },
-        {
-          "title": "\"회원가입 필요 없어요\" 무료 띄어쓰기검사기 추천과 활용법",
-          "url": "https://blog.naver.com/pbhqudgus/224474955122"
-        },
-        {
-          "title": "\"300자 넘으면 뒤가 잘립니다\" 띄어쓰기검사기로 긴 글 검사하는 방법",
-          "url": "https://blog.naver.com/quantumleapschool/224472131044"
-        },
-        {
-          "title": "맞춤법 검사기 사용법, 띄어쓰기까지 한 번에 고치는 법",
-          "url": "https://blog.naver.com/techssaem/224488798660"
-        },
-        {
-          "title": "네이버 맞춤법 검사기 바로가기! 띄어쓰기·오타 수정부터 300자 사용법까지",
-          "url": "https://blog.naver.com/gjcarrotel/224483645844"
-        },
-        {
-          "title": "맞춤법 검사기·글자수세기·띄어쓰기 검사기: 네이버 블로그 글쓰기 필수 도구 활용법",
-          "url": "https://blog.naver.com/royal23-/224486466805"
-        }
-      ]
+     "keyword": "듀오링고일본어",
+     "monthlySearch": 2580,
+     "saturation": 54.8
     },
     {
-      "keyword": "신한쏠퀴즈",
-      "grade": "A급",
-      "monthlySearch": 368700,
-      "monthlyPublish": 4504,
-      "saturation": 1.22,
-      "entry": "매우 높음",
-      "speed": "1~2일",
-      "adComp": "낮음",
-      "blogSlots": 17,
-      "reason": "매일 정답을 찾는 앱 퀴즈 수요가 월 36만 8,700이고 블로그 자리가 17칸이에요. 상위 평균 Lv5에 Lv1 블로그도 있고, 상위 글 절반 이상이 오늘 작성됐어요. 정답(월 2만 5,150) 키워드로 오늘의 정답·힌트를 매일 갱신하는 형식이면 짧은 글로 반복 유입을 만들 수 있어요.",
-      "subKeywords": [
-        {
-          "keyword": "신한쏠퀴즈 정답",
-          "monthlySearch": 25150
-        },
-        {
-          "keyword": "신한쏠퀴즈 출석퀴즈",
-          "monthlySearch": 760
-        },
-        {
-          "keyword": "신한쏠야구 퀴즈 정답",
-          "monthlySearch": 1190
-        },
-        {
-          "keyword": "신한은행 쏠퀴즈 정답",
-          "monthlySearch": 200
-        }
-      ],
-      "autocomplete": [
-        "신한쏠퀴즈",
-        "신한쏠퀴즈 정답",
-        "신한쏠퀴즈11월24일",
-        "신한쏠퀴즈11월22일",
-        "신한쏠퀴즈11월23일",
-        "신한쏠퀴즈11월20일",
-        "신한쏠퀴즈11월19일",
-        "신한쏠퀴즈 11월 21일",
-        "신한쏠퀴즈11월18일",
-        "신한쏠퀴즈11월15일"
-      ],
-      "topPosts": [
-        {
-          "title": "11월 21일 신한 쏠퀴즈 정답 공개! 쏠야구·출석퀴즈·SOL페이 퀴즈팡팡 한눈에 보기",
-          "url": "https://blog.naver.com/rainbow_726/224485741022"
-        },
-        {
-          "title": "[오늘의 앱테크] 11월 23일 신한 쏠퀴즈 정답｜쏠야구·퀴즈팡팡·슈퍼SOL 출석퀴즈",
-          "url": "https://blog.naver.com/flalspwlq/224487797610"
-        },
-        {
-          "title": "11월 20일 신한 쏠퀴즈 정답 3종｜쏠야구·퀴즈팡팡·슈퍼SOL",
-          "url": "https://blog.naver.com/82_ok/224484516421"
-        },
-        {
-          "title": "11월 23일 신한퀴즈 정답 총정리신한쏠야구·퀴즈팡팡·출석퀴즈",
-          "url": "https://blog.naver.com/sksmsqorwkda/224487859825"
-        },
-        {
-          "title": "11월 25일 수요일 신한 쏠퀴즈 정답 총정리! 쏠야구 양현종·SOL페이 퀴즈팡팡 1만 5천원, 슈퍼SOL 출석퀴즈 오전 7시 업데이트",
-          "url": "https://blog.naver.com/tubmh123/224490671737"
-        },
-        {
-          "title": "[오늘의 앱테크] 11월 20일 신한 쏠퀴즈 정답｜쏠야구·퀴즈팡팡·슈퍼SOL 출석퀴즈",
-          "url": "https://blog.naver.com/flalspwlq/224484275078"
-        }
-      ]
+     "keyword": "듀오링고시험",
+     "monthlySearch": 1950,
+     "saturation": 100
     },
     {
-      "keyword": "네이버웍스",
-      "grade": "A급",
-      "monthlySearch": 156390,
-      "monthlyPublish": 3017,
-      "saturation": 1.93,
-      "entry": "매우 높음",
-      "speed": "빠름",
-      "adComp": "중간",
-      "blogSlots": 8,
-      "reason": "월 15만 6,390 검색의 기업용 협업 툴인데 포화도 1.93%, 블로그 자리는 8칸이에요. 상위 평균 Lv4에 Lv1 블로그도 섞여 있고 PC 유입이 93%라 표와 긴 설명이 유리해요. 네이버웍스메일(월 4,440) 쪽으로 메일 로그인·용량·백업을 정리하면 검색 의도가 분명한 유입을 잡아요.",
-      "subKeywords": [
-        {
-          "keyword": "네이버웍스메일",
-          "monthlySearch": 4440
-        },
-        {
-          "keyword": "네이버웍스 다운로드",
-          "monthlySearch": 2210
-        },
-        {
-          "keyword": "네이버웍스 드라이브",
-          "monthlySearch": 1880
-        },
-        {
-          "keyword": "네이버웍스 pc",
-          "monthlySearch": 400
-        },
-        {
-          "keyword": "네이버웍스 메신저",
-          "monthlySearch": 340
-        },
-        {
-          "keyword": "정부 네이버웍스",
-          "monthlySearch": 260
-        },
-        {
-          "keyword": "네이버웍스 공공",
-          "monthlySearch": 190
-        },
-        {
-          "keyword": "네이버웍스 비밀번호 찾기",
-          "monthlySearch": 160
-        },
-        {
-          "keyword": "네이버웍스 클로바노트",
-          "monthlySearch": 150
-        },
-        {
-          "keyword": "네이버웍스 ai",
-          "monthlySearch": 120
-        },
-        {
-          "keyword": "네이버웍스 메일 로그인 url",
-          "monthlySearch": 220
-        },
-        {
-          "keyword": "네이버웍스이메일",
-          "monthlySearch": 120
-        },
-        {
-          "keyword": "네이버웍스 메일 회수",
-          "monthlySearch": 50
-        },
-        {
-          "keyword": "네이버웍스 메일 연동",
-          "monthlySearch": 40
-        },
-        {
-          "keyword": "네이버웍스 메일 로그인 링크",
-          "monthlySearch": 40
-        },
-        {
-          "keyword": "네이버웍스 메일 용량",
-          "monthlySearch": 30
-        },
-        {
-          "keyword": "네이버웍스 메일 발송취소",
-          "monthlySearch": 30
-        },
-        {
-          "keyword": "네이버웍스 메일 백업",
-          "monthlySearch": 30
-        },
-        {
-          "keyword": "네이버웍스 메일 도메인",
-          "monthlySearch": 30
-        },
-        {
-          "keyword": "네이버웍스 메일 서명",
-          "monthlySearch": 30
-        }
-      ],
-      "autocomplete": [
-        "네이버웍스",
-        "네이버웍스 로그인",
-        "네이버웍스 메일",
-        "정부 네이버웍스",
-        "네이버웍스 가격",
-        "네이버웍스 pc",
-        "네이버웍스 고객센터",
-        "네이버웍스 메일 로그인",
-        "네이버웍스 드라이브",
-        "네이버웍스 다운로드"
-      ],
-      "topPosts": [
-        {
-          "title": "네이버클라우드(하이퍼클로바X·네이버웍스) – 팀네이버의 서버와 GPU를 돌리는 회사",
-          "url": "https://blog.naver.com/running907/224490794537"
-        },
-        {
-          "title": "네이버웍스 설문 만드는 법, 사내 익명 응답 설정부터 결과 공유까지",
-          "url": "https://blog.naver.com/1n1project/224471569862"
-        },
-        {
-          "title": "네이버웍스 무료 요금제 이용방법! +30일 무료체험",
-          "url": "https://blog.naver.com/monimal_/224457918635"
-        },
-        {
-          "title": "회사 이메일 만들기, 네이버웍스 vs 구글 워크스페이스 내 도메인 메일 비교 (2026 요금 정리)",
-          "url": "https://blog.naver.com/curiouspoon/224465615233"
-        },
-        {
-          "title": "웍스AI 회사 계정 처음 쓸 때, 모델 고르기부터 '사용량을 다 썼어요' 대처까지",
-          "url": "https://blog.naver.com/ddasik3103/224472687465"
-        },
-        {
-          "title": "AIEP 전북 계정 이메일 확인하는 방법- 네이버웍스(Works) 메일",
-          "url": "https://blog.naver.com/kindpark6142/224467008689"
-        }
-      ]
+     "keyword": "슈퍼듀오링고가격",
+     "monthlySearch": 1620,
+     "saturation": 30.5
     },
     {
-      "keyword": "네이버KEEP",
-      "grade": "A급",
-      "monthlySearch": 139700,
-      "monthlyPublish": 2030,
-      "saturation": 1.45,
-      "entry": "높음",
-      "speed": "빠름",
-      "adComp": "낮음",
-      "blogSlots": 15,
-      "reason": "월 13만 9,700 검색의 메모 앱인데 포화도 1.45%로 비어 있어요. 상위 평균은 Lv7이지만 Lv1 블로그도 섞이고, 상위 4곳은 유효키워드가 적어 실전 성적 차이가 크지 않아요. PC·모바일 설치, 저장한 메모 찾기, 오프라인 저장처럼 실제로 검색되는 포인트를 정리하면 좋아요.",
-      "subKeywords": [
-        {
-          "keyword": "네이버keep저장찾기",
-          "monthlySearch": 1100
-        },
-        {
-          "keyword": "네이버keep pc",
-          "monthlySearch": 210
-        },
-        {
-          "keyword": "네이버 keep 저장",
-          "monthlySearch": 200
-        },
-        {
-          "keyword": "네이버keep 무슨뜻",
-          "monthlySearch": 60
-        },
-        {
-          "keyword": "네이버keep 홈화면",
-          "monthlySearch": 40
-        },
-        {
-          "keyword": "네이버keep 공유방법",
-          "monthlySearch": 40
-        }
-      ],
-      "autocomplete": [
-        "네이버keep",
-        "네이버keep저장찾기",
-        "네이버 keep 저장",
-        "네이버keep 홈화면",
-        "네이버keep 무슨뜻",
-        "네이버keep 없애는법",
-        "네이버keep 공유방법",
-        "네이버keep pc화면 방법",
-        "네이버keep저장방법",
-        "네이버keep 배경화면"
-      ],
-      "topPosts": [
-        {
-          "title": "네이버 Keep 저장하는 법, 나중에 다시 볼 글과 사진 보관하기",
-          "url": "https://blog.naver.com/kyh30098/224475824019"
-        },
-        {
-          "title": "네이버 킵(Keep) 사용법 총정리｜링크·사진·메모 저장하고 다시 찾는 방법",
-          "url": "https://blog.naver.com/digital_fixnote/224478395703"
-        },
-        {
-          "title": "네이버 킵(Keep) 사용법 총정리! 게시글 저장부터 메모 작성까지",
-          "url": "https://blog.naver.com/felix_203/224487171192"
-        },
-        {
-          "title": "네이버 킵(Keep) 사용법! 링크·사진·메모 저장부터 PC 확인까지",
-          "url": "https://blog.naver.com/jjuyujin/224491855389"
-        },
-        {
-          "title": "북마크만 수백 개였는데.. 한곳에 모아준 네이버킵",
-          "url": "https://blog.naver.com/prumirkarma/224482720834"
-        },
-        {
-          "title": "네이버 검색기록 한꺼번에 삭제하는 방법, 최근검색어 전체삭제",
-          "url": "https://blog.naver.com/skyblue100418/224478022240"
-        }
-      ]
+     "keyword": "듀오링고테스트",
+     "monthlySearch": 1490,
+     "saturation": 29.5
     },
     {
-      "keyword": "원판돌리기",
-      "grade": "A급",
-      "monthlySearch": 79720,
-      "monthlyPublish": 1933,
-      "saturation": 2.42,
-      "entry": "매우 높음",
-      "speed": "빠름",
-      "adComp": "중간",
-      "blogSlots": 4,
-      "reason": "월 7만 9,720 검색의 랜덤 뽑기 도구인데 포화도 2.42%예요. 상위 평균 Lv5에 Lv1 블로그도 섞여 있고 모바일 비중이 89%예요. 룰렛돌리기(월 24만 2,600)로 넓혀 무료 사이트 비교, 휴대폰에서 쓰는 법, 결과 저장·공유까지 담으면 체류 시간이 긴 글이 돼요.",
-      "subKeywords": [
-        {
-          "keyword": "룰렛돌리기",
-          "monthlySearch": 242600
-        },
-        {
-          "keyword": "원판돌리기 게임",
-          "monthlySearch": 1790
-        },
-        {
-          "keyword": "원판 돌리기 운동",
-          "monthlySearch": 50
-        },
-        {
-          "keyword": "룰렛돌리기 사이트",
-          "monthlySearch": 1010
-        },
-        {
-          "keyword": "룰렛돌리기 게임",
-          "monthlySearch": 640
-        },
-        {
-          "keyword": "랜덤 룰렛 돌리기",
-          "monthlySearch": 340
-        },
-        {
-          "keyword": "룰렛렌탈",
-          "monthlySearch": 110
-        },
-        {
-          "keyword": "여행지 룰렛 돌리기",
-          "monthlySearch": 80
-        },
-        {
-          "keyword": "룰렛돌리기 네이버게임",
-          "monthlySearch": 60
-        },
-        {
-          "keyword": "룰렛 돌리기 대량",
-          "monthlySearch": 30
-        },
-        {
-          "keyword": "룰렛돌리기 조작",
-          "monthlySearch": 30
-        },
-        {
-          "keyword": "룰렛 돌리기 게임 사이트",
-          "monthlySearch": 30
-        }
-      ],
-      "autocomplete": [
-        "원판돌리기",
-        "네이버 원판돌리기",
-        "원판돌리기 게임",
-        "원판돌리기 무료",
-        "원판 돌리기 운동",
-        "원판돌리기 링크",
-        "원판돌리기 앱",
-        "원판돌리기 개수",
-        "원판 돌리기 게임 사이트",
-        "원판돌리기 사이트"
-      ],
-      "topPosts": [
-        {
-          "title": "AI 비서에게 '코딩해서 결과물 줘봐' 했더니 — 폰에서 바로 열리는 원판돌리기 웹페이지가 나왔습니다",
-          "url": "https://blog.naver.com/sk47kt/224485626742"
-        },
-        {
-          "title": "틱톡 앱테크 후기! 원판 4만원·돼지저금통 5만5천원·친구초대 2만1천원",
-          "url": "https://blog.naver.com/apptech016/224486547324"
-        },
-        {
-          "title": "룰렛 대여, 팝업스토어부터 지역축제까지 돌림판 선택과 디자인 준비법",
-          "url": "https://blog.naver.com/dadaeyeo-rental/224478821115"
-        },
-        {
-          "title": "틱톡 현금 이벤트! 원판 돌리기 현금 3만원? 실제 받는 법 정리",
-          "url": "https://blog.naver.com/makerpark85/224453755738"
-        },
-        {
-          "title": "[무료 도안] 냥냥 빙글빙글 룰렛 | A4 가로 무료 도안 6장 · 돌리고 함께 노는 종이 룰렛",
-          "url": "https://blog.naver.com/pjylkhj/224478409946"
-        },
-        {
-          "title": "손으로 돌려 써는 양배추 채칼 야채 절단기 슬라이서 업소용",
-          "url": "https://blog.naver.com/k9kcitrzi/224483946679"
-        }
-      ]
-    },
-    {
-      "keyword": "내아이피주소",
-      "grade": "A급",
-      "monthlySearch": 29190,
-      "monthlyPublish": 410,
-      "saturation": 1.4,
-      "entry": "높음",
-      "speed": "빠름",
-      "adComp": "중간",
-      "blogSlots": 16,
-      "reason": "월 2만 9,190 검색에 발행 410건으로 포화도 1.40%, 블로그 자리는 16칸이에요. 상위 평균 Lv8이지만 Lv3~Lv5 블로그도 섞여 있고 PC 유입이 80%예요. 확인 방법이 PC와 휴대폰으로 갈리니 내아이피주소확인(월 1만 540)으로 윈도우·맥·휴대폰 확인법을 나눠 정리하면 좋아요.",
-      "subKeywords": [
-        {
-          "keyword": "내아이피주소확인",
-          "monthlySearch": 10540
-        },
-        {
-          "keyword": "내 아이피 주소 확인하기",
-          "monthlySearch": 2220
-        },
-        {
-          "keyword": "내아이피주소조회",
-          "monthlySearch": 250
-        },
-        {
-          "keyword": "내 컴퓨터 아이피 주소 확인",
-          "monthlySearch": 170
-        },
-        {
-          "keyword": "내아이피주소검색",
-          "monthlySearch": 80
-        },
-        {
-          "keyword": "내 아이피 주소 확인 방법",
-          "monthlySearch": 60
-        },
-        {
-          "keyword": "내아이피 확인 cmd",
-          "monthlySearch": 50
-        },
-        {
-          "keyword": "내 아이피 주소 위치 확인",
-          "monthlySearch": 30
-        }
-      ],
-      "autocomplete": [
-        "내아이피주소",
-        "내 아이피 주소 확인하기",
-        "내아이피주소확인",
-        "내 아이피 주소 조회",
-        "내 아이피 주소 변경",
-        "내 아이피 주소 위치",
-        "내 아이피 주소 찾기",
-        "내 아이피 주소 뜻",
-        "내 아이피 주소 검색",
-        "내 아이피 주소 바꾸는 방법"
-      ],
-      "topPosts": [
-        {
-          "title": "내 ip 주소 확인 방법 컴퓨터 아이피 주소 보는 법",
-          "url": "https://blog.naver.com/sinnam88/224487860251"
-        },
-        {
-          "title": "PC와 스마트폰 인터넷 IP 주소 확인하는 방법 (공인 IP vs 사설 IP)",
-          "url": "https://blog.naver.com/winsweet/224482493033"
-        },
-        {
-          "title": "내 아이피 확인, 검색한 주소와 컴퓨터에 뜨는 주소가 왜 다를까",
-          "url": "https://blog.naver.com/sirune_post/224479379074"
-        },
-        {
-          "title": "ip 주소 확인 방법 내 아이피주소 확인 cmd, 공인 사설 차이점까지",
-          "url": "https://blog.naver.com/kingstargirl/224490793007"
-        },
-        {
-          "title": "내 IP주소 확인 조회, 내아이피주소 공인IP 위치확인 방법",
-          "url": "https://blog.naver.com/01198916129/224456511535"
-        },
-        {
-          "title": "내 IP 주소 확인 방법, PC 아이피주소 보는법 총정리",
-          "url": "https://blog.naver.com/dbsgns2011/224461512980"
-        }
-      ]
-    },
-    {
-      "keyword": "에이징커브테스트",
-      "grade": "A급",
-      "monthlySearch": 21640,
-      "monthlyPublish": 163,
-      "saturation": 0.75,
-      "entry": "높음",
-      "speed": "보통",
-      "adComp": "중간",
-      "blogSlots": 17,
-      "reason": "월 2만 1,640 검색에 발행 163건뿐인 2026년 신규 키워드예요. 블로그 자리가 17칸이고 상위 평균 Lv6에 Lv1 블로그도 있어 선점 효과가 커요. 테스트 게임(월 840)·사이트(월 220)로 쪼개 게임 링크와 방법, 피지컬 나이 결과 해석을 한 번에 정리하면 좋아요.",
-      "subKeywords": [
-        {
-          "keyword": "에이징커브 테스트 게임",
-          "monthlySearch": 840
-        },
-        {
-          "keyword": "에이징 커브 테스트 사이트",
-          "monthlySearch": 220
-        },
-        {
-          "keyword": "에이징커브 진단 테스트",
-          "monthlySearch": 120
-        },
-        {
-          "keyword": "에이징커브 테스트 모바일",
-          "monthlySearch": 50
-        },
-        {
-          "keyword": "롤 에이징커브 테스트",
-          "monthlySearch": 50
-        },
-        {
-          "keyword": "에이징커브 피지컬 테스트",
-          "monthlySearch": 40
-        }
-      ],
-      "autocomplete": [
-        "에이징커브 테스트",
-        "에이징커브 테스트 모바일",
-        "에이징 커브 테스트 사이트",
-        "에이징커브 테스트 게임",
-        "에이징커브 테스트 뜻"
-      ],
-      "topPosts": [
-        {
-          "title": "요즘 인방 대유행 '에이징 커브 테스트' 링크 & 미니게임 정리 (나 아직 에이징 커브 아니야)",
-          "url": "https://blog.naver.com/dbsxo13/224488143885"
-        },
-        {
-          "title": "에이징커브 테스트 게임 사이트 링크 마우스 반응속도 피지컬 순위 알아보기",
-          "url": "https://blog.naver.com/fje0978bb/224487863082"
-        },
-        {
-          "title": "에이징커브 테스트 점수는 나이가 아니다, 결과 유형 가르는 10점 차",
-          "url": "https://blog.naver.com/salkka-it/224464643021"
-        },
-        {
-          "title": "게임 피지컬 나이 테스트 바로가기 | 에이징커브 결과 진단서 저장방법",
-          "url": "https://blog.naver.com/mzung013/224480968679"
-        },
-        {
-          "title": "에이징커브 테스트 해봤더니 내 나이가? 게임 방법부터 결과 해석까지",
-          "url": "https://blog.naver.com/smile12550/224464973657"
-        },
-        {
-          "title": "에이징커브 테스트 사이트 링크 게임 하는법",
-          "url": "https://blog.naver.com/zeimer/224468684666"
-        }
-      ]
-    },
-    {
-      "keyword": "크롬원격데스크탑",
-      "grade": "A급",
-      "monthlySearch": 15380,
-      "monthlyPublish": 233,
-      "saturation": 1.51,
-      "entry": "높음",
-      "speed": "빠름",
-      "adComp": "중간",
-      "blogSlots": 13,
-      "reason": "월 1만 5,380 검색에 발행 233건으로 포화도 1.51%, 블로그 자리는 13칸이에요. 상위 평균 Lv6에 Lv1 블로그도 있고 상위 절반이 2주 안에 쓰인 글이라 지금 써도 노출될 여지가 있어요. 설치부터 휴대폰 연결까지 화면 순서대로 담고 연결이 끊길 때 해결법을 붙이면 좋아요.",
-      "subKeywords": [],
-      "autocomplete": [
-        "크롬 원격데스크탑",
-        "크롬 원격데스크탑 쓰는 법",
-        "크롬 원격데스크탑 속도",
-        "크롬 원격 데스크탑 모바일",
-        "크롬원격데스크탑 우클릭",
-        "크롬원격데스크탑 시간",
-        "크롬 원격데스크탑 esc",
-        "크롬 원격데스크탑 컴퓨터종료",
-        "크롬 원격데스크탑 화면",
-        "크롬원격데스크탑 부팅"
-      ],
-      "topPosts": [
-        {
-          "title": "크롬 원격 데스크톱 설치 방법과 PC 모바일 접속 사용법 총정리",
-          "url": "https://blog.naver.com/jado1991/224483026710"
-        },
-        {
-          "title": "크롬 원격 데스크톱 설치와 연결 방법, PC 원격제어 설정",
-          "url": "https://blog.naver.com/dbsgns2011/224475805429"
-        },
-        {
-          "title": "구글 크롬 원격 데스크톱 사용법, 설치부터 휴대폰으로 PC 원격제어까지",
-          "url": "https://blog.naver.com/tech_tetris/224482949525"
-        },
-        {
-          "title": "“집 PC를 밖에서 그대로 조작한다고?” 설치만 하면 가능한 크롬 원격 데스크톱 연결 방법",
-          "url": "https://blog.naver.com/hantmsla123/224475722577"
-        },
-        {
-          "title": "크롬 원격 데스크톱 연결이 끊길 땐 절전 모드부터 끄세요",
-          "url": "https://blog.naver.com/madcatz_/224474736050"
-        },
-        {
-          "title": "크롬 원격 데스크톱 사용 방법(내 PC 원격 제어)",
-          "url": "https://blog.naver.com/huitopy/224468508460"
-        }
-      ]
-    },
-    {
-      "keyword": "인스타글씨체변환",
-      "grade": "A급",
-      "monthlySearch": 10760,
-      "monthlyPublish": 67,
-      "saturation": 0.62,
-      "entry": "높음",
-      "speed": "빠름",
-      "adComp": "낮음",
-      "blogSlots": 12,
-      "reason": "한 달 발행이 67건뿐인데 블로그 자리는 12칸이에요. 상위 평균 Lv6에 Lv1부터 Lv10까지 분포가 넓고, 상위 절반은 유효키워드가 적어 레벨 대비 부담이 덜해요. 영문 필기체와 한글 변환 여부를 나누고 프로필·스토리 적용 순서를 담으면 빈틈이 없어요.",
-      "subKeywords": [
-        {
-          "keyword": "인스타 스토리 글씨체 변환",
-          "monthlySearch": 440
-        },
-        {
-          "keyword": "인스타 글씨체 변환 사이트",
-          "monthlySearch": 370
-        },
-        {
-          "keyword": "인스타 글씨체 변환 한국어",
-          "monthlySearch": 230
-        },
-        {
-          "keyword": "인스타 글씨체 변환 한글",
-          "monthlySearch": 110
-        },
-        {
-          "keyword": "인스타 스토리 글씨체 추천",
-          "monthlySearch": 30
-        }
-      ],
-      "autocomplete": [
-        "인스타 글씨체 변환",
-        "인스타 글씨체 변환 한국어",
-        "인스타 글씨체 변환 사이트 한글",
-        "인스타 글씨체 변환 하트",
-        "인스타 글씨체 변환 방법",
-        "인스타 글씨체 변환 손글씨",
-        "인스타 글씨체 변환 단축키",
-        "인스타 글씨체 변환 굵기",
-        "인스타 글씨체 변환 굵기 단축키"
-      ],
-      "topPosts": [
-        {
-          "title": "인스타 폰트 변환, 프로필 글씨 예쁘게 바꾸는 방법",
-          "url": "https://blog.naver.com/smile12550/224476256196"
-        },
-        {
-          "title": "인스타그램 글씨체 변환 원리, 프로필·스토리 꾸미기 전 알아 둘 점",
-          "url": "https://blog.naver.com/homton/224484822234"
-        },
-        {
-          "title": "인스타 프로필 글씨체 바꾸는 법, 한글 이름·소개글까지 3분",
-          "url": "https://blog.naver.com/ddakman/224475151529"
-        },
-        {
-          "title": "[IT인사이트] 인스타그램 폰트변환 완벽 가이드: 프로필·게시글 글씨체 바꾸는 방법부터 주의할 점까지",
-          "url": "https://blog.naver.com/soyoco925/224476644685"
-        },
-        {
-          "title": "인스타 폰트 변환 이렇게 쉽다고? 프로필 이름부터 소개글까지 예쁘게 꾸미는 법",
-          "url": "https://blog.naver.com/socjames77_/224476229533"
-        },
-        {
-          "title": "인스타 폰트 변환 사이트 영문 한글 글씨체 꾸미기와 복사 붙여넣기 방법",
-          "url": "https://blog.naver.com/infobody/224483880915"
-        }
-      ]
+     "keyword": "듀오링고오류",
+     "monthlySearch": 1220,
+     "saturation": 81.3
     }
-  ]
+   ],
+   "autocomplete": [
+    "듀오링고 가격",
+    "슈퍼 듀오링고 가격",
+    "듀오링고 가격 비교",
+    "듀오링고 가격 패밀리",
+    "듀오링고 가격 무료",
+    "듀오링고 가격별",
+    "듀오링고 가격 인상",
+    "듀오링고 가격 할인",
+    "듀오링고 가격 맥스",
+    "듀오링고 가격 한달"
+   ],
+   "topPosts": [
+    {
+     "title": "듀오링고 가격 비교, 무료와 슈퍼 차이부터 패밀리 6명 공유 방법까지",
+     "url": "https://blog.naver.com/ishine75/224492212846",
+     "headings": [
+      "무료·슈퍼·패밀리 요금제 비교",
+      "패밀리 6명 공유 방법",
+      "1인당 비용 계산"
+     ],
+     "summary": "무료와 슈퍼 차이, 패밀리 요금제로 6명이 나눠 낼 때의 실제 부담액 비교"
+    },
+    {
+     "title": "2026 듀오링고 가격, “맥스 요금제 사라진다?” 무료·슈퍼·패밀리 차이 총정리",
+     "url": "https://blog.naver.com/jinnnn777_/224481348285",
+     "headings": [
+      "2026 요금제 개편",
+      "맥스 요금제 변화",
+      "무료·슈퍼·패밀리 차이"
+     ],
+     "summary": "2026년 기준 듀오링고 요금제 변화와 무료·슈퍼·패밀리 선택 기준 정리"
+    },
+    {
+     "title": "듀오링고 패밀리 가격, 슈퍼 요금제 1년 구독료와 6명 공유 비용 비교",
+     "url": "https://blog.naver.com/jesma1210/224493129107",
+     "headings": [
+      "슈퍼·패밀리 공개 가격",
+      "요금제별 금액 비교",
+      "무료·라이트·슈퍼 기능 차이"
+     ],
+     "summary": "패밀리 1년 구독료와 인원별 분담 비용, 무료체험까지 금액 중심으로 비교"
+    },
+    {
+     "title": "듀오링고 슈퍼 가격 무료 유료 차이 1년 이용권 할인 사이트 방법",
+     "url": "https://blog.naver.com/narsyus/224484921531",
+     "headings": [
+      "슈퍼 가격과 무료 차이",
+      "1년 이용권 할인",
+      "할인 구매 방법"
+     ],
+     "summary": "듀오링고 슈퍼의 무료·유료 차이와 1년 이용권 할인 구매 방법 정리"
+    },
+    {
+     "title": "슈퍼 듀오링고 패밀리 가격, 연 12만 원 대신 월 2천 원대",
+     "url": "https://blog.naver.com/yic8315/224492544140",
+     "headings": [
+      "공식 정가 확인",
+      "월 2천 원대 만드는 방법",
+      "1인 월 환산 비교"
+     ],
+     "summary": "연 12만 원대 정가를 패밀리 분담과 할인으로 월 2천 원대로 낮추는 계산"
+    }
+   ]
+  },
+  {
+   "keyword": "27인치모니터",
+   "grade": "S급",
+   "monthlySearch": 31200,
+   "monthlyPublish": 7639,
+   "saturation": 24.48,
+   "entry": "높음",
+   "speed": "1~2일",
+   "adComp": "중간",
+   "blogSlots": 10,
+   "reason": "월 31,200 검색에 한 달 발행 7,639건, 포화도 24%예요. 검색량에 비해 글이 적고, 상위 블로그들의 유효키워드가 적어 승산이 있어요 FHD와 QHD 등 해상도별 차이와 주사율 기준을 표로 만들어 비교해 보세요.",
+   "briefing": {
+    "verdict": "지금 파고들 틈이 보여요",
+    "checks": [
+     "상위 평균은 Lv2이고, 유효키워드가 아예 없는 블로그가 9개나 섞여 있어요",
+     "먼저 올라온 글 전부가 최근 2일 이내에 작성된 만큼, 지금 바로 새 글을 올려보세요",
+     "PC 검색 비중이 60%를 넘으니, 상세한 사양 비교나 표를 활용하면 유리해요"
+    ],
+    "strategy": [
+     "FHD와 QHD 등 해상도별 차이와 주사율 기준을 표로 만들어 비교해 보세요",
+     "사용 목적에 따라 사무용과 게이밍용으로 나누고, 예산대별 추천 모델을 정리해 보세요"
+    ]
+   },
+   "subKeywords": [
+    {
+     "keyword": "모니터받침대",
+     "monthlySearch": 37400,
+     "saturation": 22.3
+    },
+    {
+     "keyword": "32인치모니터",
+     "monthlySearch": 18140,
+     "saturation": 31.7
+    },
+    {
+     "keyword": "24인치모니터",
+     "monthlySearch": 12750,
+     "saturation": 37.2
+    },
+    {
+     "keyword": "듀얼모니터암",
+     "monthlySearch": 7990,
+     "saturation": 26.6
+    },
+    {
+     "keyword": "모니터거치대",
+     "monthlySearch": 7840,
+     "saturation": 100
+    },
+    {
+     "keyword": "게임용모니터추천",
+     "monthlySearch": 6630,
+     "saturation": 100
+    },
+    {
+     "keyword": "34인치모니터",
+     "monthlySearch": 5940,
+     "saturation": 19.5
+    },
+    {
+     "keyword": "모니터24인치",
+     "monthlySearch": 5750,
+     "saturation": 82.5
+    },
+    {
+     "keyword": "LG27인치모니터",
+     "monthlySearch": 5300,
+     "saturation": 30.6
+    },
+    {
+     "keyword": "모니터32인치",
+     "monthlySearch": 5000,
+     "saturation": 100
+    }
+   ],
+   "autocomplete": [
+    "LG27인치모니터",
+    "27인치 모니터",
+    "27인치 모니터 크기",
+    "크로스오버 27인치모니터",
+    "27인치 모니터 암",
+    "LG전자 27인치모니터",
+    "삼성 27인치 모니터",
+    "벤큐 27인치 모니터",
+    "27인치모니터커버",
+    "27인치 모니터 추천"
+   ],
+   "topPosts": [
+    {
+     "title": "27인치 모니터 추천 2026｜사무·게임·영상 감상, 용도별로 무엇을 보고 골라야 할까",
+     "url": "https://blog.naver.com/alphascan314/224484654753",
+     "headings": [
+      "27인치 모니터, 먼저 볼 것은 해상도",
+      "사무용 QHD와 편의 기능",
+      "게이밍 주사율 기준",
+      "영상 감상 IPS·OLED 차이"
+     ],
+     "summary": "용도별로 해상도·주사율·패널을 고르는 기준과 모델별 스펙 비교"
+    },
+    {
+     "title": "27인치 QHD 모니터, 왜 이렇게 많이 선택할까? 인기 이유 3가지 🖥️",
+     "url": "https://blog.naver.com/qsoniclove/224473982000",
+     "headings": [
+      "27인치 QHD 인기 이유",
+      "책상에 맞는 황금 사이즈",
+      "해상도·가격 데이터"
+     ],
+     "summary": "27인치 QHD가 책상 크기와 가격 면에서 많이 선택되는 이유 3가지"
+    },
+    {
+     "title": "\"사무실 모니터 27인치 사이즈가 답인이유\" 한달후기 네이버쇼핑 판매량 탑4.. 삼성 인터픽셀 주사율 해상도 가성비 화이트 대량구매",
+     "url": "https://blog.naver.com/sinsa654/224477721018",
+     "headings": [
+      "사무용 27인치 인기 이유",
+      "삼성 인터픽셀 2종 비교",
+      "실구매가와 스탠드 기능"
+     ],
+     "summary": "사무실용 27인치 판매 상위 모델의 해상도·주사율·실구매가 비교"
+    },
+    {
+     "title": "“4세대 OLED가 이 가격?” 27인치 게이밍 모니터 추천 알파스캔 AOC Q27G4ZDP",
+     "url": "https://blog.naver.com/942969aa/224492057730",
+     "headings": [
+      "가격 및 혜택",
+      "주요 스펙",
+      "상세 사양"
+     ],
+     "summary": "알파스캔 AOC 27인치 OLED 게이밍 모니터의 가격과 주요 사양 정리"
+    },
+    {
+     "title": "“20만원대 가성비” 삼성 오디세이 G5 27인치 게이밍 모니터로 선택한 이유",
+     "url": "https://blog.naver.com/achoulee/224481725723",
+     "headings": [
+      "G5 두 모델 비교",
+      "제품 소개",
+      "실전 사용기",
+      "기본 스탠드 활용"
+     ],
+     "summary": "20만 원대 삼성 오디세이 G5 27인치를 고른 이유와 실전 사용 후기"
+    }
+   ]
+  },
+  {
+   "keyword": "높이조절모니터암",
+   "grade": "S급",
+   "monthlySearch": 3610,
+   "monthlyPublish": 2728,
+   "saturation": 75.57,
+   "entry": "매우 높음",
+   "speed": "1~2일",
+   "adComp": "높음",
+   "blogSlots": 19,
+   "reason": "월 3,610 검색에 한 달 발행 2,728건, 포화도 76%예요. 검색량보다 글이 적고 상위 블로그 레벨이 낮아, 내 레벨이라면 승산이 있어요 설치 전 확인해야 할 VESA 규격, 하중, 책상 두께를 체크리스트로 정리해 보세요.",
+   "briefing": {
+    "verdict": "지금 바로 도전해 볼 만해요",
+    "checks": [
+     "상위 평균은 Lv3이고, Lv1 블로그가 다수 포진해 있어 틈이 보여요",
+     "앞서 있는 글 절반 이상이 오늘 쓰인 글이라, 지금 작성해도 상위 노출 기회가 많아요",
+     "상위 블로그들의 유효키워드가 내 레벨보다 훨씬 적어 실전 성적에서도 유리해요"
+    ],
+    "strategy": [
+     "설치 전 확인해야 할 VESA 규격, 하중, 책상 두께를 체크리스트로 정리해 보세요",
+     "모델별 높이 조절 범위와 관절 방식 차이를 비교하면 고르는 사람에게 도움이 될 거예요"
+    ]
+   },
+   "subKeywords": [
+    {
+     "keyword": "모니터받침대",
+     "monthlySearch": 37400,
+     "saturation": 22.3
+    },
+    {
+     "keyword": "듀얼모니터암",
+     "monthlySearch": 7990,
+     "saturation": 26.6
+    },
+    {
+     "keyword": "모니터거치대",
+     "monthlySearch": 7840,
+     "saturation": 100
+    },
+    {
+     "keyword": "32인치모니터암",
+     "monthlySearch": 1990,
+     "saturation": 56.9
+    },
+    {
+     "keyword": "27인치모니터암",
+     "monthlySearch": 1570,
+     "saturation": 3.0
+    },
+    {
+     "keyword": "노스바유모니터암",
+     "monthlySearch": 1320,
+     "saturation": 16.3
+    },
+    {
+     "keyword": "모니터암추천",
+     "monthlySearch": 910,
+     "saturation": 100
+    },
+    {
+     "keyword": "듀얼모니터추천",
+     "monthlySearch": 830,
+     "saturation": 100
+    },
+    {
+     "keyword": "42인치모니터",
+     "monthlySearch": 820,
+     "saturation": 77.0
+    }
+   ],
+   "autocomplete": [
+    "높이조절 모니터암"
+   ],
+   "topPosts": [
+    {
+     "title": "모니터 받침대가 책상 자리를 차지한다면? 카멜마운트 싱글 셀프밸런스 모니터암 설치와 호환 체크",
+     "url": "https://blog.naver.com/sunnyk0702/224489233086",
+     "headings": [
+      "모니터 받침대 대체",
+      "셀프밸런스 모니터암 설치",
+      "호환 체크"
+     ],
+     "summary": "받침대 대신 카멜마운트 싱글 모니터암을 설치하며 확인한 호환 조건"
+    },
+    {
+     "title": "카멜마운트 CA1P 모니터암 내돈내산 설치기, 두꺼운 철제 프레임 책상 추가 옵션 없이 무타공 고정!",
+     "url": "https://blog.naver.com/junhkile/224478092890",
+     "headings": [
+      "철제 프레임 책상 문제",
+      "무타공 클램프 설치",
+      "추가 옵션 없이 고정"
+     ],
+     "summary": "두꺼운 철제 프레임 책상에 추가 옵션 없이 CA1P를 고정한 설치기"
+    },
+    {
+     "title": "각도조절 가능한 카멜마운트 고중량 모니터암 추천",
+     "url": "https://blog.naver.com/khn9312/224482641576",
+     "headings": [
+      "에어밸런스 기능",
+      "틸트·스위블 각도 조절",
+      "높낮이 조절"
+     ],
+     "summary": "카멜마운트 MPS2의 에어밸런스와 틸트·스위블·높이 조절 사용기"
+    },
+    {
+     "title": "듀얼모니터암 설치, 27인치 두 대로 높이 맞추는 순서",
+     "url": "https://blog.naver.com/macfixnote/224479447195",
+     "headings": [
+      "무게와 책상 두께 확인",
+      "27인치 두 대 높이 맞추기",
+      "설치 순서"
+     ],
+     "summary": "듀얼모니터암으로 27인치 두 대의 높이를 맞추는 설치 순서와 주의점"
+    },
+    {
+     "title": "카멜마운트 모니터암 PMA2X 초고중량 싱글 모니터암 추천 이유 3가지",
+     "url": "https://blog.naver.com/taegi_97/224477255834",
+     "headings": [
+      "57인치·27kg 지지력",
+      "높이 655mm 조절 범위",
+      "색상·보관 옵션"
+     ],
+     "summary": "카멜마운트 PMA2X의 초고중량 지지력과 조절 범위를 추천 이유로 정리"
+    }
+   ]
+  },
+  {
+   "keyword": "캔바구독취소",
+   "grade": "S급",
+   "monthlySearch": 1460,
+   "monthlyPublish": 75,
+   "saturation": 5.14,
+   "entry": "매우 높음",
+   "speed": "보통",
+   "adComp": "낮음",
+   "blogSlots": 13,
+   "reason": "월 1,460 검색에 한 달 발행 75건, 포화도 5%예요. 검색량에 비해 발행량이 적고, 나보다 낮은 레벨의 블로그도 많아 해볼 만해요 구독 취소 경로를 결제 수단별로 나누고, 결제 전후 환불 가능 여부를 구분해 보세요.",
+   "briefing": {
+    "verdict": "지금 바로 파고들 틈이 보여요",
+    "checks": [
+     "상위 평균은 Lv4이고 Lv1 블로그가 섞여 있어 레벨 부담이 적어요",
+     "상위 글 절반 이상이 한 달 안에 올라온 글이에요.",
+     "상위 블로그 중 상당수가 나보다 유효키워드가 적어 승산이 있는 자리예요"
+    ],
+    "strategy": [
+     "구독 취소 경로를 결제 수단별로 나누고, 결제 전후 환불 가능 여부를 구분해 보세요",
+     "자동 결제 방지 팁과 취소 버튼이 보이지 않을 때의 대처법을 순서대로 담아보세요"
+    ]
+   },
+   "subKeywords": [
+    {
+     "keyword": "캔바 구독 해지",
+     "monthlySearch": 80,
+     "saturation": 100
+    },
+    {
+     "keyword": "캔바 구독 취소 방법",
+     "monthlySearch": 40,
+     "saturation": 100
+    },
+    {
+     "keyword": "캔바 구독 취소 환불",
+     "monthlySearch": 30,
+     "saturation": 100
+    }
+   ],
+   "autocomplete": [
+    "캔바 구독취소",
+    "캔바 구독 취소 환불",
+    "캔바 구독 취소 방법",
+    "캔바 구독취소하는 방법"
+   ],
+   "topPosts": [
+    {
+     "title": "\"카드 정지했는데 결제됐어요\" 은행 자동 갱신 캔바 구독취소",
+     "url": "https://blog.naver.com/prumirkarma/224487514342",
+     "headings": [
+      "카드 정지로는 해지되지 않음",
+      "자동 갱신 구조",
+      "구독 취소 경로"
+     ],
+     "summary": "카드를 정지해도 자동 갱신이 이어지는 이유와 실제 구독 해지 방법"
+    },
+    {
+     "title": "캔바 작업 끝났는데 결제 계속? 구독 해지 전에 확인할 3가지",
+     "url": "https://blog.naver.com/isehtu/224482306236",
+     "headings": [
+      "구독 계정과 팀 확인",
+      "앱스토어 결제는 앱에서 해지",
+      "이용 종료일과 디자인 보존"
+     ],
+     "summary": "해지 전 확인할 세 가지: 팀 계정, 앱스토어 결제, 종료 후 디자인 보존"
+    },
+    {
+     "title": "캔바 무료 체험 30일 제대로 쓰고 프로 취소하는 법",
+     "url": "https://blog.naver.com/javascriptgo/224482942046",
+     "headings": [
+      "30일 무료 체험 구조",
+      "무료·프로 기능 차이",
+      "체험 종료 전 취소"
+     ],
+     "summary": "30일 무료 체험이 자동 결제로 이어지지 않게 프로를 취소하는 방법"
+    },
+    {
+     "title": "캔바 구독취소 무료체험 해지 모바일 1분컷",
+     "url": "https://blog.naver.com/wldnjs2750/224399419099",
+     "headings": [
+      "무료체험 자동 결제",
+      "캔바 프로 가격",
+      "모바일 해지 순서"
+     ],
+     "summary": "모바일에서 무료 체험을 끝내고 구독을 취소하는 순서와 요금"
+    },
+    {
+     "title": "캔바 구독 취소, 결제일 하루 전에 돈이 나가니 이틀 전에 누르세요",
+     "url": "https://blog.naver.com/aicampus/224443291374",
+     "headings": [
+      "결제일 하루 전 청구",
+      "설정→청구→요금제 취소",
+      "앱 결제는 스토어에서"
+     ],
+     "summary": "결제 하루 전에 청구되는 구조와 웹·앱 결제별 취소 경로 안내"
+    }
+   ]
+  },
+  {
+   "keyword": "egg파일열기",
+   "grade": "A급",
+   "monthlySearch": 2990,
+   "monthlyPublish": 65,
+   "saturation": 2.17,
+   "entry": "높음",
+   "speed": "보통",
+   "adComp": "낮음",
+   "blogSlots": 16,
+   "reason": "월 2,990 검색에 한 달 발행 65건, 포화도 2%예요. 상위 평균은 Lv7이고 낮은 레벨의 블로그도 자리를 잡고 있어 도전해 볼 만해요 반디집이나 웹 사이트 등 EGG 파일을 여는 도구별로 압축 해제 과정을 순서대로 정리해 보세요.",
+   "briefing": {
+    "verdict": "지금 한번 써볼 만해요",
+    "checks": [
+     "검색량에 비해 발행량이 적어 경쟁 부담이 크지 않은 키워드예요",
+     "상위 블로그 중 일부는 유효키워드가 적어 해볼 만한 자리예요",
+     "PC 검색 비중이 압도적으로 높아 정보를 꼼꼼하게 정리하는 편이 유리해요"
+    ],
+    "strategy": [
+     "반디집이나 웹 사이트 등 EGG 파일을 여는 도구별로 압축 해제 과정을 순서대로 정리해 보세요",
+     "파일을 여는 과정에서 발생할 수 있는 오류 해결법을 함께 담으면 정보성 글로서 가치가 높아집니다"
+    ]
+   },
+   "subKeywords": [
+    {
+     "keyword": "egg 파일 열기 갤럭시",
+     "monthlySearch": 60,
+     "saturation": 1.7
+    },
+    {
+     "keyword": "egg 파일 열기 아이폰",
+     "monthlySearch": 50,
+     "saturation": 6.0
+    },
+    {
+     "keyword": "egg파일여는법",
+     "monthlySearch": 40,
+     "saturation": 100
+    },
+    {
+     "keyword": "아이폰 egg 파일 열기",
+     "monthlySearch": 30,
+     "saturation": 10.0
+    }
+   ],
+   "autocomplete": [
+    "egg 파일 열기",
+    "egg 파일 열기 아이폰",
+    "egg 파일 열기 갤럭시",
+    "egg 파일 열기 아이패드",
+    "egg 파일 열기 핸드폰",
+    "egg 파일 열기 맥북"
+   ],
+   "topPosts": [
+    {
+     "title": "EGG 파일 열기, 알집·반디집 설치 없이 브라우저에서 푸는 법 (분할 압축, 맥)",
+     "url": "https://blog.naver.com/tripradar/224461887294",
+     "headings": [
+      "브라우저에서 바로 압축 풀기",
+      "EGG 파일이 안 열리는 다섯 가지 순간",
+      "맥북·사진관 수령 파일 해결"
+     ],
+     "summary": "설치 없이 브라우저에서 egg를 푸는 사이트 사용법과 안 열릴 때 상황별 해결"
+    },
+    {
+     "title": "알집 대신 반디집 쓰는 이유, EGG 파일 열기부터 우클릭 메뉴 활용법까지",
+     "url": "https://blog.naver.com/touch81/224492581755",
+     "headings": [
+      "반디집 무료 다운로드와 설치",
+      "우클릭 메뉴로 압축 풀기",
+      "압축 풀 때 편한 점"
+     ],
+     "summary": "반디집을 설치해 egg 파일을 풀고 우클릭 메뉴로 바로 여는 방법과 장단점"
+    },
+    {
+     "title": "egg 파일 열기, 더블클릭으론 안 열리는 이유와 분할 압축 푸는 순서",
+     "url": "https://blog.naver.com/tmvj156/224441873165",
+     "headings": [
+      "더블클릭해도 안 열리는 이유",
+      "알집 없이 여는 프로그램(윈도우·맥)",
+      "분할 압축은 vol1부터"
+     ],
+     "summary": "egg가 안 열리는 원인과 윈도우·맥에서 알집 없이 푸는 프로그램, 분할 압축 순서"
+    },
+    {
+     "title": "반디집 다운로드 및 egg 파일 열기 압축풀기, 분할압축 사용법",
+     "url": "https://blog.naver.com/rywls92/224420278528",
+     "headings": [
+      "반디집 다운로드와 설치",
+      "egg 파일 열기 및 압축 해제",
+      "분할압축 설정과 해제",
+      "자주 묻는 질문"
+     ],
+     "summary": "반디집 설치부터 egg 압축 해제, 분할 압축을 만들고 푸는 법과 FAQ"
+    },
+    {
+     "title": "반디집 다운로드 및 EGG 파일 열기, 압축풀기 방법",
+     "url": "https://blog.naver.com/dbsgns2011/224464951968",
+     "headings": [
+      "EGG 압축 형식의 특징",
+      "반디집으로 압축 풀기",
+      "40여 가지 형식 지원"
+     ],
+     "summary": "알집 없이 반디집으로 EGG를 푸는 방법과 지원하는 압축 형식 범위"
+    }
+   ]
+  },
+  {
+   "keyword": "디즈니플러스성인인증",
+   "grade": "A급",
+   "monthlySearch": 7410,
+   "monthlyPublish": 159,
+   "saturation": 2.15,
+   "entry": "높음",
+   "speed": "빠름",
+   "adComp": "낮음",
+   "blogSlots": 14,
+   "reason": "월 7,410 검색에 한 달 발행 159건, 포화도 2%예요. 검색량에 비해 올라온 글이 적고, 평균 레벨이 높지만 실제로는 틈이 보여요 인증 방법부터 오류 해결법까지 시청자가 자주 묻는 질문을 순서대로 정리해 보세요.",
+   "briefing": {
+    "verdict": "지금 한번 써볼 만해요",
+    "checks": [
+     "상위 평균은 Lv8이고 Lv1 블로그도 자리를 차지하고 있어요",
+     "앞서 있는 글 절반 이상이 2주 안에 쓰인 글이라 새 글이 노출되기 유리해요",
+     "유효키워드가 적은 블로그가 상위에 있어 레벨 격차를 뚫어볼 만해요"
+    ],
+    "strategy": [
+     "인증 방법부터 오류 해결법까지 시청자가 자주 묻는 질문을 순서대로 정리해 보세요",
+     "오류가 떴을 때 확인해야 할 기기 설정이나 브라우저 환경을 단계별로 짚어주세요"
+    ]
+   },
+   "subKeywords": [
+    {
+     "keyword": "디즈니플러스 성인인증 방법",
+     "monthlySearch": 820,
+     "saturation": 14.6
+    },
+    {
+     "keyword": "디즈니플러스 성인인증 에러",
+     "monthlySearch": 220,
+     "saturation": 0.5
+    },
+    {
+     "keyword": "디즈니 플러스 성인인증 안됨",
+     "monthlySearch": 160,
+     "saturation": 0.6
+    },
+    {
+     "keyword": "디즈니 플러스 성인인증 하는 법",
+     "monthlySearch": 110,
+     "saturation": 87.3
+    },
+    {
+     "keyword": "디즈니플러스 성인인증 링크",
+     "monthlySearch": 80,
+     "saturation": 38.8
+    },
+    {
+     "keyword": "디즈니플러스 성인인증 사이트",
+     "monthlySearch": 80,
+     "saturation": 61.3
+    },
+    {
+     "keyword": "디즈니플러스 성인인증 했는데",
+     "monthlySearch": 70,
+     "saturation": 100
+    }
+   ],
+   "autocomplete": [
+    "디즈니 플러스 성인인증",
+    "디즈니플러스 성인인증 에러",
+    "디즈니플러스 성인인증 방법",
+    "디즈니플러스 성인인증 링크",
+    "디즈니플러스 성인인증 사이트",
+    "디즈니 플러스 성인인증 안됨",
+    "디즈니 플러스 성인인증 하는 법",
+    "디즈니플러스 성인인증 계정",
+    "디즈니플러스 성인인증 했는데",
+    "디즈니 플러스 성인인증 했는데 계속"
+   ],
+   "topPosts": [
+    {
+     "title": "\"프로필마다 1년에 한 번\" 디즈니플러스성인인증 SMS 방법 총정리",
+     "url": "https://blog.naver.com/quantumleapschool/224481515734",
+     "headings": [
+      "프로필마다 1년에 한 번 인증",
+      "SMS 6자리 코드 입력",
+      "인증 후 작품이 안 보일 때",
+      "프로필 PIN 설정"
+     ],
+     "summary": "프로필마다 1년에 한 번 SMS로 인증하는 절차와 인증 후에도 막힐 때 확인할 설정"
+    },
+    {
+     "title": "\"인증했는데 또 막혀요?\" 디즈니플러스성인인증 오류 해결법",
+     "url": "https://blog.naver.com/0431dang/224488839713",
+     "headings": [
+      "인증과 프로필 등급 구분",
+      "캐시·입력 오류 점검",
+      "TV·링크 접속 문제",
+      "1년 뒤 재인증"
+     ],
+     "summary": "성인인증을 마쳐도 막히는 원인을 프로필 등급·캐시·기기별로 나눠 점검하는 방법"
+    },
+    {
+     "title": "디즈니플러스 성인인증 오류, 데이터 삭제 전 확인할 설정과 증상",
+     "url": "https://blog.naver.com/hanjh5064/224489598771",
+     "headings": [
+      "특정 작품만 안 보일 때",
+      "조건별 증상 정리",
+      "데이터 삭제 전 점검"
+     ],
+     "summary": "데이터를 지우기 전에 콘텐츠 등급과 계정 조건을 확인하는 순서 안내"
+    },
+    {
+     "title": "디즈니플러스 성인 인증 방법 기한, ott서비스 확인하기",
+     "url": "https://blog.naver.com/kingstargirl/224473568328",
+     "headings": [
+      "성인인증 방법",
+      "인증 주기 1년",
+      "가입 정보 입력 순서"
+     ],
+     "summary": "이름·생년월일·통신사를 입력하고 문자 코드로 끝내는 기본 인증 절차"
+    },
+    {
+     "title": "\"19+ 작품 틀었다가 막혔어요\" 재생 직전 디즈니플러스성인인증",
+     "url": "https://blog.naver.com/prumirkarma/224487560514",
+     "headings": [
+      "재생 직전 인증 요구",
+      "가입 연령과 시청 단계",
+      "프로필 등급 필요"
+     ],
+     "summary": "TV에서 19+ 작품 재생 직전 인증이 뜰 때 필요한 인증과 프로필 등급 설정"
+    }
+   ]
+  },
+  {
+   "keyword": "네이버메모",
+   "grade": "A급",
+   "monthlySearch": 149200,
+   "monthlyPublish": 46885,
+   "saturation": 31.42,
+   "entry": "높음",
+   "speed": "빠름",
+   "adComp": "-",
+   "blogSlots": 13,
+   "reason": "월 149,200 검색에 한 달 발행 46,885건, 포화도 31%예요. 상위 평균 레벨은 높지만, 내 레벨 이하의 블로그가 섞여 있어 비집고 들어갈 자리가 보여요 사용 환경별 동기화 방법과 상황별 추천 기능을 유형별로 나누어 정리해 보세요.",
+   "briefing": {
+    "verdict": "지금 도전해 볼 만해요",
+    "checks": [
+     "검색량에 비해 발행량이 적어 경쟁 부담이 덜한 편이에요.",
+     "상위 글 절반 이상이 최근 2주 안에 작성되어 새 글도 노출될 수 있어요.",
+     "실제 상위권 블로그 중에는 유효키워드가 적은 곳도 있어 실전 성적 차이가 크지 않아요."
+    ],
+    "strategy": [
+     "사용 환경별 동기화 방법과 상황별 추천 기능을 유형별로 나누어 정리해 보세요.",
+     "PC와 모바일에서 각각 활용하는 순서를 실제 화면 캡처와 함께 보여주면 처음 쓰는 사람에게 좋습니다."
+    ]
+   },
+   "subKeywords": [
+    {
+     "keyword": "네이버메모장 여는방법",
+     "monthlySearch": 230,
+     "saturation": 100
+    },
+    {
+     "keyword": "네이버메모 복원",
+     "monthlySearch": 180,
+     "saturation": 100
+    },
+    {
+     "keyword": "네이버메모 공유방법",
+     "monthlySearch": 40,
+     "saturation": 100
+    },
+    {
+     "keyword": "네이버메모 백업하는법",
+     "monthlySearch": 40,
+     "saturation": 100
+    }
+   ],
+   "autocomplete": [
+    "네이버메모",
+    "네이버 메모장",
+    "네이버메모 복원",
+    "네이버메모장 여는방법",
+    "네이버메모 앱",
+    "네이버메모장찾기",
+    "네이버메모 저장",
+    "네이버 메모 pc",
+    "네이버메모 공유방법",
+    "네이버메모 글자크기"
+   ],
+   "topPosts": [
+    {
+     "title": "폰과 PC에서 네이버 메모 함께 쓰는 법, 동기화 오류 없이 완벽 정리",
+     "url": "https://blog.naver.com/frozenturtle/224484087297",
+     "headings": [
+      "네이버 메모 여는 곳",
+      "폰·PC 동기화 방법",
+      "폴더와 잠금 설정"
+     ],
+     "summary": "memo.naver.com과 앱에서 같은 아이디로 동기화하고 폴더·잠금을 쓰는 법"
+    },
+    {
+     "title": "네이버 메모장 여는 방법 PC와 휴대폰에서 바로 쓰는 순서",
+     "url": "https://blog.naver.com/kkwrkdrk2/224486737188",
+     "headings": [
+      "휴대폰에서 여는 방법",
+      "PC에서 바로 쓰기",
+      "메모 찾기와 복사"
+     ],
+     "summary": "휴대폰 앱과 PC 브라우저에서 네이버 메모장을 여는 순서와 확인할 점"
+    },
+    {
+     "title": "휴대폰에 쓴 네이버 메모, PC에서도 볼 수 있을까? 공유·복구 방법까지",
+     "url": "https://blog.naver.com/latest_it/224472289381",
+     "headings": [
+      "PC에서 열기",
+      "공유하기",
+      "복구하기",
+      "PDF로 보관"
+     ],
+     "summary": "휴대폰에 쓴 네이버 메모를 PC에서 열고 공유·복구·PDF 보관까지 하는 방법"
+    },
+    {
+     "title": "네이버 메모장 PC 앱 다운로드 방법 설치",
+     "url": "https://blog.naver.com/gfytojyv/224492939084",
+     "headings": [
+      "네이버 메모 소개",
+      "PC 앱 다운로드",
+      "여러 기기 동기화"
+     ],
+     "summary": "PC 앱을 설치해 여러 기기에서 같은 계정으로 네이버 메모를 쓰는 방법"
+    },
+    {
+     "title": "네이버 킵(Keep) 사용법 총정리｜링크·사진·메모 저장하고 다시 찾는 방법",
+     "url": "https://blog.naver.com/digital_fixnote/224478395703",
+     "headings": [
+      "네이버 킵이란",
+      "링크 저장",
+      "사진·파일 저장",
+      "검색과 태그 활용"
+     ],
+     "summary": "네이버 킵에 링크·사진·메모를 저장하고 태그와 검색으로 다시 찾는 방법"
+    }
+   ]
+  },
+  {
+   "keyword": "아이패드비밀번호분실",
+   "grade": "A급",
+   "monthlySearch": 1260,
+   "monthlyPublish": 220,
+   "saturation": 17.46,
+   "entry": "높음",
+   "speed": "빠름",
+   "adComp": "중간",
+   "blogSlots": 14,
+   "reason": "월 1,260 검색에 한 달 발행 220건, 포화도 17%예요. 검색량에 비해 글이 적고, 상위 블로그 레벨이 다양해 비집고 들어갈 자리가 있어요 비밀번호를 잊었을 때와 알 때의 대처법을 상황별로 나누고, 초기화 단계별 순서를 정리해 보세요.",
+   "briefing": {
+    "verdict": "지금 한번 써볼 만해요",
+    "checks": [
+     "상위 평균은 Lv7이고 Lv1부터 Lv5까지 낮은 레벨도 상위에 섞여 있어요",
+     "상위 글 절반 이상이 2주 안에 올라온 글이에요.",
+     "상위 블로그 중 일부는 유효키워드가 적어, 실전 성적 면에서 겨뤄볼 만해요"
+    ],
+    "strategy": [
+     "비밀번호를 잊었을 때와 알 때의 대처법을 상황별로 나누고, 초기화 단계별 순서를 정리해 보세요",
+     "데이터 보존 가능 여부와 72시간 골든타임 등 사용자가 가장 궁금해하는 점을 공식 안내를 참고해 짚어 보세요"
+    ]
+   },
+   "subKeywords": [
+    {
+     "keyword": "아이패드 비밀번호 분실 초기화",
+     "monthlySearch": 210,
+     "saturation": 59.5
+    },
+    {
+     "keyword": "아이패드활성화잠금해제",
+     "monthlySearch": 200,
+     "saturation": 100
+    },
+    {
+     "keyword": "아이폰화면잠금해제",
+     "monthlySearch": 190,
+     "saturation": 100
+    },
+    {
+     "keyword": "아이패드 비밀번호 분실 푸는 방법",
+     "monthlySearch": 70,
+     "saturation": 78.6
+    },
+    {
+     "keyword": "아이패드 비밀번호 분실 서비스센터",
+     "monthlySearch": 30,
+     "saturation": 100
+    }
+   ],
+   "autocomplete": [
+    "아이패드 비밀번호 분실",
+    "아이패드 비밀번호 분실 초기화",
+    "아이패드 비밀번호 분실 시간",
+    "아이패드 비밀번호 분실 서비스센터",
+    "아이패드 비밀번호 분실 푸는 방법",
+    "아이패드 비밀번호 분실 초기화 방법",
+    "아이패드 비밀번호 분실 초기화 비용"
+   ],
+   "topPosts": [
+    {
+     "title": "아이패드 비밀번호 분실 시 대처 방법",
+     "url": "https://blog.naver.com/apple_jayhoon/224479406451",
+     "headings": [
+      "Apple 계정이 있어야 풀 수 있음",
+      "수리점에서 보는 대처",
+      "잠금 해제 조건"
+     ],
+     "summary": "Apple 계정 정보가 있어야 잠금을 풀 수 있다는 전제와 매장 대응 사례"
+    },
+    {
+     "title": "아이패드 비밀번호 분실, 데이터 안 날리는 72시간 골든타임부터 초기화 방법까지",
+     "url": "https://blog.naver.com/savemath/224481037835",
+     "headings": [
+      "72시간 골든타임 조건",
+      "이전 암호로 잠금 해제",
+      "컴퓨터 없이 초기화"
+     ],
+     "summary": "72시간 안이면 데이터를 지키고 이전 암호로 푸는 방법과 초기화 절차"
+    },
+    {
+     "title": "아이패드 비밀번호 분실, 초기화 전에 확인할 72시간 조건",
+     "url": "https://blog.naver.com/danchuinfo/224478280959",
+     "headings": [
+      "초기화 전에 확인할 세 가지",
+      "화면 암호와 Apple 계정 구분",
+      "72시간 조건"
+     ],
+     "summary": "아이패드 화면 암호와 Apple 계정 암호를 구분해 초기화 여부를 판단하는 법"
+    },
+    {
+     "title": "아이패드 비밀번호 분실, 잠겼을 때 Tenorshare 4uKey로 공장 초기화 하는 방법",
+     "url": "https://blog.naver.com/susuva/224477016138",
+     "headings": [
+      "공장 초기화 전 확인 사항",
+      "4uKey 설치와 화면 잠금 해제",
+      "7세대 초기화 과정"
+     ],
+     "summary": "Tenorshare 4uKey로 잠긴 아이패드를 공장 초기화하는 단계별 과정"
+    },
+    {
+     "title": "아이패드 비밀번호 분실했을 때 | 아이패드 초기화 방법, 컴퓨터 없이 되는 경우부터",
+     "url": "https://blog.naver.com/tech-nam/224437176241",
+     "headings": [
+      "암호를 아는지 모르는지 구분",
+      "72시간 이내 처리",
+      "컴퓨터 없이 초기화"
+     ],
+     "summary": "상황을 나눠 컴퓨터 없이도 가능한 아이패드 초기화 방법을 정리"
+    }
+   ]
+  },
+  {
+   "keyword": "카카오톡선물환불상대방",
+   "grade": "A급",
+   "monthlySearch": 1600,
+   "monthlyPublish": 339,
+   "saturation": 21.19,
+   "entry": "높음",
+   "speed": "빠름",
+   "adComp": "낮음",
+   "blogSlots": 16,
+   "reason": "월 1,600 검색에 한 달 발행 339건, 포화도 21%예요. 검색량에 비해 글이 적고, 상위 블로그들의 레벨 분포가 넓어 해볼 만해요 환불 시 상대방 알림 여부와 거절·취소의 차이를 구분해 정리해 보세요.",
+   "briefing": {
+    "verdict": "지금 한번 써볼 만해요",
+    "checks": [
+     "상위 평균은 Lv6이고 Lv1 블로그도 있어 들어갈 틈이 보여요",
+     "지금 떠 있는 글 절반 이상이 최근 2주 내 작성되어 새 글도 잘 보이는 편이에요",
+     "유효키워드가 나보다 적은 상위 블로그가 있어 실전 성적도 해볼 만해요"
+    ],
+    "strategy": [
+     "환불 시 상대방 알림 여부와 거절·취소의 차이를 구분해 정리해 보세요",
+     "환불 방법과 현금화 비율을 공식 안내를 참고해 한눈에 들어오게 담아 보세요"
+    ]
+   },
+   "subKeywords": [
+    {
+     "keyword": "카카오톡 선물 환불 상대방 알림",
+     "monthlySearch": 50,
+     "saturation": 100
+    },
+    {
+     "keyword": "카카오톡 선물 환불 상대방 확인",
+     "monthlySearch": 30,
+     "saturation": 100
+    },
+    {
+     "keyword": "카카오톡 선물받은거 환불",
+     "monthlySearch": 30,
+     "saturation": 100
+    }
+   ],
+   "autocomplete": [
+    "카카오톡 선물 환불 상대방",
+    "카카오톡 선물 환불 상대방 알림",
+    "카카오톡 선물 환불 상대방 확인"
+   ],
+   "topPosts": [
+    {
+     "title": "카카오톡 선물하기 환불 취소 방법, 상대방 카톡 알림 여부 확인하기",
+     "url": "https://blog.naver.com/dbsgns2011/224478465977",
+     "headings": [
+      "보낸 사람의 환불·취소",
+      "상대방 알림 여부",
+      "환불 처리 순서"
+     ],
+     "summary": "선물하기 환불·취소 절차와 상대방에게 알림이 가는지 확인하는 방법"
+    },
+    {
+     "title": "카카오톡 선물 환불하면 상대방이 알까? 직접 물어봤어요",
+     "url": "https://blog.naver.com/hb8503/224481745253",
+     "headings": [
+      "유효기간 만료 후 포인트 환불",
+      "선물 거절과 환불 차이",
+      "유효기간 남았을 때 환불"
+     ],
+     "summary": "유효기간 만료·거절·직접 환불 경우별로 상대방 알림이 가는지 확인"
+    },
+    {
+     "title": "카카오톡 선물 거절하면 누구에게 환불될까? 상대방 알림까지",
+     "url": "https://blog.naver.com/big_ears/224480852769",
+     "headings": [
+      "거절 시 환불 대상",
+      "상대방 알림 여부",
+      "거절과 환불 신청 구분"
+     ],
+     "summary": "선물을 거절하면 돈이 누구에게 돌아가고 상대방에게 알림이 가는지 구분"
+    },
+    {
+     "title": "카카오톡 선물 거절 방법 환불 대상 및 상대방 알림 확인",
+     "url": "https://blog.naver.com/kyurl55/224460398435",
+     "headings": [
+      "선물 거절의 의미",
+      "거절하는 방법",
+      "환불 대상과 알림",
+      "배송상품 주의사항"
+     ],
+     "summary": "받은 선물을 거절하는 방법과 환불 대상·알림, 배송상품 주의점 정리"
+    },
+    {
+     "title": "카톡 선물 거절하면 상대방이 알까? 알림·환불·거절 방법 정리",
+     "url": "https://blog.naver.com/freundschaft1234/224478966382",
+     "headings": [
+      "거절과 교환권 환불 차이",
+      "알림이 가는 경우",
+      "거절 버튼이 없을 때"
+     ],
+     "summary": "선물 거절과 교환권 환불의 차이를 알림·환불 대상 기준으로 비교"
+    }
+   ]
+  },
+  {
+   "keyword": "34인치모니터",
+   "grade": "A급",
+   "monthlySearch": 5940,
+   "monthlyPublish": 1132,
+   "saturation": 19.06,
+   "entry": "매우 높음",
+   "speed": "1~2일",
+   "adComp": "중간",
+   "blogSlots": 10,
+   "reason": "월 5,940 검색에 한 달 발행 1,132건, 포화도 19%예요. 검색량 대비 글이 적고 상위 블로그 레벨도 낮아, 내 레벨이면 승산이 있어요 32인치와 34인치 모니터의 실제 작업 영역 차이를 표로 비교해 보세요.",
+   "briefing": {
+    "verdict": "지금 바로 도전해 볼 만해요",
+    "checks": [
+     "상위 평균은 Lv3이고, Lv1 블로그가 다수 섞여 있어 틈이 확실히 보여요",
+     "지금 떠 있는 글 절반 이상이 최근 2일 내 작성된 글로, 지금 바로 진입해도 괜찮아요",
+     "상위 블로그들의 유효키워드가 적어, 내 레벨과 실전 성적 차이가 크지 않아요"
+    ],
+    "strategy": [
+     "32인치와 34인치 모니터의 실제 작업 영역 차이를 표로 비교해 보세요",
+     "게이밍과 작업용 환경에서 느끼는 와이드 화면의 장단점을 실제 사용 기준으로 정리해 보세요"
+    ]
+   },
+   "subKeywords": [
+    {
+     "keyword": "27인치모니터",
+     "monthlySearch": 31200,
+     "saturation": 24.5
+    },
+    {
+     "keyword": "32인치모니터",
+     "monthlySearch": 18140,
+     "saturation": 31.7
+    },
+    {
+     "keyword": "24인치모니터",
+     "monthlySearch": 12750,
+     "saturation": 37.2
+    },
+    {
+     "keyword": "듀얼모니터받침대",
+     "monthlySearch": 7030,
+     "saturation": 21.0
+    },
+    {
+     "keyword": "게임용모니터추천",
+     "monthlySearch": 6630,
+     "saturation": 100
+    },
+    {
+     "keyword": "모니터32인치",
+     "monthlySearch": 5000,
+     "saturation": 100
+    },
+    {
+     "keyword": "144HZ모니터",
+     "monthlySearch": 4760,
+     "saturation": 50.8
+    },
+    {
+     "keyword": "높이조절모니터암",
+     "monthlySearch": 3610,
+     "saturation": 2.2
+    },
+    {
+     "keyword": "49인치모니터",
+     "monthlySearch": 2560,
+     "saturation": 30.7
+    },
+    {
+     "keyword": "34인치커브드모니터",
+     "monthlySearch": 450,
+     "saturation": 50.9
+    }
+   ],
+   "autocomplete": [
+    "34인치 모니터",
+    "lg 34인치 모니터",
+    "삼성 34인치 모니터",
+    "34인치 모니터암",
+    "34인치 모니터 크기",
+    "34인치 모니터 비교",
+    "34인치 모니터 lg",
+    "34인치 모니터 커브드",
+    "34인치 모니터 비율",
+    "34인치 모니터 사이즈"
+   ],
+   "topPosts": [
+    {
+     "title": "[내돈내산] LG 울트라기어 게이밍 모니터 34G600A 34인치 구매 후기｜WQHD·160Hz",
+     "url": "https://blog.naver.com/dasom1122_/224486811656",
+     "headings": [
+      "제품 사양(WQHD·160Hz)",
+      "구매 계기",
+      "게이밍 사용 후기"
+     ],
+     "summary": "LG 울트라기어 34G600A를 직접 사서 쓴 WQHD 160Hz 게이밍 모니터 후기"
+    },
+    {
+     "title": "델 34인치 모니터 P3425WE 3개월 후기, 울트라와이드 장점 정리",
+     "url": "https://blog.naver.com/alwaysmilever/224486863311",
+     "headings": [
+      "27인치에서 넘어온 이유",
+      "울트라와이드 장점",
+      "3개월 사용 소감"
+     ],
+     "summary": "델 P3425WE를 3개월 쓰며 느낀 울트라와이드의 장점과 아쉬운 점"
+    },
+    {
+     "title": "(정보) 필립스 34M2C8600PC 34인치 울트라와이드 모니터 출시, 게이밍과 화이트 데스크셋업을 모두 고려한 모니터",
+     "url": "https://blog.naver.com/smallertw/224479387573",
+     "headings": [
+      "신제품 출시 정보",
+      "게이밍·화이트 셋업 고려",
+      "주요 특징"
+     ],
+     "summary": "필립스 34M2C8600PC 출시 소식과 게이밍·화이트 데스크셋업용 특징"
+    },
+    {
+     "title": "영상 편집과 업무용으로 선택한 34인치 한성모니터 TFG34Q16WP 울트라와이드 솔직 후기 🖥️",
+     "url": "https://blog.naver.com/jdm333/224472277359",
+     "headings": [
+      "사무용 모니터에서 바꾼 이유",
+      "WQHD 화질과 주사율 체감",
+      "영상 편집 사용 후기"
+     ],
+     "summary": "영상 편집·업무용으로 한성 TFG34Q16WP를 쓴 솔직 후기와 체감 차이"
+    },
+    {
+     "title": "모니터 추천 삼성 QD-OLED 패널 쓰는 가성비 34인치 OLED 모니터 한성 TFG34Q17WL, 삼성 G8 OLED와 비교",
+     "url": "https://blog.naver.com/windai11/224484497811",
+     "headings": [
+      "QD-OLED 패널 특징",
+      "한성 TFG34Q17WL 사양",
+      "삼성 G8 OLED와 비교"
+     ],
+     "summary": "삼성 QD-OLED 패널을 쓴 한성 34인치와 삼성 G8 OLED를 비교"
+    }
+   ]
+  },
+  {
+   "keyword": "에어팟초기화",
+   "grade": "A급",
+   "monthlySearch": 1660,
+   "monthlyPublish": 1062,
+   "saturation": 63.98,
+   "entry": "높음",
+   "speed": "빠름",
+   "adComp": "낮음",
+   "blogSlots": 14,
+   "reason": "월 1,660 검색에 한 달 발행 1,062건, 포화도 64%예요. 상위 평균은 Lv6이고 낮은 레벨 블로그도 섞여 있어 비집고 들어갈 자리가 있어요 모델별 초기화 버튼 위치와 LED 색상 변화를 순서대로 정리해 보세요.",
+   "briefing": {
+    "verdict": "지금 한번 써볼 만해요",
+    "checks": [
+     "상위 글 절반 이상이 2주 안에 올라온 글이에요.",
+     "상위 블로그 중 5개는 유효키워드가 나보다 적어 실전 성적 차이가 크지 않아요",
+     "검색량보다 글이 적게 올라와 경쟁 부담이 덜한 편이에요"
+    ],
+    "strategy": [
+     "모델별 초기화 버튼 위치와 LED 색상 변화를 순서대로 정리해 보세요",
+     "연결 오류 상황을 가정하고 기기 지우기부터 페어링까지 단계별로 보여주세요"
+    ]
+   },
+   "subKeywords": [
+    {
+     "keyword": "에어팟 초기화 방법",
+     "monthlySearch": 4640,
+     "saturation": 17.2
+    },
+    {
+     "keyword": "에어팟 초기화 나의찾기",
+     "monthlySearch": 160,
+     "saturation": 100
+    },
+    {
+     "keyword": "에어팟 초기화 안됨",
+     "monthlySearch": 140,
+     "saturation": 100
+    },
+    {
+     "keyword": "에어팟 초기화 후 연결",
+     "monthlySearch": 50,
+     "saturation": 100
+    },
+    {
+     "keyword": "에어팟 초기화 후 페어링",
+     "monthlySearch": 40,
+     "saturation": 100
+    },
+    {
+     "keyword": "에어팟 초기화 위치추적",
+     "monthlySearch": 40,
+     "saturation": 100
+    }
+   ],
+   "autocomplete": [
+    "에어팟 초기화 방법",
+    "에어팟 초기화",
+    "에어팟 초기화 안됨",
+    "에어팟 초기화 나의찾기",
+    "에어팟 초기화 방법 4세대",
+    "에어팟 초기화 후 페어링",
+    "에어팟 초기화 방법 프로 2",
+    "에어팟 초기화 후 연결 안 됨",
+    "에어팟 초기화 방법 3세대",
+    "에어팟 초기화 위치추적"
+   ],
+   "topPosts": [
+    {
+     "title": "새 기기 연결 전 에어팟 초기화 방법, 덜 끝나면 이전 기기를 찾습니다",
+     "url": "https://blog.naver.com/corinth526/224476580594",
+     "headings": [
+      "초기화가 필요한 상황",
+      "페어링 데이터 삭제",
+      "이전 기기 정리"
+     ],
+     "summary": "새 기기에 연결하기 전 초기화로 페어링 정보를 지우고 이전 기기를 정리하는 법"
+    },
+    {
+     "title": "에어팟 초기화 방법 (한쪽 안 들릴 때·연결 안 될 때 해결까지)",
+     "url": "https://blog.naver.com/mulmulz/224477943799",
+     "headings": [
+      "기본 3단계 초기화",
+      "뒷면 버튼 있는 모델",
+      "전면 탭 방식 모델",
+      "한쪽 안 들릴 때 해결"
+     ],
+     "summary": "케이스 버튼을 길게 눌러 초기화하는 3단계와 한쪽 안 들릴 때 해결법"
+    },
+    {
+     "title": "에어팟 초기화 에어팟4와 프로3은 케이스 앞면을 두 번씩 탭",
+     "url": "https://blog.naver.com/itbgd/224483979092",
+     "headings": [
+      "케이스에 넣고 30초 대기",
+      "에어팟4·프로3은 앞면 두 번 탭",
+      "아이폰에서 기기 지우기"
+     ],
+     "summary": "에어팟4·프로3의 전면 탭 초기화와 아이폰에서 기기를 지우는 순서"
+    },
+    {
+     "title": "에어팟초기화방법 에어팟 프로2 연결 안 될 때 재설정 절차",
+     "url": "https://blog.naver.com/tera0306/224477272688",
+     "headings": [
+      "케이스 대기와 설정 열기",
+      "이 기기 지우기",
+      "뒷면 버튼 15초",
+      "다시 연결"
+     ],
+     "summary": "에어팟 프로2 연결이 안 될 때 재설정하고 다시 페어링하는 절차"
+    },
+    {
+     "title": "에어팟 한쪽 안들림 오류 연결 안됨 공장 초기화 페어링 해제 방법",
+     "url": "https://blog.naver.com/keiraso/224481314790",
+     "headings": [
+      "오류 해결 순서",
+      "모델별 초기화 방법",
+      "증상별 확인 사항"
+     ],
+     "summary": "한쪽 안 들림·연결 안 됨 증상을 충전 확인부터 초기화까지 순서로 해결"
+    }
+   ]
+  },
+  {
+   "keyword": "텔레그램다운로드",
+   "grade": "A급",
+   "monthlySearch": 2630,
+   "monthlyPublish": 765,
+   "saturation": 29.09,
+   "entry": "높음",
+   "speed": "빠름",
+   "adComp": "낮음",
+   "blogSlots": 12,
+   "reason": "월 2,630 검색에 한 달 발행 765건, 포화도 29%예요. 검색량에 비해 글이 적고, 상위 블로그 레벨이 다양해 비집고 들어갈 자리가 있어요 공식 사이트 설치법을 시작으로, 한글 설정이나 자동 저장 끄기 같은 설정 팁을 단계별로 나누어 보세요.",
+   "briefing": {
+    "verdict": "지금 한번 써볼 만해요",
+    "checks": [
+     "상위 평균은 Lv6이고 Lv1 블로그도 자리를 차지하고 있어요",
+     "상위 글 절반 이상이 2주 내 글이라 새 글도 잘 올라오는 편이에요",
+     "PC 검색 비중이 92%로 매우 높아 텍스트 설명이 중요한 키워드예요"
+    ],
+    "strategy": [
+     "공식 사이트 설치법을 시작으로, 한글 설정이나 자동 저장 끄기 같은 설정 팁을 단계별로 나누어 보세요",
+     "PC 버전 설치 시 주의할 공식 주소 확인법과 무설치 버전 활용법을 표로 정리하면 읽는 사람이 따라 하기 쉽습니다"
+    ]
+   },
+   "subKeywords": [
+    {
+     "keyword": "텔레그램PC설치",
+     "monthlySearch": 90,
+     "saturation": 100
+    },
+    {
+     "keyword": "텔레그램 다운로드 위치",
+     "monthlySearch": 70,
+     "saturation": 100
+    },
+    {
+     "keyword": "텔레그램 다운로드 파일",
+     "monthlySearch": 50,
+     "saturation": 100
+    },
+    {
+     "keyword": "텔레그램 다운로드 안됨",
+     "monthlySearch": 50,
+     "saturation": 40.0
+    },
+    {
+     "keyword": "텔레그램 다운로드 기록",
+     "monthlySearch": 30,
+     "saturation": 100
+    }
+   ],
+   "autocomplete": [
+    "텔레그램 다운로드",
+    "텔레그램 다운로드 파일",
+    "텔레그램 다운로드 위치",
+    "텔레그램 다운로드 안됨",
+    "텔레그램 다운로드 기록",
+    "텔레그램 다운로드 파일 보는법",
+    "텔레그램 다운로드 속도",
+    "텔레그램 다운로드 보는법",
+    "텔레그램 다운로드방법",
+    "텔레그램 다운로드 링크"
+   ],
+   "topPosts": [
+    {
+     "title": "텔레그램 공식 다운로드 주소 확인법, 검색 광고로 받은 파일은 지우고 다시 받으세요",
+     "url": "https://blog.naver.com/dublin2767/224479567623",
+     "headings": [
+      "공식 주소 확인",
+      "검색 광고로 받은 파일 주의",
+      "윈도우 비트 수 확인",
+      "설치 후 첫 설정"
+     ],
+     "summary": "desktop.telegram.org 공식 주소 확인과 광고로 받은 설치 파일 점검법"
+    },
+    {
+     "title": "텔레그램 PC버전 설치 다운로드",
+     "url": "https://blog.naver.com/znanffv2r/224489839724",
+     "headings": [
+      "텔레그램 소개",
+      "PC버전 설치",
+      "모바일과 대화 연동"
+     ],
+     "summary": "PC버전을 설치해 휴대폰과 같은 대화를 컴퓨터에서 이어 쓰는 방법"
+    },
+    {
+     "title": "텔레그램 PC 다운로드 설치",
+     "url": "https://blog.naver.com/w8imocb7xvox6o/224476288708",
+     "headings": [
+      "PC버전이 필요한 상황",
+      "설치 파일 받기",
+      "키보드로 대화 이어가기"
+     ],
+     "summary": "텔레그램 데스크톱을 설치해 컴퓨터에서 메시지와 파일을 주고받는 법"
+    },
+    {
+     "title": "텔레그램 사용법, 처음 시작할 때 확인할 설치·파일 전송·채널 이용",
+     "url": "https://blog.naver.com/hanjh5064/224483021741",
+     "headings": [
+      "설치 전 준비",
+      "처음 실행하면 써볼 기능",
+      "채널 활용",
+      "보안 설정"
+     ],
+     "summary": "설치 직후 확인할 파일 전송·채널 이용·보안 설정을 항목별로 안내"
+    },
+    {
+     "title": "[스마트폰 사용법] 텔레그램 설치부터 회원가입, 친구 추가, 메시지 보내기까지! 초보자를 위한 완벽 사용 가이드",
+     "url": "https://blog.naver.com/v0152/224473414775",
+     "headings": [
+      "텔레그램이란",
+      "스마트폰 설치(갤럭시·아이폰)",
+      "회원가입",
+      "친구 추가와 메시지"
+     ],
+     "summary": "스마트폰에 설치해 가입하고 친구 추가·메시지 보내기까지 초보자 가이드"
+    }
+   ]
+  },
+  {
+   "keyword": "카톡조용한채팅방숨김",
+   "grade": "A급",
+   "monthlySearch": 710,
+   "monthlyPublish": 231,
+   "saturation": 32.54,
+   "entry": "높음",
+   "speed": "빠름",
+   "adComp": "낮음",
+   "blogSlots": 18,
+   "reason": "월 710 검색에 한 달 발행 231건, 포화도 33%예요. 검색량보다 글이 적고, 상위 블로그 레벨이 낮아 비집고 들어갈 자리가 보여요 설정부터 해제 방법, 적용 안 되는 방 유형까지 단계별로 나누어 정리해 보세요.",
+   "briefing": {
+    "verdict": "지금 한번 써볼 만해요",
+    "checks": [
+     "상위 평균은 Lv6이고 Lv1 블로그도 있어 해볼 만해요",
+     "상위 글 절반이 2주 내 글이라 지금 새 글도 보여요",
+     "유효키워드가 적은 블로그가 섞여 있어 승산이 있는 자리예요"
+    ],
+    "strategy": [
+     "설정부터 해제 방법, 적용 안 되는 방 유형까지 단계별로 나누어 정리해 보세요",
+     "조용한 채팅방이 필요한 상황별(업무, 알림 관리 등) 활용 팁을 곁들이면 더 좋습니다"
+    ]
+   },
+   "subKeywords": [
+    {
+     "keyword": "카톡 조용한 채팅방 해제",
+     "monthlySearch": 1130,
+     "saturation": 36.5
+    },
+    {
+     "keyword": "조용한 채팅방 숨김해제",
+     "monthlySearch": 80,
+     "saturation": 100
+    },
+    {
+     "keyword": "카톡 조용한 채팅방 푸는법",
+     "monthlySearch": 60,
+     "saturation": 100
+    },
+    {
+     "keyword": "카톡조용한채팅방 숨김 보는법",
+     "monthlySearch": 30,
+     "saturation": 100
+    }
+   ],
+   "autocomplete": [
+    "카톡 조용한 채팅방 숨김",
+    "카톡 조용한 채팅방 숨김 해제",
+    "카톡조용한채팅방 숨김 보는법",
+    "카톡 조용한채팅방 숨김 차이",
+    "카톡 조용한채팅방 숨김 찾는방법"
+   ],
+   "topPosts": [
+    {
+     "title": "카톡 조용한 채팅방 설정 해제 방법, 단톡방 안 나가고 숨기기 (+오픈채팅)",
+     "url": "https://blog.naver.com/ryurime88/224491604822",
+     "headings": [
+      "기기별 설정 방법(갤럭시·아이폰·PC)",
+      "보관한 채팅방 꺼내기",
+      "오픈채팅 적용"
+     ],
+     "summary": "갤럭시·아이폰·PC에서 조용한 채팅방으로 보관하고 다시 꺼내는 방법"
+    },
+    {
+     "title": "카카오톡 조용한 채팅방 설정 방법 숨김 및 해제하기(단톡방, 오픈채팅)",
+     "url": "https://blog.naver.com/kos7201111/224482059342",
+     "headings": [
+      "조용한 채팅방 적용 효과",
+      "안드로이드 설정",
+      "아이폰 설정",
+      "PC 설정"
+     ],
+     "summary": "조용한 채팅방을 켜면 알림과 목록이 어떻게 바뀌는지 기기별 설정법"
+    },
+    {
+     "title": "“목록에서 안 보였으면 좋겠다” 카톡 채팅방 숨기기 쓰면 해결될까?",
+     "url": "https://blog.naver.com/frozenturtle/224477253162",
+     "headings": [
+      "카톡 채팅방 숨기기 방법",
+      "갤럭시는 길게 누르기",
+      "아이폰은 밀어서 보관"
+     ],
+     "summary": "갤럭시는 길게 눌러, 아이폰은 밀어서 보관하는 조용한 채팅방 사용법"
+    },
+    {
+     "title": "카톡 채팅방 숨기기, 조용한 채팅방 기능으로 깔끔하게 정리하는 방법",
+     "url": "https://blog.naver.com/dbsehdnjs1105/224477560145",
+     "headings": [
+      "조용한 채팅방 기능",
+      "광고·단체방 정리",
+      "목록 복잡함 해결"
+     ],
+     "summary": "광고 채널과 단톡방을 조용한 채팅방으로 옮겨 채팅 목록을 정리하는 방법"
+    },
+    {
+     "title": "카카오톡 채팅방 숨기기 방법 (조용한 채팅방으로 보관·해제)",
+     "url": "https://blog.naver.com/blueuoo/224483233079",
+     "headings": [
+      "갤럭시에서 숨기기",
+      "아이폰에서 숨기기",
+      "보관함에서 해제"
+     ],
+     "summary": "삭제 없이 별도 보관함으로 옮기는 기기별 조용한 채팅방 설정법"
+    }
+   ]
+  },
+  {
+   "keyword": "오리지날미국구글",
+   "grade": "A급",
+   "monthlySearch": 440,
+   "monthlyPublish": 35,
+   "saturation": 7.95,
+   "entry": "높음",
+   "speed": "느림",
+   "adComp": "낮음",
+   "blogSlots": 17,
+   "reason": "월 440 검색에 한 달 발행 35건, 포화도 8%예요. 검색량에 비해 올라온 글이 적고, 상위 블로그들의 유효키워드 격차가 크지 않아 도전해 볼 만한 자리예요 접속이 튕기거나 지역이 바뀌는 등 사용자가 겪는 불편을 먼저 짚고, 해결하는 순서를 단계별로 보여주세요.",
+   "briefing": {
+    "verdict": "지금 한번 써볼 만해요",
+    "checks": [
+     "상위 평균은 Lv6이고 Lv1을 포함해 나보다 낮은 블로그가 13개나 있어요",
+     "먼저 올라온 글 절반 이상이 60일 넘은 정보라 최신 링크와 접속 방법을 정리하면 승산이 있어요",
+     "모바일 검색 비중이 93% 이상이니 가독성 좋은 링크와 접속 순서를 강조해 보세요"
+    ],
+    "strategy": [
+     "접속이 튕기거나 지역이 바뀌는 등 사용자가 겪는 불편을 먼저 짚고, 해결하는 순서를 단계별로 보여주세요",
+     "먼저 올라온 글에 없는 최신 접속 링크 확인법과 지역 설정 변경 과정을 공식 안내를 참고해 정리해 보세요"
+    ]
+   },
+   "subKeywords": [
+    {
+     "keyword": "오리지날 미국구글 바로가기",
+     "monthlySearch": 1370,
+     "saturation": 1.8
+    },
+    {
+     "keyword": "오리지날 미국구글 링크",
+     "monthlySearch": 60,
+     "saturation": 23.3
+    }
+   ],
+   "autocomplete": [
+    "오리지날 미국구글",
+    "오리지날 미국구글 바로가기",
+    "오리지날 미국구글 링크",
+    "오리지날 미국구글 주소"
+   ],
+   "topPosts": [
+    {
+     "title": "오리지날 미국구글 바로가기 링크 주소 구글 미국 사이트 바로가기 휴대폰 설정",
+     "url": "https://blog.naver.com/pixelpop-blog/224479734886",
+     "headings": [
+      "구글 지역 설정이 원인",
+      "컴퓨터에서 미국 결과로 바꾸기",
+      "안드로이드·아이폰 설정 경로"
+     ],
+     "summary": "주소가 아니라 구글 검색 지역 설정을 바꿔 미국 결과를 보는 방법"
+    },
+    {
+     "title": "오리지날 미국 구글 바로가기 링크",
+     "url": "https://blog.naver.com/oxdpnizi/224482034489",
+     "headings": [
+      "화면 하단 언어·지역 메뉴",
+      "결과 차이 체감",
+      "바로가기 저장"
+     ],
+     "summary": "구글 하단 언어·지역 메뉴로 미국 결과를 보고 바로가기를 저장한 경험"
+    },
+    {
+     "title": "미국구글 바로가기 주소, 오리지날 링크로 접속하는 법과 검색 지역 설정 총정리",
+     "url": "https://blog.naver.com/kjininfo/224477623499",
+     "headings": [
+      "한국 결과가 뜨는 이유",
+      "미국구글 바로가기 링크",
+      "VPN 필요 여부",
+      "영어 검색 효과"
+     ],
+     "summary": "미국구글 링크로 접속하는 법과 검색 지역 설정, VPN 필요 여부 정리"
+    },
+    {
+     "title": "오리지날 미국 구글 바로가기 링크 Google 국가별 사이트 안내",
+     "url": "https://blog.naver.com/vovov77/224454360224",
+     "headings": [
+      "오리지날 미국 구글 차이",
+      "바로가기 링크",
+      "국가별 Google 주소"
+     ],
+     "summary": "국가별 구글 주소 목록과 미국 구글에 접속했을 때의 결과 차이 설명"
+    },
+    {
+     "title": "오리지날 미국구글 바로가기 방법 사이트 링크 주소",
+     "url": "https://blog.naver.com/sinnam88/224404357540",
+     "headings": [
+      "파라미터 원리",
+      "한국 구글과 결과 차이",
+      "시크릿 모드 활용"
+     ],
+     "summary": "구글 주소 파라미터로 지역·언어를 지정하는 원리와 시크릿 모드 활용"
+    }
+   ]
+  }
+ ]
 }
