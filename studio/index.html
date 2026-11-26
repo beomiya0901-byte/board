@@ -38,6 +38,7 @@
   --brand-ink:#ffffff;
   --brand-soft:#eceefe;
   --gold:#8a5b00;--gold-bg:#fff2ce;--gold-line:#f4d99b;
+  --pend:#5b5bb5;--pend-bg:#efeffd;--pend-line:#dcdaf7;
   --good:#0b6b48;--good-bg:#dcf5e8;--good-line:#b6e6cf;
   --mid:#42506b;--mid-bg:#e9edf5;--mid-line:#d3dae8;
   --bad:#a3303c;--bad-bg:#ffe4e6;--bad-line:#f7c6cb;
@@ -65,6 +66,7 @@
   --brand-ink:#11121a;
   --brand-soft:#23264a;
   --gold:#f4cd7d;--gold-bg:#3a2f14;--gold-line:#5a4920;
+  --pend:#bdb8ff;--pend-bg:#23223c;--pend-line:#35334f;
   --good:#7fe0b4;--good-bg:#123528;--good-line:#1f5440;
   --mid:#b9c4dc;--mid-bg:#242b3a;--mid-line:#333c50;
   --bad:#ffaab2;--bad-bg:#3b1a1f;--bad-line:#5c2931;
@@ -199,6 +201,26 @@ main{padding:14px 0 8px}
 .badge.mid{background:var(--mid-bg);color:var(--mid);border-color:var(--mid-line)}
 .badge.bad{background:var(--bad-bg);color:var(--bad);border-color:var(--bad-line)}
 .badge.plain{background:var(--surface-3);color:var(--text-2)}
+/* 블톡 등급 = S급 · A급 · B급 (+ 분석 대기) */
+.badge.s{background:linear-gradient(135deg,#4d55cf,#7b5bf2);color:#fff;border-color:transparent}
+.badge.a{background:var(--good-bg);color:var(--good);border-color:var(--good-line)}
+.badge.b{background:var(--brand-soft);color:var(--brand);border-color:var(--brand-soft)}
+.badge.pending{background:var(--pend-bg);color:var(--pend);border-color:var(--pend-line)}
+.kw-pending{
+  display:flex;flex-direction:column;gap:8px;align-items:flex-start;
+  padding:10px 12px;border-radius:12px;background:var(--pend-bg);border:1px solid var(--pend-line);
+}
+.kw-pending p{margin:0;font-size:12.5px;line-height:1.5;color:var(--pend);font-weight:650}
+.kw-pending .btn{background:var(--surface);color:var(--pend);border:1px solid var(--pend-line);box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.opt-more{margin-top:2px;border-top:1px solid var(--line-2);padding-top:10px}
+.opt-more > summary{
+  cursor:pointer;list-style:none;font-size:12.5px;font-weight:750;color:var(--text-2);
+  display:flex;align-items:center;gap:5px;padding:2px 0;
+}
+.opt-more > summary::-webkit-details-marker{display:none}
+.opt-more > summary::before{content:'▸';font-size:11px;color:var(--text-3)}
+.opt-more[open] > summary::before{content:'▾'}
+.opt-more > summary + *{margin-top:10px}
 
 /* ── 발행 글 검색 순위 ─────────────────── */
 .rank-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:7px}
@@ -758,7 +780,7 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
           <h1 id="home-blog">범도리의 IT 이모저모</h1>
           <p class="hero-basis">
             <span class="pill" id="home-level">준최적</span>
-            <span id="home-basis-text">황금 기준 검색량 1,000+ · 경쟁강도 1.00 이하</span>
+            <span id="home-basis-text">S급 기준 검색량 1,000+ · 경쟁강도 1.00 이하</span>
           </p>
           <p class="hero-rank" id="home-rank" hidden></p>
         </div>
@@ -875,7 +897,7 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
       <div class="section-head">
         <div>
           <h2>설정</h2>
-          <p>내 블로그와 황금 키워드 기준을 정해요</p>
+          <p>내 블로그와 블톡 S·A·B 등급 기준을 정해요</p>
         </div>
       </div>
       <div class="settings">
@@ -899,8 +921,8 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
         </div>
 
         <div class="card set-card">
-          <h3>황금 키워드 기준</h3>
-          <p>이 기준을 모두 넘으면 <span class="badge gold">황금</span> 으로 표시해요</p>
+          <h3>키워드 등급 기준 (블톡 S·A·B)</h3>
+          <p>블톡 등급이 있으면 그대로 쓰고, 직접 넣은 키워드는 이 기준으로 <span class="badge s">S급</span> <span class="badge a">A급</span> <span class="badge b">B급</span>을 매겨요</p>
           <div class="field">
             <label for="cfg-minvol">최소 월 검색량 (회)</label>
             <input id="cfg-minvol" type="number" min="0" step="100" inputmode="numeric">
@@ -1027,7 +1049,7 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
     <div class="sheet-head">
       <div style="flex:1">
         <h2 id="dlg-add-title">키워드 추가</h2>
-        <p>검색량과 문서수를 넣으면 경쟁강도를 바로 계산해요</p>
+        <p>키워드 이름만 넣으면 바로 담겨요 · 숫자는 나중에 채워도 돼요</p>
       </div>
       <button type="button" class="close-x" data-act="close-dialog" data-dlg="dlg-add" aria-label="닫기">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -1038,32 +1060,44 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
         <label for="add-kw">키워드 <span style="color:var(--bad)">*</span></label>
         <input id="add-kw" type="text" placeholder="예: 아이폰 배터리 성능 확인" maxlength="80" autocomplete="off">
       </div>
-      <div class="wc-grid two">
-        <div class="field">
-          <label for="add-pc">PC 검색량</label>
-          <input id="add-pc" type="text" inputmode="numeric" placeholder="12,100" autocomplete="off">
-        </div>
-        <div class="field">
-          <label for="add-mo">모바일 검색량</label>
-          <input id="add-mo" type="text" inputmode="numeric" placeholder="48,000" autocomplete="off">
-        </div>
-        <div class="field">
-          <label for="add-docs">블로그 문서수</label>
-          <input id="add-docs" type="text" inputmode="numeric" placeholder="3,100" autocomplete="off">
-        </div>
-        <div class="field">
-          <label for="add-status">담을 곳</label>
-          <select id="add-status">
-            <option value="보류">보류 · 키워드 탭에 모아두기</option>
-            <option value="채택">채택 · 바로 글감으로</option>
-            <option value="제외">제외</option>
-          </select>
-        </div>
+      <div class="field">
+        <label for="add-memo">메모 (선택)</label>
+        <textarea id="add-memo" rows="2" placeholder="글 방향, 준비물, 참고할 점" maxlength="300"></textarea>
       </div>
       <div class="field">
-        <label for="add-memo">메모</label>
-        <textarea id="add-memo" placeholder="글 방향, 준비물, 참고할 점 (선택)" maxlength="300"></textarea>
+        <label for="add-status">담을 곳</label>
+        <select id="add-status">
+          <option value="보류">보류 · 키워드 탭에 모아두기</option>
+          <option value="채택">채택 · 바로 글감으로</option>
+          <option value="제외">제외</option>
+        </select>
       </div>
+      <details class="opt-more" id="add-more">
+        <summary>숫자 직접 입력 (선택)</summary>
+        <div class="wc-grid two">
+          <div class="field">
+            <label for="add-pc">PC 검색량</label>
+            <input id="add-pc" type="text" inputmode="numeric" placeholder="12,100" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="add-mo">모바일 검색량</label>
+            <input id="add-mo" type="text" inputmode="numeric" placeholder="48,000" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="add-docs">블로그 문서수</label>
+            <input id="add-docs" type="text" inputmode="numeric" placeholder="3,100" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="add-grade">블톡 등급</label>
+            <select id="add-grade">
+              <option value="">모름 · 나중에 분석</option>
+              <option value="S급">S급</option>
+              <option value="A급">A급</option>
+              <option value="B급">B급</option>
+            </select>
+          </div>
+        </div>
+      </details>
       <div class="preview" id="add-preview"></div>
     </div>
     <div class="sheet-foot">
@@ -1164,7 +1198,8 @@ var DEFAULT_CFG = {
   maxComp:1.0,
   theme:''
 };
-var GRADE_CLASS = { '황금':'gold', '양호':'good', '보통':'mid', '포화':'bad', '미정':'plain' };
+var GRADE_CLASS = { 'S급':'s', 'A급':'a', 'B급':'b', '보통':'plain', '분석 대기':'pending', '미정':'plain' };
+var GRADE_KEYS = { S:'S급', A:'A급', B:'B급' };
 
 var state = load();
 var ui = { q:'', filter:'보류', sort:'new', tab:'home', writeSeg:'wait', open:{} };
@@ -1211,6 +1246,7 @@ function normKw(k){
     mo: toNum(k.mo),
     docs: toNum(k.docs),
     memo: String(k.memo || ''),
+    grade: bltGrade(k.grade),
     status: STATUSES.indexOf(k.status) >= 0 ? k.status : '보류',
     title: String(k.title || ''),
     dueDate: isDate(k.dueDate) ? k.dueDate : '',
@@ -1220,6 +1256,10 @@ function normKw(k){
     updatedAt: k.updatedAt || k.createdAt || new Date().toISOString()
   };
   if(k.vol != null && !isNaN(Number(k.vol))) o.vol = toNum(k.vol);
+  if(typeof k.analysisPending === 'boolean') o.analysisPending = k.analysisPending;
+  ['saturation','briefing','subKeywords','autocomplete','topPosts'].forEach(function(f){
+    if(k[f] != null && k[f] !== '') o[f] = k[f];
+  });
   return o;
 }
 function save(){
@@ -1241,12 +1281,43 @@ function vol(k){ return (k.vol != null) ? Number(k.vol)||0 : (Number(k.pc)||0) +
 function comp(k){ var v = vol(k); if(!v) return null; return (Number(k.docs)||0) / v; }
 function compText(k){ var c = comp(k); return c == null ? '—' : c.toFixed(2); }
 function gradeOf(k){
+  if(!k) return '미정';
+  var g = bltGrade(k.grade) || bltGrade(k.memo) || recGradeOf(k.kw);
+  if(g) return g;
+  if(isPending(k)) return '분석 대기';
   var v = vol(k), c = comp(k), cfg = state.cfg;
   if(c == null) return '미정';
-  if(v >= cfg.minVol && c <= cfg.maxComp) return '황금';
-  if(v >= cfg.minVol * 0.5 && c <= cfg.maxComp * 2) return '양호';
-  if(c <= cfg.maxComp * 5) return '보통';
-  return '포화';
+  if(v >= cfg.minVol && c <= cfg.maxComp) return 'S급';
+  if(v >= cfg.minVol * 0.5 && c <= cfg.maxComp * 2) return 'A급';
+  if(c <= cfg.maxComp * 5) return 'B급';
+  return '보통';
+}
+/* 'S급'·'A급'·'B급' 표기를 하나로 맞춘다 ('S', '블톡 A급' 같은 표기도 받아준다) */
+function bltGrade(v){
+  var s = String(v == null ? '' : v).toUpperCase().replace(/\s+/g,'');
+  if(!s) return '';
+  var m = s.match(/^([SAB])(?:급)?$/);
+  if(!m) m = s.match(/블톡([SAB])(?:급)?/);
+  if(!m) m = s.match(/(?:^|[^A-Z])([SAB])급/);
+  return m ? GRADE_KEYS[m[1]] : '';
+}
+/* 블톡 분석이 아직 안 들어온 키워드 */
+function isPending(k){
+  if(!k) return false;
+  if(k.analysisPending === true) return true;
+  if(k.analysisPending === false) return false;
+  return !vol(k) && !(Number(k.docs) || 0) && !bltGrade(k.grade) && !bltGrade(k.memo) && !recGradeOf(k.kw);
+}
+function recGradeOf(kw){
+  var map = rec && rec.gradeMap;
+  if(!map) return '';
+  var n = normK(kw);
+  return (n && map[n]) ? map[n] : '';
+}
+function memoReason(memo){
+  var s = String(memo || '').trim();
+  if(!s) return '';
+  return s.replace(/^블톡\s*[SAB]\s*급(\s*·\s*포화도\s*[^·]*)?(?:\s*·\s*)?/, '').trim();
 }
 function badge(g){ return '<span class="badge ' + (GRADE_CLASS[g]||'plain') + '">' + esc(g) + '</span>'; }
 function levelFit(k){
@@ -1331,7 +1402,7 @@ function renderBrand(){
   document.getElementById('home-blog').textContent = name;
   document.getElementById('home-level').textContent = state.cfg.level;
   document.getElementById('home-basis-text').textContent =
-    '황금 기준 검색량 ' + num(state.cfg.minVol) + '+ · 경쟁강도 ' + state.cfg.maxComp.toFixed(2) + ' 이하';
+    'S급 기준 검색량 ' + num(state.cfg.minVol) + '+ · 경쟁강도 ' + state.cfg.maxComp.toFixed(2) + ' 이하';
   document.title = name + ' · 키워드 스튜디오';
 }
 function renderHome(){
@@ -1401,7 +1472,7 @@ function statHtml(label, value, sub, accent){
 var REC_URL = './recommendations.json';
 var REC_REQUEST_TEXT = '블톡에서 S급·A급 키워드 새로 찾아서 스튜디오에 올려줘';
 var WRITTEN_URL = './written.json';
-var rec = { loading:false, loaded:false, error:'', data:null, written:null, writtenErr:'', writtenAt:'' };
+var rec = { loading:false, loaded:false, error:'', data:null, written:null, writtenErr:'', writtenAt:'', gradeMap:null };
 var writtenTask = null;
 
 function normK(s){ return String(s == null ? '' : s).replace(/\s+/g,'').toLowerCase(); }
@@ -1475,7 +1546,13 @@ function loadRecs(announce){
         items: items
       };
       rec.loaded = true; rec.loading = false; rec.error = '';
+      rec.gradeMap = {};
+      items.forEach(function(it){
+        var g = bltGrade(it.grade), key = normK(it.keyword);
+        if(g && key && !rec.gradeMap[key]) rec.gradeMap[key] = g;
+      });
       renderRecs();
+      refresh();   /* 추천 목록과 같은 키워드의 등급을 보관함·글감에도 바로 반영 */
       if(announce) toast('추천 키워드 ' + items.length + '개를 새로 불러왔어요');
     })
     .catch(function(err){
@@ -1557,8 +1634,17 @@ function recCard(it, i){
       '<button class="btn ghost sm" data-act="rec-save" data-idx="' + i + '">보관함에 담기</button>' +
     '</div></article>';
 }
-function recSubs(it){ return Array.isArray(it.subKeywords) ? it.subKeywords.filter(function(s){ return s && String(s.keyword||'').trim(); }) : []; }
-function recList(v){ return Array.isArray(v) ? v.map(function(x){ return String(x||'').trim(); }).filter(Boolean) : []; }
+function recSubs(it){
+  return Array.isArray(it.subKeywords) ? it.subKeywords.map(function(s){
+    return (s && typeof s === 'object') ? s : { keyword: s };
+  }).filter(function(s){ return s && String(s.keyword||'').trim(); }) : [];
+}
+function recList(v){
+  return Array.isArray(v) ? v.map(function(x){
+    if(x && typeof x === 'object') return String(x.keyword || x.text || x.value || '').trim();
+    return String(x||'').trim();
+  }).filter(Boolean) : [];
+}
 function recPosts(it){ return Array.isArray(it.topPosts) ? it.topPosts.filter(function(p){ return p && String(p.url||'').trim(); }) : []; }
 function recDetails(it){
   var subs = recSubs(it), ac = recList(it.autocomplete), posts = recPosts(it);
@@ -1581,15 +1667,11 @@ function buildRecPrompt(it){
   lines.push('- ' + it.keyword + ' · ' + it.grade + ' · 월 검색 ' + num(it.monthlySearch) +
     (it.monthlyPublish != null ? ' · 월 발행 ' + num(it.monthlyPublish) : '') + ' · 포화도 ' + recPct(it.saturation));
   if(it.reason) lines.push('- 블톡 메모: ' + it.reason);
-  var bf = it.briefing || {};
-  var bChecks = recList(bf.checks), bStrat = recList(bf.strategy);
-  if(String(bf.verdict||'').trim() || bChecks.length || bStrat.length){
-    lines.push('');
-    lines.push('[블토기 브리핑]');
-    if(String(bf.verdict||'').trim()) lines.push('- 판정: ' + String(bf.verdict).trim());
-    bChecks.forEach(function(c){ lines.push('- 살펴본 점: ' + c); });
-    bStrat.forEach(function(c){ lines.push('- 전략: ' + c); });
-  }
+  return lines.concat(detailLines(it)).join('\n');
+}
+/* 상세 데이터(브리핑·세부 키워드·자동완성·상위 글) → 프롬프트 줄 */
+function detailLines(it){
+  var lines = briefLines(it);
   var subs = recSubs(it);
   if(subs.length){
     lines.push('');
@@ -1608,7 +1690,21 @@ function buildRecPrompt(it){
       if (String(p.summary||'').trim()) lines.push('  요약: ' + String(p.summary).trim());
     });
   }
-  return lines.join('\n');
+  return lines;
+}
+function briefLines(it){
+  var lines = [], bf = (it.briefing && typeof it.briefing === 'object' && !Array.isArray(it.briefing)) ? it.briefing : {};
+  var bChecks = recList(bf.checks), bStrat = recList(bf.strategy);
+  var plain = Array.isArray(it.briefing) ? recList(it.briefing) : [];
+  if(String(bf.verdict||'').trim() || bChecks.length || bStrat.length || plain.length){
+    lines.push('');
+    lines.push('[블토기 브리핑]');
+    if(String(bf.verdict||'').trim()) lines.push('- 판정: ' + String(bf.verdict).trim());
+    bChecks.forEach(function(c){ lines.push('- 살펴본 점: ' + c); });
+    bStrat.forEach(function(c){ lines.push('- 전략: ' + c); });
+    plain.forEach(function(c){ lines.push('- ' + c); });
+  }
+  return lines;
 }
 function recByIdx(i){
   var n = Number(i);
@@ -1630,8 +1726,9 @@ function recSave(i){
   var search = Number(it.monthlySearch) || 0;
   var publish = (it.monthlyPublish != null) ? Number(it.monthlyPublish) || 0 : Math.round(search * (Number(it.saturation) || 0) / 100);
   var item = normKw({
-    id: nid(), kw: it.keyword, vol: search, docs: publish, status:'보류',
+    id: nid(), kw: it.keyword, vol: search, docs: publish, grade: it.grade, status:'보류',
     memo: '블톡 ' + it.grade + ' · 포화도 ' + recPct(it.saturation) + (it.reason ? ' · ' + it.reason : ''),
+    saturation: it.saturation != null ? it.saturation : '',
     createdAt: new Date().toISOString()
   });
   if(!item){ toast('키워드를 보관함에 담지 못했어요'); return; }
@@ -1690,18 +1787,26 @@ function renderKwList(){
 }
 function kwCard(k){
   var g = gradeOf(k);
+  var pending = isPending(k);
   var opts = STATUSES.map(function(s){ return '<option value="' + s + '"' + (k.status === s ? ' selected' : '') + '>' + s + '</option>'; }).join('');
+  var body = pending
+    ? '<div class="kw-pending">' +
+        '<p>블톡 분석 대기 중이에요 · 피클이 곧 등급·포화도·브리핑을 채워 드려요</p>' +
+        '<button class="btn soft sm" data-act="kw-analyze" data-id="' + k.id + '">분석 요청</button>' +
+      '</div>'
+    : '<div class="kw-line">' +
+        '<span>월 <b>' + num(vol(k)) + '</b>회</span>' +
+        '<span>문서 <b>' + num(k.docs) + '</b></span>' +
+        '<span>경쟁 <b>' + compText(k) + '</b></span>' +
+        '<span>' + volLine(k) + '</span>' +
+        (k.saturation != null && k.saturation !== '' ? '<span>포화도 <b>' + recPct(k.saturation) + '</b></span>' : '') +
+      '</div>';
   return '<article class="card kw">' +
     '<div class="kw-head">' +
       '<button class="kw-name" data-act="kw-edit" data-id="' + k.id + '" title="키워드 수정">' + esc(k.kw) + fitMark(k) + '</button>' +
       badge(g) +
     '</div>' +
-    '<div class="kw-line">' +
-      '<span>월 <b>' + num(vol(k)) + '</b>회</span>' +
-      '<span>문서 <b>' + num(k.docs) + '</b></span>' +
-      '<span>경쟁 <b>' + compText(k) + '</b></span>' +
-      '<span>' + volLine(k) + '</span>' +
-    '</div>' +
+    body +
     (k.memo ? '<p class="kw-memo">' + esc(k.memo) + '</p>' : '') +
     '<div class="kw-foot">' +
       '<select class="status-select" data-act="set-status" data-id="' + k.id + '" data-status="' + k.status + '" aria-label="상태 변경">' + opts + '</select>' +
@@ -1863,16 +1968,34 @@ function writtenCard(p){
 }
 
 /* ── 프롬프트 ─────────────────────────── */
+/* 보관함 키워드도 추천 키워드와 같은 상세 데이터(브리핑·세부 키워드·자동완성·상위 글)를 쓰도록 맞춘다 */
+function kwAsDetail(k){
+  return {
+    keyword: k.kw,
+    grade: gradeOf(k),
+    monthlySearch: vol(k),
+    monthlyPublish: Number(k.docs) || null,
+    saturation: k.saturation,
+    reason: memoReason(k.memo),
+    briefing: k.briefing,
+    subKeywords: k.subKeywords,
+    autocomplete: k.autocomplete,
+    topPosts: k.topPosts
+  };
+}
 function buildPrompt(k){
+  var it = kwAsDetail(k);
   var lines = [
     '정보글 작성해줘. 키워드는 아래와 같아. CLAUDE.md 규칙대로 블톡 세부 키워드부터 조사하고 네이버 임시저장까지 해줘.',
     '',
     '[메인 키워드]',
-    '- ' + k.kw + ' · 월 검색 ' + num(vol(k)) + ' · 블로그 문서 ' + num(k.docs) + ' · 경쟁강도 ' + compText(k) + ' (' + gradeOf(k) + ')'
+    '- ' + k.kw + ' · ' + it.grade + ' · 월 검색 ' + num(vol(k)) + ' · 블로그 문서 ' + num(k.docs) + ' · 경쟁강도 ' + compText(k) +
+      (k.saturation != null && k.saturation !== '' ? ' · 포화도 ' + recPct(k.saturation) : '')
   ];
+  if(isPending(k)) lines.push('- 아직 블톡 분석 전 키워드예요. 등급·포화도는 분석되면 채워집니다.');
   if(k.title.trim()) lines.push('- 제목 아이디어: ' + k.title.trim());
-  if(k.memo.trim()) lines.push('- 메모: ' + k.memo.trim());
-  return lines.join('\n');
+  if(it.reason) lines.push('- 메모: ' + it.reason);
+  return lines.concat(detailLines(it)).join('\n');
 }
 function copyText(text){
   if(navigator.clipboard && navigator.clipboard.writeText){
@@ -1904,16 +2027,20 @@ function openAdd(){
   delete document.getElementById('form-add').dataset.editId;
   document.getElementById('dlg-add-title').textContent = '키워드 추가';
   document.getElementById('add-status').value = '보류';
+  var more = document.getElementById('add-more');
+  if(more) more.open = false;
   updateAddPreview();
   openDlg('dlg-add');
   setTimeout(function(){ document.getElementById('add-kw').focus(); }, 60);
 }
 function readAdd(){
+  var gradeEl = document.getElementById('add-grade');
   return {
     kw: document.getElementById('add-kw').value.replace(/\s+/g,' ').trim(),
     pc: toNum(document.getElementById('add-pc').value),
     mo: toNum(document.getElementById('add-mo').value),
     docs: toNum(document.getElementById('add-docs').value),
+    grade: gradeEl ? bltGrade(gradeEl.value) : '',
     memo: document.getElementById('add-memo').value.trim(),
     status: document.getElementById('add-status').value
   };
@@ -1921,15 +2048,17 @@ function readAdd(){
 function previewHtml(k){
   var v = (Number(k.pc)||0)+(Number(k.mo)||0);
   var c = v ? (Number(k.docs)||0)/v : null;
-  var fake = { pc:k.pc, mo:k.mo, docs:k.docs };
+  var fake = { pc:k.pc, mo:k.mo, docs:k.docs, memo:k.memo, grade:k.grade };
   var g = gradeOf(fake);
   var fits = (c != null) && c <= state.cfg.maxComp * (LEVEL_FACTOR[state.cfg.level] || 1);
+  var note;
+  if(g === '분석 대기') note = '숫자 없이 담으면 ‘분석 대기’로 저장되고, 피클이 블톡 분석을 채워 넣어요';
+  else if(c == null) note = '검색량을 넣으면 경쟁강도를 계산해 드려요';
+  else note = fits ? '내 레벨(' + state.cfg.level + ')에서 노려볼 만한 키워드예요' : '지금 레벨 기준으로는 경쟁이 조금 있는 편이에요';
   return '<div class="preview-top"><span>미리보기</span>' + badge(g) + '</div>' +
     '<div class="preview-line">월 검색량 <b>' + num(v) + '회</b><span>문서 <b>' + num(k.docs) + '건</b></span>' +
     '<span>경쟁강도 <b>' + (c == null ? '—' : c.toFixed(2)) + '</b></span></div>' +
-    '<div class="preview-note">' + (c == null
-      ? '검색량을 넣으면 경쟁강도를 계산해 드려요'
-      : (fits ? '내 레벨(' + state.cfg.level + ')에서 노려볼 만한 키워드예요' : '지금 레벨 기준으로는 경쟁이 조금 있는 편이에요')) + '</div>';
+    '<div class="preview-note">' + note + '</div>';
 }
 function updateAddPreview(){
   var k = readAdd();
@@ -1940,11 +2069,12 @@ function submitAdd(e){
   var k = readAdd();
   if(!k.kw){ toast('키워드를 입력해 주세요'); document.getElementById('add-kw').focus(); return; }
   if(dupOf(k.kw)){ toast('이미 보관함에 있는 키워드예요'); return; }
-  var item = normKw({ id:nid(), kw:k.kw, pc:k.pc, mo:k.mo, docs:k.docs, memo:k.memo, status:k.status, createdAt:new Date().toISOString() });
+  var item = normKw({ id:nid(), kw:k.kw, pc:k.pc, mo:k.mo, docs:k.docs, grade:k.grade, memo:k.memo, status:k.status, createdAt:new Date().toISOString() });
+  item.analysisPending = !vol(item) && !(Number(item.docs) || 0) && !bltGrade(item.grade) && !bltGrade(item.memo) && !recGradeOf(item.kw);
   state.kws.push(item);
   save(); closeDlg('dlg-add');
   refresh();
-  toast('“' + k.kw + '” 추가했어요');
+  toast(item.analysisPending ? '“' + k.kw + '” 담았어요 — 블톡 분석 대기' : '“' + k.kw + '” 추가했어요');
 }
 function dupOf(kw){
   var n = kw.toLowerCase();
@@ -2056,7 +2186,9 @@ function renderSettings(){
 function updateCfgHint(){
   var lf = LEVEL_FACTOR[state.cfg.level] || 1;
   document.getElementById('cfg-hint').innerHTML =
-    '<b>황금</b> = 월 검색량 ' + num(state.cfg.minVol) + '회 이상 · 경쟁강도 ' + state.cfg.maxComp.toFixed(2) + ' 이하<br>' +
+    '<b>S급</b> = 월 검색량 ' + num(state.cfg.minVol) + '회 이상 · 경쟁강도 ' + state.cfg.maxComp.toFixed(2) + ' 이하<br>' +
+    '<b>A급</b> = 월 검색량 ' + num(Math.round(state.cfg.minVol * 0.5)) + '회 이상 · 경쟁강도 ' + (state.cfg.maxComp * 2).toFixed(2) + ' 이하<br>' +
+    '<b>B급</b> = 경쟁강도 ' + (state.cfg.maxComp * 5).toFixed(2) + ' 이하 · 그보다 경쟁이 세면 보통<br>' +
     '내 레벨(' + state.cfg.level + ') 추천 경쟁강도 = ' + (state.cfg.maxComp * lf).toFixed(2) + ' 이하';
 }
 function bindSettings(){
@@ -2116,7 +2248,7 @@ function sampleKws(){
     ['윈도우11 업데이트 끄기', 8200, 31000, 12400, '채택', '그룹 정책 편집기 화면 캡처'],
     ['아이패드 필기 앱 추천', 9800, 27000, 34000, '채택', '굿노트·노타빌리티 비교표'],
     ['무료 PDF 편집 프로그램', 22000, 51000, 52000, '보류', '체험단 연결 가능할지 확인'],
-    ['노트북 발열 낮추는 방법', 3900, 12600, 21000, '제외', '이미 포화 — 나중에 검토']
+    ['노트북 발열 낮추는 방법', 3900, 12600, 21000, '제외', '경쟁 높음 — 나중에 검토']
   ];
   var added = 0;
   base.forEach(function(b){
@@ -2344,12 +2476,13 @@ function ghHeaders(){
 function ghRepoUrl(){
   return 'https://api.github.com/repos/' + syncCfg.repo.split('/').map(encodeURIComponent).join('/');
 }
-function ghFileUrl(withRef){
-  var p = syncCfg.path.split('/').filter(Boolean).map(encodeURIComponent).join('/');
+function contentUrl(path, withRef){
+  var p = String(path || '').split('/').filter(Boolean).map(encodeURIComponent).join('/');
   var u = ghRepoUrl() + '/contents/' + p;
   if(withRef) u += '?ref=' + encodeURIComponent(syncCfg.branch);
   return u;
 }
+function ghFileUrl(withRef){ return contentUrl(syncCfg.path, withRef); }
 function ghErrMsg(res){
   if(res.status === 401) return '토큰이 올바르지 않거나 만료됐어요';
   if(res.status === 403) return '권한이 없어요. 토큰의 Contents: Read and write 권한을 확인해 주세요';
@@ -2522,14 +2655,52 @@ function initSync(){
 /* ── 발행 글 검색 순위 ─────────────────── */
 /* rankings.json 은 sync.json 과 분리된 파일이라 동기화 충돌(409)이 없다. */
 var RANK_FILE = 'rankings.json';
-var ranks = { loaded:false, loading:false, error:'', at:'', blogId:'', items:{} };
+var RANK_REQ_FILE = 'rank-request.json';   /* 피클에 순위 재조회를 요청하는 파일 (sync.json·rankings.json 과 분리해 409 회피) */
+var ranks = { loaded:false, loading:false, error:'', at:'', blogId:'', items:{}, requestedAt:'', requesting:false };
 
 function hasSyncToken(){ return !!(syncCfg.token && syncCfg.token.length > 10); }
-function rankFileUrl(withRef){
-  var p = RANK_FILE.split('/').filter(Boolean).map(encodeURIComponent).join('/');
-  var u = ghRepoUrl() + '/contents/' + p;
-  if(withRef) u += '?ref=' + encodeURIComponent(syncCfg.branch);
-  return u;
+function rankFileUrl(withRef){ return contentUrl(RANK_FILE, withRef); }
+/* 순위 재조회 요청을 rank-request.json 에 남긴다 (성공하면 true) */
+async function pushRankRequest(){
+  if(!hasSyncToken()) return false;
+  var body = { status:'pending', requestedAt: new Date().toISOString(), source:'studio-ui' };
+  /* 없는 파일을 GET 하면 콘솔에 404 가 남으니, 저장소 루트 목록에서 sha 를 찾는다 */
+  async function currentSha(){
+    var res = await fetch(ghRepoUrl() + '/contents/?ref=' + encodeURIComponent(syncCfg.branch),
+      { method:'GET', headers: ghHeaders(), cache:'no-store' });
+    if(res.status === 404) return '';
+    if(!res.ok) throw new Error(ghErrMsg(res));
+    var list = null;
+    try{ list = await res.json(); }catch(e){ return ''; }
+    if(!Array.isArray(list)) return '';
+    for(var i=0;i<list.length;i++){
+      var it = list[i];
+      if(it && String(it.name || '') === RANK_REQ_FILE) return String(it.sha || '');
+    }
+    return '';
+  }
+  async function put(sha){
+    var payload = {
+      message: '순위 재조회 요청 · ' + new Date().toLocaleString('ko-KR'),
+      content: toB64(JSON.stringify(body)),
+      branch: syncCfg.branch
+    };
+    if(sha) payload.sha = sha;
+    var res = await fetch(contentUrl(RANK_REQ_FILE, false), {
+      method:'PUT',
+      headers: Object.assign({ 'Content-Type':'application/json; charset=utf-8' }, ghHeaders()),
+      body: JSON.stringify(payload)
+    });
+    if(res.ok) return true;
+    if(res.status === 409 || res.status === 422) return false;   /* sha 경합 → 다시 읽고 한 번만 재시도 */
+    throw new Error(ghErrMsg(res));
+  }
+  try{
+    var sha = await currentSha();
+    if(await put(sha)) return true;
+    var sha2 = await currentSha();
+    return await put(sha2);
+  }catch(e){ return false; }
 }
 function rankFor(k){
   if(!k || !ranks.items) return null;
@@ -2646,7 +2817,7 @@ function renderRankBar(){
   if(bar.hidden) return;
   var note = document.getElementById('rank-note');
   var btn = bar.querySelector('[data-act="rank-refresh"]');
-  if(btn) btn.disabled = !!ranks.loading;
+  if(btn) btn.disabled = !!(ranks.loading || ranks.requesting);
   if(!note) return;
   if(ranks.loading) note.textContent = '순위를 불러오는 중…';
   else if(ranks.error) note.textContent = ranks.error;
@@ -2661,6 +2832,8 @@ function renderRankBar(){
         : '아직 추적할 글이 없어요 · 발행완료 글에 URL을 넣으면 순위를 확인해요';
     }
   }
+  if(ranks.requesting) note.textContent = '피클에 재조회 요청을 보내는 중…';
+  else if(ranks.requestedAt && !ranks.loading) note.textContent += ' · 피클 재조회 요청 보냄(5~10분 내 반영)';
 }
 function renderHomeRank(){
   var el = document.getElementById('home-rank');
@@ -2714,6 +2887,24 @@ async function loadRankings(opts){
     if(opts.manual) toast(ranks.error);
     return false;
   }
+}
+/* [순위 새로고침] = rankings.json 재조회 + 피클에 재조회 요청(rank-request.json) */
+function refreshRanks(){
+  if(ranks.loading || ranks.requesting) return;
+  if(!hasSyncToken()){ toast('먼저 GitHub 토큰을 넣어 주세요'); renderRankBar(); return; }
+  loadRankings({ manual:false }).then(function(ok){
+    if(!hasSyncToken()) return;
+    ranks.requesting = true; renderRankBar();
+    pushRankRequest().then(function(sent){
+      ranks.requesting = false;
+      if(sent) ranks.requestedAt = isoNow();
+      renderRankBar();
+      if(sent && ok) toast('최신 순위를 불러왔어요 · 피클에게 재조회 요청도 보냈어요 (5~10분 내 반영)', { duration:5200 });
+      else if(sent) toast('피클에게 재조회 요청을 보냈어요 (5~10분 내 반영)', { duration:5200 });
+      else if(ok) toast('순위는 새로 불러왔어요 · 피클 재조회 요청은 보내지 못했어요(토큰 권한 확인)', { duration:4200 });
+      else toast(ranks.error || '순위를 새로 불러오지 못했어요');
+    });
+  });
 }
 
 /* ── 토스트 ───────────────────────────── */
@@ -2790,7 +2981,9 @@ document.addEventListener('click', function(e){
     document.getElementById('add-mo').value = k.mo ? String(k.mo) : '';
     document.getElementById('add-docs').value = k.docs ? String(k.docs) : '';
     document.getElementById('add-memo').value = k.memo || '';
+    document.getElementById('add-grade').value = bltGrade(k.grade) || '';
     document.getElementById('add-status').value = (k.status === '발행완료') ? '채택' : k.status;
+    document.getElementById('add-more').open = !!(k.pc || k.mo || k.docs || bltGrade(k.grade));
     document.getElementById('form-add').dataset.editId = k.id;
     updateAddPreview();
     return;
@@ -2824,8 +3017,15 @@ document.addEventListener('click', function(e){
     });
     return;
   }
+  if(act === 'kw-analyze'){
+    var ak = byId(id); if(!ak) return;
+    copyText("스튜디오에 추가한 '" + ak.kw + "' 블톡 분석해서 채워줘").then(function(ok){
+      toast(ok ? '분석 요청 문구를 복사했어요 — 피클에게 붙여넣어 보내세요' : '복사하지 못했어요: 스튜디오에 추가한 “' + ak.kw + '” 블톡 분석해서 채워줘');
+    });
+    return;
+  }
   if(act === 'publish'){ openPublish(id); return; }
-  if(act === 'rank-refresh'){ loadRankings({ manual:true }); return; }
+  if(act === 'rank-refresh'){ refreshRanks(); return; }
   if(act === 'written-more'){ writtenMore.open = !writtenMore.open; renderWrite(); return; }
   if(act === 'unpublish'){
     var uk = byId(id); if(!uk) return;
@@ -2919,6 +3119,7 @@ document.addEventListener('change', function(e){
     return;
   }
   if(t.id === 'bulk-text'){ renderBulk(); return; }
+  if(t.id === 'add-grade'){ updateAddPreview(); return; }
 });
 
 document.addEventListener('input', function(e){
@@ -2966,9 +3167,10 @@ document.getElementById('form-add').addEventListener('submit', function(e){
     if(!v.kw){ toast('키워드를 입력해 주세요'); return; }
     var other = state.kws.filter(function(x){ return x.id !== editId; });
     if(other.some(function(x){ return x.kw.toLowerCase() === v.kw.toLowerCase(); })){ toast('같은 키워드가 이미 있어요'); return; }
-    k.kw = v.kw; k.pc = v.pc; k.mo = v.mo; k.docs = v.docs; k.memo = v.memo;
+    k.kw = v.kw; k.pc = v.pc; k.mo = v.mo; k.docs = v.docs; k.memo = v.memo; k.grade = v.grade;
     if(k.status !== '발행완료') k.status = v.status;
     delete k.vol;
+    k.analysisPending = !vol(k) && !(Number(k.docs) || 0) && !bltGrade(k.grade) && !bltGrade(k.memo) && !recGradeOf(k.kw);
     k.updatedAt = new Date().toISOString();
     save(); delete e.target.dataset.editId;
     document.getElementById('dlg-add-title').textContent = '키워드 추가';
