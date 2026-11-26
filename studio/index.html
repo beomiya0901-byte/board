@@ -803,8 +803,8 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
           <p class="eyebrow">내 블로그</p>
           <h1 id="home-blog">범도리의 IT 이모저모</h1>
           <p class="hero-basis">
-            <span class="pill" id="home-level">준최적</span>
-            <span id="home-basis-text">S급 기준 검색량 1,000+ · 경쟁강도 1.00 이하</span>
+            <span class="pill" id="home-level">Lv8</span>
+            <span id="home-basis-text">S급 기준 검색량 1,000+ · 포화도 30% 이하</span>
           </p>
           <p class="hero-rank" id="home-rank" hidden></p>
         </div>
@@ -935,24 +935,30 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
           <div class="field">
             <label for="cfg-level">블로그 레벨</label>
             <select id="cfg-level">
-              <option value="초보">초보 · 운영 3개월 미만</option>
-              <option value="일반">일반 · 6개월 안팎</option>
-              <option value="준최적">준최적 · 1년 이상, 지수 1,500+</option>
-              <option value="최적">최적 · 지수 3,000+</option>
+              <option value="Lv1">Lv1 · 유효키워드 없음</option>
+              <option value="Lv2">Lv2</option>
+              <option value="Lv3">Lv3</option>
+              <option value="Lv4">Lv4</option>
+              <option value="Lv5">Lv5</option>
+              <option value="Lv6">Lv6</option>
+              <option value="Lv7">Lv7</option>
+              <option value="Lv8">Lv8</option>
+              <option value="Lv9">Lv9</option>
+              <option value="Lv10">Lv10 · 상위 200위 이내</option>
             </select>
-            <span class="hint">레벨이 높을수록 경쟁이 조금 있는 키워드까지 추천해요</span>
+            <span class="hint">블톡 블로그 레벨이에요. 레벨이 높을수록 경쟁이 조금 있는 키워드까지 추천해요</span>
           </div>
         </div>
 
         <div class="card set-card">
-          <h3>키워드 등급 기준 (블톡 S·A·B)</h3>
-          <p>블톡 등급이 있으면 그대로 쓰고, 직접 넣은 키워드는 이 기준으로 <span class="badge s">S급</span> <span class="badge a">A급</span> <span class="badge b">B급</span>을 매겨요</p>
+          <h3>키워드 등급 기준 (블톡 S·A·B·C·D)</h3>
+          <p>블톡 등급이 있으면 그대로 쓰고, 직접 넣은 키워드는 이 기준으로 <span class="badge s">S급</span> <span class="badge a">A급</span> <span class="badge b">B급</span> <span class="badge plain">C급</span> <span class="badge plain">D급</span>을 매겨요</p>
           <div class="field">
             <label for="cfg-minvol">최소 월 검색량 (회)</label>
             <input id="cfg-minvol" type="number" min="0" step="100" inputmode="numeric">
           </div>
           <div class="field">
-            <label for="cfg-maxcomp">최대 경쟁강도 (문서수 ÷ 검색량)</label>
+            <label for="cfg-maxcomp">최대 포화도 (발행량 ÷ 검색량, %)</label>
             <input id="cfg-maxcomp" type="number" min="0" step="0.01" inputmode="decimal">
           </div>
           <div class="set-note" id="cfg-hint"></div>
@@ -1220,16 +1226,18 @@ var APP_BUILD = (function(){
 var REFRESH_FLAG = 'kwstudio.refreshed.v1';
 var STATUSES = ['채택','보류','제외','발행완료'];
 var SORTS = { new:'최신순', vol:'검색량 높은순', comp:'경쟁강도 낮은순' };
-var LEVEL_FACTOR = { '초보':0.6, '일반':0.8, '준최적':1.0, '최적':1.2 };
+var LEVEL_FACTOR = { 'Lv1':0.5, 'Lv2':0.6, 'Lv3':0.7, 'Lv4':0.8, 'Lv5':0.9, 'Lv6':1.0, 'Lv7':1.1, 'Lv8':1.2, 'Lv9':1.3, 'Lv10':1.4 };
+var LEGACY_LEVEL = { '초보':'Lv2', '일반':'Lv4', '준최적':'Lv6', '최적':'Lv9' };
+function normLevel(v){ if(LEVEL_FACTOR[v]) return v; if(LEGACY_LEVEL[v]) return LEGACY_LEVEL[v]; return DEFAULT_CFG.level; }
 var DEFAULT_CFG = {
   blogName:'범도리의 IT 이모저모',
-  level:'준최적',
+  level:'Lv8',
   minVol:1000,
-  maxComp:1.0,
+  maxComp:0.3,
   theme:''
 };
-var GRADE_CLASS = { 'S급':'s', 'A급':'a', 'B급':'b', '보통':'plain', '분석 대기':'pending', '미정':'plain' };
-var GRADE_KEYS = { S:'S급', A:'A급', B:'B급' };
+var GRADE_CLASS = { 'S급':'s', 'A급':'a', 'B급':'b', 'C급':'plain', 'D급':'plain', '보통':'plain', '분석 대기':'pending', '미정':'plain' };
+var GRADE_KEYS = { S:'S급', A:'A급', B:'B급', C:'C급', D:'D급' };
 
 var state = load();
 var ui = { q:'', filter:'보류', sort:'new', tab:'home', writeSeg:'wait', open:{} };
@@ -1256,7 +1264,7 @@ function load(){
     var d = JSON.parse(raw);
     if(!d || typeof d !== 'object') return base;
     var cfg = Object.assign({}, DEFAULT_CFG, (d.cfg && typeof d.cfg === 'object') ? d.cfg : {});
-    if(!LEVEL_FACTOR[cfg.level]) cfg.level = DEFAULT_CFG.level;
+    cfg.level = normLevel(cfg.level);
     var kws = Array.isArray(d.kws) ? d.kws.map(normKw).filter(Boolean) : [];
     var deleted = {};
     if(d.deleted && typeof d.deleted === 'object'){
@@ -1320,15 +1328,16 @@ function gradeOf(k){
   if(v >= cfg.minVol && c <= cfg.maxComp) return 'S급';
   if(v >= cfg.minVol * 0.5 && c <= cfg.maxComp * 2) return 'A급';
   if(c <= cfg.maxComp * 5) return 'B급';
-  return '보통';
+  if(v >= 100) return 'C급';
+  return 'D급';
 }
 /* 'S급'·'A급'·'B급' 표기를 하나로 맞춘다 ('S', '블톡 A급' 같은 표기도 받아준다) */
 function bltGrade(v){
   var s = String(v == null ? '' : v).toUpperCase().replace(/\s+/g,'');
   if(!s) return '';
-  var m = s.match(/^([SAB])(?:급)?$/);
-  if(!m) m = s.match(/블톡([SAB])(?:급)?/);
-  if(!m) m = s.match(/(?:^|[^A-Z])([SAB])급/);
+  var m = s.match(/^([SABCD])(?:급)?$/);
+  if(!m) m = s.match(/블톡([SABCD])(?:급)?/);
+  if(!m) m = s.match(/(?:^|[^A-Z])([SABCD])급/);
   return m ? GRADE_KEYS[m[1]] : '';
 }
 /* 블톡 분석이 아직 안 들어온 키워드 */
@@ -1432,7 +1441,7 @@ function renderBrand(){
   document.getElementById('home-blog').textContent = name;
   document.getElementById('home-level').textContent = state.cfg.level;
   document.getElementById('home-basis-text').textContent =
-    'S급 기준 검색량 ' + num(state.cfg.minVol) + '+ · 경쟁강도 ' + state.cfg.maxComp.toFixed(2) + ' 이하';
+    'S급 기준 검색량 ' + num(state.cfg.minVol) + '+ · 포화도 ' + Math.round(state.cfg.maxComp * 100) + '% 이하';
   document.title = name + ' · 키워드 스튜디오';
 }
 function renderHome(){
@@ -2090,11 +2099,11 @@ function previewHtml(k){
   var fits = (c != null) && c <= state.cfg.maxComp * (LEVEL_FACTOR[state.cfg.level] || 1);
   var note;
   if(g === '분석 대기') note = '숫자 없이 담으면 ‘분석 대기’로 저장되고, 피클이 블톡 분석을 채워 넣어요';
-  else if(c == null) note = '검색량을 넣으면 경쟁강도를 계산해 드려요';
+  else if(c == null) note = '검색량을 넣으면 포화도를 계산해 드려요';
   else note = fits ? '내 레벨(' + state.cfg.level + ')에서 노려볼 만한 키워드예요' : '지금 레벨 기준으로는 경쟁이 조금 있는 편이에요';
   return '<div class="preview-top"><span>미리보기</span>' + badge(g) + '</div>' +
     '<div class="preview-line">월 검색량 <b>' + num(v) + '회</b><span>문서 <b>' + num(k.docs) + '건</b></span>' +
-    '<span>경쟁강도 <b>' + (c == null ? '—' : c.toFixed(2)) + '</b></span></div>' +
+    '<span>포화도 <b>' + (c == null ? '—' : Math.round(c * 100) + '%') + '</b></span></div>' +
     '<div class="preview-note">' + note + '</div>';
 }
 function updateAddPreview(){
@@ -2213,7 +2222,7 @@ function renderSettings(){
   document.getElementById('cfg-blog').value = state.cfg.blogName;
   document.getElementById('cfg-level').value = state.cfg.level;
   document.getElementById('cfg-minvol').value = state.cfg.minVol;
-  document.getElementById('cfg-maxcomp').value = state.cfg.maxComp;
+  document.getElementById('cfg-maxcomp').value = Math.round(state.cfg.maxComp * 100);
   applyTheme();
   updateCfgHint();
   document.getElementById('about-count').textContent = state.kws.length;
@@ -2223,10 +2232,10 @@ function renderSettings(){
 function updateCfgHint(){
   var lf = LEVEL_FACTOR[state.cfg.level] || 1;
   document.getElementById('cfg-hint').innerHTML =
-    '<b>S급</b> = 월 검색량 ' + num(state.cfg.minVol) + '회 이상 · 경쟁강도 ' + state.cfg.maxComp.toFixed(2) + ' 이하<br>' +
-    '<b>A급</b> = 월 검색량 ' + num(Math.round(state.cfg.minVol * 0.5)) + '회 이상 · 경쟁강도 ' + (state.cfg.maxComp * 2).toFixed(2) + ' 이하<br>' +
-    '<b>B급</b> = 경쟁강도 ' + (state.cfg.maxComp * 5).toFixed(2) + ' 이하 · 그보다 경쟁이 세면 보통<br>' +
-    '내 레벨(' + state.cfg.level + ') 추천 경쟁강도 = ' + (state.cfg.maxComp * lf).toFixed(2) + ' 이하';
+    '<b>S급</b> = 월 검색량 ' + num(state.cfg.minVol) + '회 이상 · 포화도 ' + Math.round(state.cfg.maxComp * 100) + '% 이하<br>' +
+    '<b>A급</b> = 월 검색량 ' + num(Math.round(state.cfg.minVol * 0.5)) + '회 이상 · 포화도 ' + Math.round(state.cfg.maxComp * 200) + '% 이하<br>' +
+    '<b>B급</b> = 포화도 ' + Math.round(state.cfg.maxComp * 500) + '% 이하 · 그보다 높으면 C급, 월 검색량 100회 미만은 D급<br>' +
+    '내 레벨(' + state.cfg.level + ') 추천 포화도 = ' + Math.round(state.cfg.maxComp * lf * 100) + '% 이하';
 }
 function bindSettings(){
   document.getElementById('cfg-level').addEventListener('change', function(e){
@@ -2239,8 +2248,8 @@ function bindSettings(){
   });
   document.getElementById('cfg-maxcomp').addEventListener('change', function(e){
     var v = Number(String(e.target.value).replace(',','.'));
-    state.cfg.maxComp = isFinite(v) && v >= 0 ? Math.round(v * 100) / 100 : DEFAULT_CFG.maxComp;
-    e.target.value = state.cfg.maxComp; save(); updateCfgHint(); refresh();
+    state.cfg.maxComp = isFinite(v) && v >= 0 ? Math.round(v) / 100 : DEFAULT_CFG.maxComp;
+    e.target.value = Math.round(state.cfg.maxComp * 100); save(); updateCfgHint(); refresh();
   });
   document.getElementById('import-file').addEventListener('change', function(e){
     var f = e.target.files && e.target.files[0];
@@ -2256,7 +2265,7 @@ function bindSettings(){
           var nextKws = kws.map(normKw).filter(Boolean);
           markRemovedIds(state.kws, nextKws);
           state.cfg = Object.assign({}, DEFAULT_CFG, cfg);
-          if(!LEVEL_FACTOR[state.cfg.level]) state.cfg.level = DEFAULT_CFG.level;
+          state.cfg.level = normLevel(state.cfg.level);
           state.kws = nextKws;
           save(); refresh(true); toast(state.kws.length + '개 키워드를 불러왔어요');
         });
@@ -2436,7 +2445,7 @@ function applyMerged(m){
   pushSuppress = true;
   try{
     state.cfg = Object.assign({}, DEFAULT_CFG, (m.cfg && typeof m.cfg === 'object') ? m.cfg : {});
-    if(!LEVEL_FACTOR[state.cfg.level]) state.cfg.level = DEFAULT_CFG.level;
+    state.cfg.level = normLevel(state.cfg.level);
     state.cfgUpdatedAt = m.cfgUpdatedAt || '';
     state.kws = (m.kws || []).map(normKw).filter(Boolean);
     state.deleted = m.deleted || {};
@@ -3290,7 +3299,7 @@ document.addEventListener('input', function(e){
     var mc = document.getElementById('cfg-maxcomp');
     state.cfg.minVol = clampInt(mp.value, 0, 100000000);
     var v = Number(String(mc.value).replace(',','.'));
-    state.cfg.maxComp = isFinite(v) && v >= 0 ? Math.round(v * 100) / 100 : DEFAULT_CFG.maxComp;
+    state.cfg.maxComp = isFinite(v) && v >= 0 ? Math.round(v) / 100 : DEFAULT_CFG.maxComp;
     updateCfgHint(); queueSave(); return;
   }
   if(t.id === 'bulk-text'){ return; }
