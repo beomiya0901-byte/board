@@ -11,7 +11,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <!-- 배포할 때마다 이 값을 현재 시각으로 올려 주세요. [새로고침] 버튼이 이 값으로 새 HTML을 판별한다 -->
-<meta name="studio-build" content="2026-11-27T10:32:00+09:00">
+<meta name="studio-build" content="2026-11-27T15:07:53+09:00">
 <title>키워드 스튜디오</title>
 <meta name="description" content="블로그 키워드를 모으고, 경쟁강도를 계산하고, 보관함과 발행까지 관리하는 개인용 키워드 스튜디오.">
 <meta name="theme-color" content="#f3f4f7">
@@ -469,12 +469,36 @@ input[type="date"]::-webkit-calendar-picker-indicator{margin-left:0;opacity:.55}
 .rank-top .top-main strong{font-size:14px}
 .rank-top .rank-badge{flex:none}
 
-/* ── 키워드: 보류 목록 ─────────────────── */
+/* ── 키워드: 블톡 추천 + 담아 둔 키워드 통합 목록 ─────── */
 .kw-head-top{align-items:center}
 .head-tools{display:flex;gap:6px;flex:none}
-.toolbar.kw-tools{flex-direction:row;align-items:center;gap:8px;margin:0 0 12px;flex-wrap:nowrap}
+.toolbar.kw-tools{flex-direction:row;align-items:center;gap:8px;margin:10px 0 8px;flex-wrap:nowrap}
 .toolbar.kw-tools .search-wrap{flex:1 1 auto;min-width:0}
 .toolbar.kw-tools .sort-select{flex:0 0 auto;max-width:44%}
+.kw-filter{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+.kw-chip{
+  flex:none;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);
+  background:var(--surface);color:var(--text-2);font-size:12.5px;font-weight:750;letter-spacing:-.02em;
+  transition:background .15s ease,color .15s ease,border-color .15s ease;
+}
+.kw-chip.active{background:var(--brand-soft);color:var(--brand);border-color:transparent}
+#kw-filter .count-label{margin-left:auto}
+.kw-hold{display:flex;flex-direction:column;gap:10px;min-width:0}
+.kw-hold:empty{display:none}
+.kw-acts{display:flex;gap:8px;flex-wrap:wrap;width:100%;margin-top:2px}
+.kw-acts .btn{flex:1 1 132px;min-height:40px}
+.kw-foot-sub{display:flex;align-items:center;gap:8px;width:100%;margin-top:8px}
+.kw-foot-sub .status-select{flex:0 1 168px;max-width:168px;min-width:0;background:var(--surface-2);border-color:var(--line-2);color:var(--text-2);min-height:36px;font-size:12px}
+.kw-foot-sub .del-btn{margin-left:auto}
+@media (min-width:880px){
+  #kw-list{display:flex;flex-direction:column;gap:12px}
+  #kw-list #hold-section{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  #kw-list #hold-section:empty{display:none}
+  #kw-list .rec-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+}
+#kw-list .rec-grid{display:flex;flex-direction:column;gap:10px;margin:0}
+.req-note{margin:8px 0 0;font-size:11.5px;color:var(--text-3);font-weight:650;line-height:1.45}
+.btn.busy{opacity:.72}
 .kw-line{display:flex;flex-wrap:wrap;gap:2px 10px;font-size:12px;color:var(--text-3);font-weight:650}
 .kw-line b{color:var(--text-2);font-weight:800;font-variant-numeric:tabular-nums}
 .rec-top .rec-kw{flex:1 1 auto}
@@ -856,29 +880,7 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
         </div>
       </div>
 
-      <section class="section" id="hold-section" hidden>
-        <div class="section-head">
-          <div>
-            <h2>보류 키워드</h2>
-            <p>아직 채택하지 않은 후보예요</p>
-          </div>
-          <span class="count-label" id="kw-count">0개</span>
-        </div>
-        <div class="toolbar kw-tools">
-          <div class="search-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
-            <input id="kw-search" type="search" placeholder="키워드 · 메모 검색" autocomplete="off" aria-label="키워드 검색">
-          </div>
-          <select class="sort-select" id="kw-sort" aria-label="정렬">
-            <option value="new">최신순</option>
-            <option value="vol">검색량 높은순</option>
-            <option value="comp">경쟁강도 낮은순</option>
-          </select>
-        </div>
-        <div class="list" id="kw-list"></div>
-      </section>
-
-      <!-- 블톡 추천 키워드 -->
+      <!-- 블톡 추천 키워드 = 추천 + 직접 담아 둔 키워드를 한 목록으로 -->
       <section class="rec-section" aria-labelledby="rec-title">
         <div class="rec-head">
           <div>
@@ -890,10 +892,33 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 10-2.3 5.7"/><path d="M20 5v6h-6"/></svg>
               새로고침
             </button>
-            <button class="btn primary sm" data-act="rec-request">키워드 찾기 요청</button>
+            <button class="btn primary sm" id="rec-request-btn" data-act="rec-request">키워드 찾기 요청</button>
           </div>
         </div>
-        <div class="rec-grid" id="rec-list" aria-live="polite"></div>
+        <p class="req-note" id="req-note" hidden></p>
+        <div class="toolbar kw-tools">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+            <input id="kw-search" type="search" placeholder="키워드 · 메모 검색" autocomplete="off" aria-label="키워드 검색">
+          </div>
+          <select class="sort-select" id="kw-sort" aria-label="정렬">
+            <option value="new">최신순</option>
+            <option value="vol">검색량 높은순</option>
+            <option value="comp">경쟁강도 낮은순</option>
+          </select>
+        </div>
+        <div class="kw-filter" id="kw-filter" role="group" aria-label="등급 필터">
+          <button class="kw-chip active" data-act="kw-filter" data-grade="전체" aria-pressed="true">전체</button>
+          <button class="kw-chip" data-act="kw-filter" data-grade="S급" aria-pressed="false">S급</button>
+          <button class="kw-chip" data-act="kw-filter" data-grade="A급" aria-pressed="false">A급</button>
+          <button class="kw-chip" data-act="kw-filter" data-grade="B급" aria-pressed="false">B급</button>
+          <button class="kw-chip" data-act="kw-filter" data-grade="대기" aria-pressed="false">분석 대기</button>
+          <span class="count-label" id="kw-count">0개</span>
+        </div>
+        <div class="list" id="kw-list">
+          <div class="kw-hold" id="hold-section"></div>
+          <div class="rec-grid" id="rec-list" aria-live="polite"></div>
+        </div>
       </section>
     </section>
 
@@ -1100,7 +1125,7 @@ input[type="checkbox"]{width:18px;height:18px;accent-color:var(--brand);margin:0
       <div class="field">
         <label for="add-status">담을 곳</label>
         <select id="add-status">
-          <option value="보류">보류 · 키워드 탭에 모아두기</option>
+          <option value="보류">보류 · 블톡 추천 목록에 모아두기</option>
           <option value="채택">채택 · 바로 보관함으로</option>
           <option value="제외">제외</option>
         </select>
@@ -1243,7 +1268,7 @@ var GRADE_CLASS = { 'S급':'s', 'A급':'a', 'B급':'b', 'C급':'plain', 'D급':'
 var GRADE_KEYS = { S:'S급', A:'A급', B:'B급', C:'C급', D:'D급' };
 
 var state = load();
-var ui = { q:'', filter:'보류', sort:'new', tab:'home', writeSeg:'wait', open:{} };
+var ui = { q:'', filterGrade:'전체', sort:'new', tab:'home', writeSeg:'wait', open:{} };
 var bulkRows = [];
 var pendingPubId = null;
 var confirmAction = null;
@@ -1614,61 +1639,34 @@ function loadRecs(announce){
     });
   return rec.task;
 }
-function renderRecs(){
-  var box = document.getElementById('rec-list');
-  var meta = document.getElementById('rec-meta');
-  if(!box || !meta) return;
-  if(rec.loading && !rec.loaded){
-    meta.textContent = '마지막 업데이트 확인 중…';
-    box.innerHTML = '<div class="rec-state">블톡 추천 키워드를 불러오는 중…</div>';
-    return;
-  }
-  if(rec.error && !rec.loaded){
-    meta.textContent = '불러오기 실패';
-    box.innerHTML = '<div class="rec-state"><strong>추천 키워드를 불러오지 못했어요</strong>' +
-      esc(rec.error) + '<br>잠시 후 <b>새로고침</b>을 다시 눌러 주세요.</div>';
-    return;
-  }
-  if(!rec.data) return;
-  var d = rec.data;
-  var items = d.items.map(function(it, i){ return { it:it, i:i }; });
-  var sCount = items.filter(function(x){ return String(x.it.grade).indexOf('S') === 0; }).length;
-  var aCount = items.length - sCount;
-  var flagN = { '담김':0, '글감':0, '작성됨':0 };
-  items.forEach(function(x){ var f = recFlag(x.it); if(flagN[f] != null) flagN[f]++; });
-  meta.innerHTML = '마지막 업데이트 <b>' + esc(d.updatedAt || '—') + '</b> · ' + esc(d.source) +
-    ' · ' + items.length + '개 (S급 ' + sCount + ' · A급 ' + aCount + ')' +
-    (flagN['글감'] ? ' · 보관함 ' + flagN['글감'] : '') +
-    (flagN['담김'] ? ' · 담김 ' + flagN['담김'] : '');
-  var html = items.map(function(x){ return recCard(x.it, x.i); }).join('');
-  if(!items.length) html = '<div class="rec-state"><strong>새로 쓸 추천 키워드가 없어요</strong>추천 키워드가 모두 이미 쓴 글과 겹쳐요. <b>키워드 찾기 요청</b>을 눌러 주세요.</div>';
-  box.innerHTML = html;
-}
-/* 추천 카드 상태 = 담김(보류 보관함) · 글감(채택) · 작성됨(발행 글과 겹침) */
+/* 추천 키워드 + 담아 둔 키워드는 키워드 탭의 한 목록에서 그리므로 통합 렌더로 넘긴다 */
+function renderRecs(){ renderKwList(); }
+/* 추천 카드 상태 = 보관함(채택) · 발행함(이미 발행한 글과 겹침).
+   직접 담아 둔(보류) 키워드는 같은 목록 위쪽 카드로 보여 주므로 중복 표시하지 않는다. */
 function recFlag(it){
-  var n = String(it.keyword || '').toLowerCase(), k = null;
-  for(var i=0;i<state.kws.length;i++){ if(String(state.kws[i].kw).toLowerCase() === n){ k = state.kws[i]; break; } }
+  var n = normK(it.keyword), k = null;
+  for(var i=0;i<state.kws.length;i++){ if(normK(state.kws[i].kw) === n){ k = state.kws[i]; break; } }
   if(k){
-    if(k.status === '발행완료') return '작성됨';
-    if(k.status === '채택') return '글감';
-    if(k.status === '보류') return '담김';
+    if(k.status === '발행완료') return 'done';
+    if(k.status === '채택') return 'adopt';
   }
-  if(writtenHit(it.keyword)) return '작성됨';
+  if(writtenHit(it.keyword)) return 'done';
   return '';
 }
 function recCard(it, i){
   var g = String(it.grade || '');
   var cls = g.indexOf('S') === 0 ? 's' : 'a';
   var flag = recFlag(it);
-  var flagCls = flag === '담김' ? 'hold' : flag === '글감' ? 'adopt' : 'done';
+  var flagLabel = flag === 'adopt' ? '보관함' : flag === 'done' ? '발행함' : '';
+  var flagCls = flag === 'adopt' ? 'adopt' : 'done';
   var tags = [];
   if(it.entry) tags.push('진입 가능성 ' + it.entry);
   if(it.speed) tags.push('진입 속도 ' + it.speed);
   if(it.blogSlots) tags.push('블로그 자리 ' + it.blogSlots + '칸');
   if(it.adComp && it.adComp !== '-') tags.push('광고 경쟁 ' + it.adComp);
-  return '<article class="rec-card">' +
+  return '<article class="rec-card" data-kw="' + esc(it.keyword) + '">' +
     '<div class="rec-top"><strong class="rec-kw">' + esc(it.keyword) + '</strong>' +
-      (flag ? '<span class="rec-flag ' + flagCls + '">' + esc(flag) + '</span>' : '') +
+      (flagLabel ? '<span class="rec-flag ' + flagCls + '">' + esc(flagLabel) + '</span>' : '') +
       '<span class="rec-badge ' + cls + '">' + esc(g) + '</span></div>' +
     '<div class="rec-metrics"><span>검색량 월 <b>' + num(it.monthlySearch) + '</b>회</span>' +
       (it.monthlyPublish != null ? '<span>발행 <b>' + num(it.monthlyPublish) + '</b>건</span>' : '') +
@@ -1760,62 +1758,158 @@ function recByIdx(i){
   if(!rec.data || !rec.data.items || !isFinite(n)) return null;
   return rec.data.items[n] || null;
 }
-function recWrite(i){
-  var it = recByIdx(i);
-  if(!it) return;
-  copyText(buildRecPrompt(it)).then(function(ok){
-    toast(ok ? '“' + it.keyword + '” 작성 프롬프트를 복사했어요 — AI에 붙여넣어 보세요'
-             : '복사하지 못했어요. 다시 한번 눌러 주세요');
-  });
+/* 추천 카드에 들어 있는 세부 분석(브리핑·세부 키워드·자동완성·상위 글)이 있는지 */
+function recHasAnalysis(it){
+  var b = it.briefing;
+  var brief = (b && typeof b === 'object' && !Array.isArray(b))
+    ? !!(String(b.verdict || '').trim() || recList(b.checks).length || recList(b.strategy).length)
+    : recList(b).length > 0;
+  return !!(brief || recSubs(it).length || recList(it.autocomplete).length || recPosts(it).length);
 }
-function recSave(i){
-  var it = recByIdx(i);
-  if(!it) return;
-  if(dupOf(it.keyword)){ toast('“' + it.keyword + '” 이미 보관함에 있어요', { action:'키워드 탭 열기', duration:4000, onAction:function(){ setTab('keywords'); } }); return; }
+/* 추천 카드 → 보관함(채택) 항목. 세부 분석은 하나도 버리지 않고 통째로 넘긴다 */
+function recToKw(it){
   var search = Number(it.monthlySearch) || 0;
   var publish = (it.monthlyPublish != null) ? Number(it.monthlyPublish) || 0 : Math.round(search * (Number(it.saturation) || 0) / 100);
-  /* 추천 카드의 세부 분석(브리핑·세부 키워드·자동완성·상위 글)을 빠짐없이 통째로 넘긴다 */
-  var subs = recSubs(it), ac = recList(it.autocomplete), posts = recPosts(it);
-  var brief = (it.briefing && typeof it.briefing === 'object' && !Array.isArray(it.briefing))
-    ? !!(String(it.briefing.verdict || '').trim() || recList(it.briefing.checks).length || recList(it.briefing.strategy).length)
-    : recList(it.briefing).length > 0;
-  var hasAnalysis = !!(brief || subs.length || ac.length || posts.length);
-  var item = normKw({
-    id: nid(), kw: it.keyword, vol: search, docs: publish, grade: it.grade, status:'보류',
+  return normKw({
+    id: nid(), kw: it.keyword, vol: search, docs: publish, grade: it.grade, status:'채택',
     memo: '블톡 ' + it.grade + ' · 포화도 ' + recPct(it.saturation) + (it.reason ? ' · ' + it.reason : ''),
     saturation: it.saturation != null ? it.saturation : '',
     briefing: it.briefing, subKeywords: it.subKeywords, autocomplete: it.autocomplete, topPosts: it.topPosts,
     entry: it.entry, speed: it.speed, adComp: it.adComp, blogSlots: it.blogSlots,
-    analysisPending: hasAnalysis ? false : undefined,
+    analysisPending: recHasAnalysis(it) ? false : undefined,
     createdAt: new Date().toISOString()
   });
-  if(!item){ toast('키워드를 보관함에 담지 못했어요'); return; }
-  state.kws.push(item);
-  save(); refresh(); renderRecs();   /* 추천 카드의 담김·글감 표시도 바로 갱신 */
-  toast('“' + it.keyword + '” 보관함에 담았어요' +
-    (hasAnalysis ? ' · 세부 분석 포함' : ''), { action:'키워드 탭 열기', duration:4200, onAction:function(){ setTab('keywords'); } });
 }
-function recRequest(){
+/* 추천 키워드를 보관함(채택)으로 올린다. 이미 있으면 중복으로 만들지 않고 상태만 맞춘다.
+   kind = created(새로 담음) · moved(담아 둔 키워드를 채택으로) · already(이미 보관함) · done(이미 발행) · fail */
+function adoptRec(i){
+  var it = recByIdx(i);
+  if(!it) return { kind:'fail' };
+  var n = normK(it.keyword), existing = null;
+  for(var j=0;j<state.kws.length;j++){
+    if(normK(state.kws[j].kw) === n){ existing = state.kws[j]; break; }
+  }
+  if(existing){
+    if(existing.status === '발행완료') return { kind:'done', k:existing };
+    if(existing.status === '채택') return { kind:'already', k:existing };
+    existing.status = '채택';
+    existing.updatedAt = isoNow();
+    save(); refresh();
+    return { kind:'moved', k:existing };
+  }
+  var item = recToKw(it);
+  if(!item) return { kind:'fail' };
+  state.kws.push(item);
+  save(); refresh();
+  return { kind:'created', k:item };
+}
+/* [이 키워드로 작성하기] = 프롬프트 복사 + 보관함에 담고 보관함 탭 열기 */
+function recWrite(i){
+  var it = recByIdx(i);
+  if(!it) return;
+  var r = adoptRec(i);
+  if(r.kind === 'fail'){ toast('키워드를 보관함에 담지 못했어요'); return; }
+  if(r.kind === 'done'){
+    toast('“' + it.keyword + '” 이미 발행한 키워드예요', { action:'발행 완료 보기', duration:4200, onAction:function(){ setTab('write','done'); } });
+    return;
+  }
+  copyText(buildRecPrompt(it)).then(function(ok){
+    toast(ok ? '“' + it.keyword + '” 프롬프트를 복사했어요 · ' + (r.kind === 'already' ? '이미 보관함에 있어요' : '보관함에 담았어요')
+             : '“' + it.keyword + '” 프롬프트를 복사하지 못했어요 · 다시 한번 눌러 주세요', { duration:4200 });
+  });
+  setTab('write', 'wait');
+}
+/* [보관함에 담기] = 채택 상태로 보관함에 넣고 보관함 탭 열기 */
+function recSave(i){
+  var it = recByIdx(i);
+  if(!it) return;
+  var r = adoptRec(i);
+  if(r.kind === 'fail'){ toast('키워드를 보관함에 담지 못했어요'); return; }
+  if(r.kind === 'done'){
+    toast('“' + it.keyword + '” 이미 발행한 키워드예요', { action:'발행 완료 보기', duration:4200, onAction:function(){ setTab('write','done'); } });
+    return;
+  }
+  if(r.kind === 'already'){
+    toast('“' + it.keyword + '” 이미 보관함에 있어요', { action:'보관함 열기', duration:4000, onAction:function(){ setTab('write','wait'); } });
+    return;
+  }
+  setTab('write', 'wait');
+  toast('“' + it.keyword + '” 보관함에 담았어요' + (recHasAnalysis(it) ? ' · 세부 분석 포함' : ''), { duration:4200 });
+}
+/* [키워드 찾기 요청] = 피클에게 keyword-request.json 으로 요청 (토큰 없으면 문구 복사) */
+var recReq = { busy:false, at:'' };
+function setReqBtn(text, busy){
+  var b = document.getElementById('rec-request-btn');
+  if(!b) return;
+  b.disabled = !!busy;
+  b.classList.toggle('busy', !!busy);
+  b.setAttribute('aria-busy', busy ? 'true' : 'false');
+  b.textContent = text || '키워드 찾기 요청';
+}
+function renderReqNote(){
+  var el = document.getElementById('req-note');
+  if(!el) return;
+  if(!recReq.at){ el.hidden = true; el.textContent = ''; return; }
+  el.hidden = false;
+  el.textContent = '키워드 찾기 요청 보냄 · ' + fmtBuildShort(recReq.at) + ' · 피클이 곧 찾아 채워 드려요';
+}
+async function recRequest(){
+  if(recReq.busy) return;
+  if(!hasSyncToken()){
+    /* 토큰이 없을 때만 예전처럼 요청 문구를 복사해 준다 */
+    copyText(REC_REQUEST_TEXT).then(function(ok){
+      toast(ok ? '설정에서 GitHub 토큰을 연결하면 버튼 한 번으로 자동 요청돼요 · 요청 문구를 복사했어요'
+               : '설정에서 GitHub 토큰을 연결하면 버튼 한 번으로 자동 요청돼요', { duration:5600 });
+    });
+    return;
+  }
+  recReq.busy = true;
+  setReqBtn('요청 중…', true);
+  var sent = false;
+  try{
+    sent = await pushRequestFile(KEY_REQ_FILE, '키워드 찾기 요청 · ' + new Date().toLocaleString('ko-KR'));
+  }finally{
+    recReq.busy = false;
+    setReqBtn(null, false);
+  }
+  if(sent){
+    recReq.at = isoNow();
+    renderReqNote();
+    toast('새 키워드 찾기 요청을 보냈어요! 곧 블톡에서 찾아 채워 드릴게요', { duration:5600 });
+    return;
+  }
   copyText(REC_REQUEST_TEXT).then(function(ok){
-    toast(ok ? '요청 문구를 복사했어요 — 피클에게 붙여넣어 보내세요'
-             : '복사하지 못했어요: ' + REC_REQUEST_TEXT);
+    toast(ok ? '요청을 보내지 못했어요 · 요청 문구를 복사했으니 피클에게 붙여넣어 보내 주세요'
+             : '요청을 보내지 못했어요 · 토큰 권한(Contents: Read and write)을 확인해 주세요', { duration:5600 });
   });
 }
 
-/* ── 키워드 ───────────────────────────── */
+/* ── 키워드: 블톡 추천 + 담아 둔 키워드 통합 목록 ────── */
 function renderKw(){
   renderKwList();
 }
-/* 키워드 탭 = 고르기 전용. 아직 채택하지 않은 '보류'만 보여준다. */
+/* 채택 전의 '보류' 키워드 = 직접 [+]로 담았거나 추천에서 담아 둔 후보 */
 function holdKws(){ return state.kws.filter(function(k){ return k.status === '보류'; }); }
-function visibleKws(){
-  var q = ui.q.trim().toLowerCase();
-  var list = holdKws().filter(function(k){
-    if(!q) return true;
-    return k.kw.toLowerCase().indexOf(q) >= 0 || (k.memo || '').toLowerCase().indexOf(q) >= 0;
-  });
+function entryGrade(e){ return e.kind === 'rec' ? (bltGrade(e.it.grade) || '미정') : gradeOf(e.k); }
+function passGrade(e, f){
+  if(!f || f === '전체') return true;
+  var g = entryGrade(e);
+  if(f === '대기') return g === '분석 대기';
+  return g === f;
+}
+function passQuery(e, q){
+  if(!q) return true;
+  var kw = e.kind === 'rec' ? String(e.it.keyword || '') : String(e.k.kw || '');
+  var memo = e.kind === 'rec' ? String(e.it.reason || '') : String(e.k.memo || '');
+  return kw.toLowerCase().indexOf(q) >= 0 || memo.toLowerCase().indexOf(q) >= 0;
+}
+/* 한 목록에 담을 항목: 담아 둔(보류) 키워드 먼저(분석 대기 맨 위) → 블톡 추천.
+   이미 담아 둔 키워드와 같은 추천은 두 번 보여주지 않는다. */
+function mergedEntries(){
   var s = ui.sort;
-  list.sort(function(a,b){
+  var holds = holdKws().slice().sort(function(a,b){
+    var pa = isPending(a) ? 0 : 1, pb = isPending(b) ? 0 : 1;
+    if(pa !== pb) return pa - pb;                       /* 분석 대기는 맨 위 */
     if(s === 'vol') return vol(b) - vol(a);
     if(s === 'comp'){
       var ca = comp(a), cb = comp(b);
@@ -1825,24 +1919,75 @@ function visibleKws(){
       return ca - cb;
     }
     return String(b.createdAt).localeCompare(String(a.createdAt));
+  }).map(function(k){ return { kind:'hold', k:k }; });
+  var taken = {};
+  holds.forEach(function(e){ var n = normK(e.k.kw); if(n) taken[n] = 1; });
+  var recs = ((rec.data && rec.data.items) ? rec.data.items : []).map(function(it, i){
+    return { kind:'rec', it:it, i:i };
+  }).filter(function(e){
+    var n = normK(e.it.keyword);
+    return !(n && taken[n]);                            /* 같은 키워드는 담아 둔 카드 하나만 */
+  }).sort(function(a,b){
+    if(s === 'vol') return (Number(b.it.monthlySearch) || 0) - (Number(a.it.monthlySearch) || 0);
+    if(s === 'comp'){
+      var ca = Number(a.it.saturation), cb = Number(b.it.saturation);
+      if(!isFinite(ca) && !isFinite(cb)) return 0;
+      if(!isFinite(ca)) return 1;
+      if(!isFinite(cb)) return -1;
+      return ca - cb;
+    }
+    return a.i - b.i;                                   /* 블톡이 준 순서(등급순) */
   });
-  return list;
+  return holds.concat(recs);
 }
 function renderKwList(){
-  var box = document.getElementById('kw-list');
-  var sec = document.getElementById('hold-section');
-  var all = holdKws();
-  var list = visibleKws();
-  if(sec) sec.hidden = all.length === 0;
-  var cnt = document.getElementById('kw-count');
-  if(cnt) cnt.textContent = (list.length === all.length ? all.length : list.length + ' / ' + all.length) + '개';
-  if(!box) return;
-  if(!all.length){ box.innerHTML = ''; return; }
-  if(!list.length){
-    box.innerHTML = '<div class="empty"><strong>조건에 맞는 보류 키워드가 없어요</strong><p>검색어를 지우거나 바꿔 보세요.</p></div>';
-    return;
+  var holdBox = document.getElementById('hold-section');
+  var recBox = document.getElementById('rec-list');
+  var meta = document.getElementById('rec-meta');
+  if(!holdBox || !recBox) return;
+  var all = mergedEntries();
+  var q = ui.q.trim().toLowerCase();
+  var shown = all.filter(function(e){ return passQuery(e, q) && passGrade(e, ui.filterGrade); });
+  var holdHtml = shown.filter(function(e){ return e.kind === 'hold'; }).map(function(e){ return kwCard(e.k); }).join('');
+  var recHtml = shown.filter(function(e){ return e.kind === 'rec'; }).map(function(e){ return recCard(e.it, e.i); }).join('');
+  var loadingRec = rec.loading && !rec.loaded;
+  var errorRec = rec.error && !rec.loaded;
+  if(!shown.length){
+    if(all.length) holdHtml = '<div class="empty"><strong>조건에 맞는 키워드가 없어요</strong><p>검색어나 등급을 바꿔 보세요.</p></div>';
+    else if(loadingRec) holdHtml = '<div class="rec-state">블톡 추천 키워드를 불러오는 중…</div>';
+    else if(errorRec) holdHtml = '<div class="rec-state"><strong>추천 키워드를 불러오지 못했어요</strong>' + esc(rec.error) +
+      '<br>잠시 후 <b>새로고침</b>을 다시 눌러 주세요.</div>';
+    else holdHtml = '<div class="rec-state"><strong>새로 쓸 키워드가 없어요</strong>추천 키워드가 모두 이미 담겨 있어요. <b>키워드 찾기 요청</b>을 눌러 주세요.</div>';
+  }else if(loadingRec){
+    recHtml = '<div class="rec-state">블톡 추천 키워드를 불러오는 중…</div>';
+  }else if(errorRec){
+    recHtml = '<div class="rec-state"><strong>추천 키워드를 불러오지 못했어요</strong>' + esc(rec.error) + '</div>';
   }
-  box.innerHTML = list.map(kwCard).join('');
+  holdBox.innerHTML = holdHtml;
+  recBox.innerHTML = recHtml;
+  document.querySelectorAll('#kw-filter .kw-chip').forEach(function(b){
+    var on = (b.dataset.grade || '전체') === ui.filterGrade;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+  var cnt = document.getElementById('kw-count');
+  if(cnt) cnt.textContent = (shown.length === all.length ? all.length : shown.length + ' / ' + all.length) + '개';
+  if(!meta) return;
+  if(loadingRec && !all.length){ meta.textContent = '마지막 업데이트 확인 중…'; return; }
+  var gs = {}, adoptN = 0;
+  all.forEach(function(e){
+    var g = entryGrade(e); gs[g] = (gs[g] || 0) + 1;
+    if(e.kind === 'rec' && recFlag(e.it) === 'adopt') adoptN++;
+  });
+  var txt = rec.data ? ('마지막 업데이트 <b>' + esc(rec.data.updatedAt || '—') + '</b> · ' + esc(rec.data.source || '블톡'))
+                     : '블톡 추천 데이터 확인 중';
+  txt += ' · <b>' + all.length + '</b>개';
+  var gt = ['S급','A급'].filter(function(g){ return gs[g]; }).map(function(g){ return g + ' ' + gs[g]; }).join(' · ');
+  var waitN = gs['분석 대기'] || 0;
+  var inParen = [gt, waitN ? '분석 대기 ' + waitN : ''].filter(Boolean).join(' · ');
+  if(inParen) txt += ' (' + inParen + ')';
+  if(adoptN) txt += ' · 보관함 ' + adoptN;
+  meta.innerHTML = txt;
 }
 function kwCard(k){
   var g = gradeOf(k);
@@ -1860,20 +2005,25 @@ function kwCard(k){
         '<span>' + volLine(k) + '</span>' +
         (k.saturation != null && k.saturation !== '' ? '<span>포화도 <b>' + recPct(k.saturation) + '</b></span>' : '') +
       '</div>';
-  return '<article class="card kw">' +
+  return '<article class="card kw" data-kw="' + esc(k.kw) + '">' +
     '<div class="kw-head">' +
       '<button class="kw-name" data-act="kw-edit" data-id="' + k.id + '" title="키워드 수정">' + esc(k.kw) + fitMark(k) + '</button>' +
+      (pending ? '' : '<span class="rec-flag hold">담아 둔</span>') +
       badge(g) +
     '</div>' +
     body +
     (k.memo ? '<p class="kw-memo">' + esc(k.memo) + '</p>' : '') +
     '<div class="kw-foot">' +
-      '<select class="status-select" data-act="set-status" data-id="' + k.id + '" data-status="' + k.status + '" aria-label="상태 변경">' + opts + '</select>' +
-      '<span class="spacer"></span>' +
-      '<button class="btn soft sm" data-act="to-write" data-id="' + k.id + '">보관함으로</button>' +
-      '<button class="del-btn" data-act="kw-del" data-id="' + k.id + '" aria-label="' + esc(k.kw) + ' 삭제">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M10 11v6M14 11v6"/></svg>' +
-      '</button>' +
+      '<div class="kw-acts">' +
+        '<button class="btn soft sm" data-act="kw-write" data-id="' + k.id + '">이 키워드로 작성하기</button>' +
+        '<button class="btn ghost sm" data-act="to-write" data-id="' + k.id + '">보관함에 담기</button>' +
+      '</div>' +
+      '<div class="kw-foot-sub">' +
+        '<select class="status-select" data-act="set-status" data-id="' + k.id + '" data-status="' + k.status + '" aria-label="상태 변경">' + opts + '</select>' +
+        '<button class="del-btn" data-act="kw-del" data-id="' + k.id + '" aria-label="' + esc(k.kw) + ' 삭제">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/><path d="M10 11v6M14 11v6"/></svg>' +
+        '</button>' +
+      '</div>' +
     '</div>' +
   '</article>';
 }
@@ -1946,7 +2096,7 @@ function htmlWait(wait){
     return '<div class="empty">' +
       '<div class="e-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4l10-10a2.5 2.5 0 0 0-3.5-3.5L4.5 16.5z"/><path d="M13.5 6.5L17.5 10.5"/></svg></div>' +
       '<strong>보관함에 작성 대기 중인 글이 없어요</strong>' +
-      '<p>키워드 탭에서 <b>보관함으로</b>를 누르거나<br>블톡 추천에서 키워드를 담아 보세요.</p>' +
+      '<p>키워드 탭에서 <b>보관함에 담기</b>를 누르면<br>여기로 와요. 블톡 추천 키워드에서 골라도 돼요.</p>' +
       '<button class="btn primary" data-act="tab" data-tab="keywords">키워드 고르기</button></div>';
   }
   return '<div class="section-head" style="margin-top:2px"><div><h2 style="font-size:15px">작성 대기</h2>' +
@@ -2003,7 +2153,7 @@ function writeCard(k){
         '<div class="field"><label>메모</label>' +
           '<input type="text" data-field="memo" data-id="' + k.id + '" value="' + esc(k.memo) + '" placeholder="준비물·참고" maxlength="300"></div>' +
       '</div>' +
-      '<div class="wc-extra"><button class="link-btn" data-act="to-hold" data-id="' + k.id + '">보류로 되돌리기</button></div>' +
+      '<div class="wc-extra"><button class="link-btn" data-act="to-hold" data-id="' + k.id + '">추천 목록으로 되돌리기</button></div>' +
     '</div>' +
     (String(k.url || '').trim() ? rankRowHtml(k) : '') +
   '</article>';
@@ -2722,13 +2872,15 @@ function initSync(){
 /* rankings.json 은 sync.json 과 분리된 파일이라 동기화 충돌(409)이 없다. */
 var RANK_FILE = 'rankings.json';
 var RANK_REQ_FILE = 'rank-request.json';   /* 피클에 순위 재조회를 요청하는 파일 (sync.json·rankings.json 과 분리해 409 회피) */
+var KEY_REQ_FILE = 'keyword-request.json';  /* 피클에 키워드 찾기를 요청하는 파일 (위 요청 파일들과 같은 방식) */
 var ranks = { loaded:false, loading:false, error:'', at:'', blogId:'', items:{}, requestedAt:'', requesting:false };
 
 function hasSyncToken(){ return !!(syncCfg.token && syncCfg.token.length > 10); }
 function rankFileUrl(withRef){ return contentUrl(RANK_FILE, withRef); }
-/* 순위 재조회 요청을 rank-request.json 에 남긴다 (성공하면 true) */
-async function pushRankRequest(){
-  if(!hasSyncToken()) return false;
+/* 피클에게 일을 부탁하는 요청 파일(keyword-request.json · rank-request.json)을 저장소에 올린다.
+   sync.json·rankings.json 과 파일을 나눠 409 를 피하고, sha 경합이 나면 다시 읽어 한 번만 더 시도한다. */
+async function pushRequestFile(file, message){
+  if(!hasSyncToken() || !file) return false;
   var body = { status:'pending', requestedAt: new Date().toISOString(), source:'studio-ui' };
   /* 없는 파일을 GET 하면 콘솔에 404 가 남으니, 저장소 루트 목록에서 sha 를 찾는다 */
   async function currentSha(){
@@ -2741,18 +2893,18 @@ async function pushRankRequest(){
     if(!Array.isArray(list)) return '';
     for(var i=0;i<list.length;i++){
       var it = list[i];
-      if(it && String(it.name || '') === RANK_REQ_FILE) return String(it.sha || '');
+      if(it && String(it.name || '') === file) return String(it.sha || '');
     }
     return '';
   }
   async function put(sha){
     var payload = {
-      message: '순위 재조회 요청 · ' + new Date().toLocaleString('ko-KR'),
+      message: message || ('요청 · ' + new Date().toLocaleString('ko-KR')),
       content: toB64(JSON.stringify(body)),
       branch: syncCfg.branch
     };
     if(sha) payload.sha = sha;
-    var res = await fetch(contentUrl(RANK_REQ_FILE, false), {
+    var res = await fetch(contentUrl(file, false), {
       method:'PUT',
       headers: Object.assign({ 'Content-Type':'application/json; charset=utf-8' }, ghHeaders()),
       body: JSON.stringify(payload)
@@ -2767,6 +2919,10 @@ async function pushRankRequest(){
     var sha2 = await currentSha();
     return await put(sha2);
   }catch(e){ return false; }
+}
+/* [순위 새로고침]이 부르는 순위 재조회 요청 */
+async function pushRankRequest(){
+  return pushRequestFile(RANK_REQ_FILE, '순위 재조회 요청 · ' + new Date().toLocaleString('ko-KR'));
 }
 function rankFor(k){
   if(!k || !ranks.items) return null;
@@ -3128,9 +3284,10 @@ document.addEventListener('click', function(e){
     hk.status = '보류'; hk.updatedAt = new Date().toISOString();
     delete ui.open[id];
     save(); refresh();
-    toast('“' + hk.kw + '” 보류로 되돌렸어요', { action:'키워드 탭 열기', duration:4200, onAction:function(){ setTab('keywords'); } });
+    toast('“' + hk.kw + '” 블톡 추천 목록으로 되돌렸어요', { action:'키워드 탭 열기', duration:4200, onAction:function(){ setTab('keywords'); } });
     return;
   }
+  if(act === 'kw-filter'){ ui.filterGrade = el.dataset.grade || '전체'; renderKwList(); return; }
   if(act === 'theme'){ toggleTheme(); return; }
   if(act === 'open-add'){ openAdd(); return; }
   if(act === 'open-bulk'){
@@ -3161,7 +3318,18 @@ document.addEventListener('click', function(e){
     var kw = byId(id); if(!kw) return;
     kw.status = '채택'; kw.updatedAt = new Date().toISOString();
     save(); refresh(); setTab('write', 'wait');
-    toast('보관함으로 옮겼어요');
+    toast('“' + kw.kw + '” 보관함에 담았어요');
+    return;
+  }
+  if(act === 'kw-write'){
+    var wk = byId(id); if(!wk) return;
+    wk.status = '채택'; wk.updatedAt = new Date().toISOString();
+    save(); refresh();
+    copyText(buildPrompt(wk)).then(function(ok){
+      toast(ok ? '“' + wk.kw + '” 프롬프트를 복사했어요 · 보관함에 담았어요'
+               : '“' + wk.kw + '” 보관함에 담았어요 · 프롬프트는 복사하지 못했어요', { duration:4200 });
+    });
+    setTab('write', 'wait');
     return;
   }
   if(act === 'kw-del'){
