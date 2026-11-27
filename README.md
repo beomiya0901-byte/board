@@ -95,19 +95,61 @@
 
 - `이 키워드로 작성하기`는 키워드 정보만 담은 짧은 요청을 복사해요. 말투·분량·제목·구성 같은 작성 규칙은 Claude 쪽 `CLAUDE.md`가 정하니 프롬프트에 넣지 마세요.
 
-## 발행 글 검색 순위 (`rankings.json`)
+## 발행 글 검색 순위 (`rankings.json`) — 수집 방식과 파일 규격
 
-발행한 글의 네이버 노출 순위는 `sync.json`과 **다른 파일**로 비공개 저장소 `beomiya0901-byte/studio-sync`의
-`rankings.json`에 쌓입니다(설정 파일과 섞이면 동기화 충돌 409가 나기 때문). 수집은 `work/check_blog_rankings.py`가 합니다.
+발행한 글의 네이버 노출 순위는 `sync.json`과 **다른 파일**로 비공개 저장소
+`beomiya0901-byte/studio-sync`의 `rankings.json`에 쌓입니다(설정 파일과 섞이면 동기화 충돌 409가 나기 때문).
+수집·기록은 `work/check_blog_rankings.py`가 합니다. **다른 에이전트(무즈 등)도 같은 파일을 읽고 쓰거나,
+아래 규칙대로 직접 수집해 같은 형식으로 넣으면 스튜디오 화면이 그대로 인식합니다.**
+
+### 1) 수집 대상
+
+| 출처 | 조건 |
+| --- | --- |
+| `studio-sync/sync.json` | `kws[]` 중 `status == "발행완료"` **또는** `url` 값이 있는 항목 |
+| `board` 저장소 `studio/written.json` | `posts[]`(RSS로 확인된 발행 글) 중 **최신 20편**(`--limit-written 0` 이면 전체) |
+
+- 두 출처를 합쳐 **키워드(공백 제거 + 소문자)가 같으면 한 번만**, **같은 글 URL(`logNo`)이면 한 번만** 조회합니다.
+- 같은 키워드가 `sync.json`에도 있으면 그 항목의 `id`를 키로 쓰고, `written.json`의 URL로 빈 URL을 채워
+  `logNo` 대조가 되게 합니다.
+- `written.json`을 못 읽어도 `sync.json` 대상만으로 계속 진행합니다(예약 실행·새 clone 환경 대비).
+
+### 2) 조회 규칙 — 통합검색 → 블로그탭 → 미노출
+
+1. **네이버 PC 통합검색**: `https://search.naver.com/search.naver?query=<키워드>`
+   - 응답 HTML의 `<div id="fdr-...">` 루트를 페이지 위→아래 순서로 자릅니다.
+   - `data-block-id`가 `web/ · review/ · blog/ · smartblock/ · atom/ · clip/ · cafe/ · kin/` 로 시작하는
+     블록만 **결과 블록**으로 인정합니다(광고·관련질문·연관검색어처럼 결과가 아닌 판은 블록 번호에서 제외).
+   - `data-meta-area`가 같은 카드들을 **한 블록**으로 묶고, 처음 나온 순서가 곧 **`block`(N블록)** 입니다.
+     (한 블록에 웹문서 카드와 블로그 카드가 섞여도 같은 영역이면 한 블록)
+   - 카드 = `fdr` 루트 1개. 스마트블록처럼 한 루트에 카드가 여러 장이면
+     `"adClassName":"_fe_view_power_content"` 경계로 나눠 카드 단위로 셉니다.
+   - 카드 안의 결과 링크는 `"titleHref"/"contentHref"`(없으면 `<a href>`)에서 읽고,
+     블로그 홈(작성자)·`keep.naver.com`·`pstatic.net` 같은 부가 링크는 버립니다.
+   - 카드 순서는 `"r":N`(`clickLog.r`) 값, 없으면 링크 순서를 씁니다 → **`rank`(블록 안 N위)**.
+   - 내 글 판별: `blog.naver.com/beompercar/<logNo>` — **`logNo`까지 같아야** 그 글로 봅니다.
+     (URL이 없으면 `beompercar` 글 중 첫 번째 노출)
+   - 통합검색에서 찾으면 `section`은 `통합검색`, 블록 ID·`ssc`가 스마트블록이면 `스마트블록`.
+2. **통합검색에 없으면 네이버 블로그탭**: `https://search.naver.com/search.naver?ssc=tab.blog.all&sm=tab_jum&query=<키워드>`
+   - 블록 ID에 `blog`가 들어 있거나 `data-meta-ssc == "tab.blog.all"` 인 블록만 봅니다.
+   - 카드의 `r`이 **1~30**(`MAX_RANK`)일 때만 인정하고, 여러 번 나오면 **가장 작은 순위**를 씁니다 → `블로그탭 N위`.
+3. 둘 다 없으면 **`미노출`**(`label` = `30위권 밖`).
+4. **조회 실패(차단·타임아웃)는 `미노출`이 아닙니다.** 그 키워드는 이번 회차 기록을 건너뛰고,
+   한 건도 성공하지 못하면 `rankings.json`을 아예 쓰지 않습니다.
+
+> 요청 사이 `--delay`(기본 1.2초) 대기, 데스크톱 크롬 UA(`Mozilla/5.0 ... Chrome/131 ...`), `Accept-Encoding: gzip` 처리.
+> 네이버가 응답 구조를 바꾸면 `data-block-id`/`_fe_view_power_content`/`"r"` 앵커를 먼저 확인하세요.
+
+### 3) `rankings.json` 스키마 (실제 파일)
 
 ```json
 {
-  "updatedAt": "2026-11-26T00:20:00+09:00",
+  "updatedAt": "2026-11-27T02:21:04+09:00",
   "blogId": "beompercar",
   "items": {
-    "<키워드 id 또는 공백제거 소문자 키워드>": {
-      "keyword": "서치어드바이저",
-      "postUrl": "https://blog.naver.com/beompercar/224490735818",
+    "mww1emtbsb8xm": {
+      "keyword": "퍼플렉시티",
+      "postUrl": "https://blog.naver.com/beompercar/224492132971",
       "section": "통합검색",
       "block": 3,
       "rank": 6,
@@ -115,29 +157,117 @@
       "label": "3블록 6위",
       "source": "integrated",
       "delta": 2,
-      "checkedAt": "2026-11-26 00:20",
-      "history": [{ "checkedAt": "2026-11-26 00:20", "section": "통합검색", "block": 3, "rank": 6, "label": "3블록 6위" }]
+      "checkedAt": "2026-11-27 02:21",
+      "history": [
+        { "checkedAt": "2026-11-26 11:28", "section": "블로그탭", "block": null, "rank": 25, "label": "블로그탭 25위" },
+        { "checkedAt": "2026-11-27 02:21", "section": "통합검색", "block": 3, "rank": 6, "label": "3블록 6위" }
+      ]
     }
   }
 }
 ```
 
-- 표기는 블톡 방식인 **`N블록 N위`**입니다. 네이버 통합검색 화면을 위에서부터 블록(결과 영역) 단위로 세어,
-  내 글이 **몇 번째 블록의 몇 번째 카드**인지 보여줍니다. 블로그 탭에서만 찾힌 글은 **`블로그탭 N위`**입니다.
-  (관련질문·연관검색어·광고처럼 결과가 아닌 판은 블록 번호에서 빼고 셉니다.)
-- `section`: `통합검색` | `스마트블록` | `블로그탭` | `미노출`.
-- `block`: 통합검색 위에서 몇 번째 블록인지(1부터). 블로그탭·미노출이면 `null`.
-- `rank`: 그 블록 안에서 몇 번째 카드인지(1부터). 블로그탭이면 블로그 탭 순위.
-- `position`: 페이지 전체에서 몇 번째 결과 카드인지(1부터). 블록이 바뀐 날에도 변동을 한 숫자로 비교하려고 함께 저장합니다.
-- `label`: 화면에 그대로 쓰는 표기(`3블록 6위` / `블로그탭 3위` / `30위권 밖`).
-- `delta`: 직전 확인 대비 변동(+면 상승). 같은 영역(통합검색↔통합검색, 블로그탭↔블로그탭)일 때만 계산하고,
-  영역이 바뀌었거나 처음 기록이면 `null`(화면에서 `NEW`).
-- `history`: 최근 10회만 남깁니다.
-- 스튜디오는 `items[키워드 id]`를 먼저 보고, 없으면 `items[공백을 뺀 소문자 키워드]`로 찾습니다.
-- `block`이 없는 옛 기록은 화면에서 `label` 값을 그대로 보여줍니다(다음 수집 때 새 표기로 바뀝니다).
+| 필드 | 설명 |
+| --- | --- |
+| `updatedAt` | 이번 수집 시각. ISO 8601 + `+09:00` (`2026-11-27T02:21:04+09:00`) |
+| `blogId` | `beompercar`(내 블로그 아이디) |
+| `items` | **키 = `sync.json` 항목의 `id`, 없으면 `공백 제거 + 소문자 키워드`**(스튜디오 `normK()`와 같은 규칙) |
+| `items[].keyword` | 메인 키워드 |
+| `items[].postUrl` | 실제로 찾힌 글 URL(못 찾았으면 대상 URL 그대로) |
+| `items[].section` | `통합검색` · `스마트블록` · `블로그탭` · `미노출` |
+| `items[].block` | 통합검색 위에서 몇 번째 결과 블록인지(1부터). 블로그탭·미노출은 `null` |
+| `items[].rank` | 그 블록 안에서 몇 번째 카드인지(1부터). 블로그탭이면 블로그탭 순위 |
+| `items[].position` | 페이지 전체에서 몇 번째 결과 카드인지(1부터). 블록 구성이 바뀌어도 변동을 한 숫자로 비교하려고 함께 저장. 블로그탭·미노출은 `null` |
+| `items[].label` | 화면에 그대로 쓰는 표기 — `3블록 6위` / `블로그탭 25위` / `30위권 밖` |
+| `items[].source` | `integrated`(통합검색) · `blogtab`(블로그탭) · `none`(미노출) |
+| `items[].delta` | 직전 기록 대비 변동. **`+`면 상승**, `-`면 하락. 첫 기록·영역 변경(통합↔블로그탭)·미노출→노출은 `null`(화면에서 `NEW`), 노출→미노출은 `-(직전 순번)` |
+| `items[].checkedAt` | 이 항목을 확인한 시각 `YYYY-MM-DD HH:MM`(KST) |
+| `items[].history` | 최근 **10회**까지. `{checkedAt, section, block, rank, label}` 를 매번 덧붙이고 앞에서 자릅니다 |
+
+- **`total` 필드는 쓰지 않습니다.** 전체 건수는 `items` 키 개수로 세면 됩니다(필요해지면 추가 협의).
+- 요청서에서 `integratedRank`·`integratedBlock`·`integratedBlockRank`·`blogTabRank` 로 부르는 값은
+  이 파일에서 각각 **`section`이 `통합검색`/`스마트블록`일 때의 `rank`·`block`**, **`section`이 `블로그탭`일 때의 `rank`** 입니다.
+  필드 이름을 새로 만들지 말고 이 규격 그대로 써 주세요(스튜디오가 이 이름으로 읽습니다).
+- 화면은 `items[id]` → 없으면 `items[normK(keyword)]` 순서로 찾습니다. `block`이 없는 옛 기록은 `label`을 그대로 보여줍니다.
+- 정렬·비교 규칙: 통합검색·스마트블록은 `position`(없으면 `block*100+rank`), 블로그탭은 `rank`로 비교하며
+  **계열이 다르면(통합 ↔ 블로그탭) 서로 비교하지 않습니다.**
+
+### 4) 실행
 
 ```bash
-python3 work/check_blog_rankings.py                  # sync.json 대상 조회 후 rankings.json 갱신
-python3 work/check_blog_rankings.py --dry-run        # 조회만
+python3 work/check_blog_rankings.py                  # sync.json + written.json 대상 조회 후 rankings.json 갱신
+python3 work/check_blog_rankings.py --dry-run        # 조회만, 저장 안 함
+python3 work/check_blog_rankings.py --limit-written 0   # written.json 발행 글 전체 조회
+python3 work/check_blog_rankings.py --no-written     # sync.json 대상만
 python3 work/check_blog_rankings.py --test-keyword "서치어드바이저"   # 지정 키워드만 확인(저장 안 함)
 ```
+
+필요한 것: `gh` CLI 로그인(저장소 읽기/쓰기), 파이썬 표준 라이브러리만 사용.
+
+### 5) 다른 에이전트가 같은 방식으로 수집할 때 체크리스트
+
+1. `studio-sync/sync.json`(branch `main`)과 `board` 저장소 `studio/written.json`을 읽어 대상을 만들고,
+   키워드·`logNo` 중복을 제거한다.
+2. 키워드마다 통합검색 URL → (`fdr` 블록 · `data-meta-area` 묶음 · `r` 순서) → 없으면 블로그탭 URL(`r ≤ 30`) 순서로 확인한다.
+3. `block`/`rank`/`position`/`label`/`section`/`source`를 위 규격대로 만들고, 직전 항목과 비교해 `delta`를 계산한 뒤
+   `history`에 이번 회차를 덧붙여 최근 10회만 남긴다.
+4. `updatedAt`(ISO)을 갱신해 `rankings.json`을 **최신 sha로 PUT**(409/422면 다시 읽고 1회 재시도). 부분 갱신이어도
+   기존 `items`의 다른 키는 지우지 않는다(읽고-합치고-쓰기).
+5. 실패한 키워드는 건너뛴다(미노출로 덮지 않는다). 성공이 0건이면 파일을 쓰지 않는다.
+
+## 자동 요청 파일 협업 규격 (`rank-request.json` · `keyword-request.json`)
+
+스튜디오 상단의 **[순위 새로고침]** 과 **[키워드 찾기 요청]** 은 사용자가 누르면 GitHub 토큰으로
+`beomiya0901-byte/studio-sync`(branch `main`, 루트)에 **요청 파일**을 PUT 합니다.
+`sync.json`·`rankings.json`과 파일을 나눠 409를 피하려는 장치이고, 피클·무즈 같은 에이전트가 이 파일을 보고 일을 집습니다.
+
+| 파일 | 버튼 | 요청받은 일 |
+| --- | --- | --- |
+| `rank-request.json` | 순위 새로고침 | 위 방식으로 검색 순위를 다시 수집해 `rankings.json` 갱신 |
+| `keyword-request.json` | 키워드 찾기 요청 | 블톡에서 새 추천 키워드를 찾아 `board` 저장소 `studio/recommendations.json`을 채움 |
+
+### 스튜디오가 쓰는 내용
+
+```json
+{ "status": "pending", "requestedAt": "2026-11-27T06:12:33.123Z", "source": "studio-ui" }
+```
+
+- `requestedAt`은 UTC ISO(브라우저 `toISOString()`), `source`는 `studio-ui` 고정.
+- GitHub 토큰이 연결되지 않은 기기에서는 파일을 쓰지 않고, 요청 문구를 클립보드에 복사해 사용자가 피클에게 붙여넣게 합니다.
+- 스튜디오는 이 파일의 상태를 화면에 쓰지 않습니다(보낸 시각만 로컬에 표시). 상태는 **에이전트끼리 덮어쓰지 않기 위한 장부**입니다.
+
+### 상태 흐름
+
+```
+pending ──(집은 에이전트가 claim)──▶ processing ──(작업 끝)──▶ done ──(새 요청이 오면)──▶ pending …
+```
+
+| 상태 | 쓰는 쪽 | 넣는 필드 | 뜻 |
+| --- | --- | --- | --- |
+| `pending` | 스튜디오 | `status`, `requestedAt`, `source` | 아직 아무도 집지 않은 새 요청 |
+| `processing` | 집은 에이전트 | `status`, `by`, `claimedAt` (+기존 `requestedAt`·`source` 유지) | 이 에이전트가 작업 중. **다른 에이전트는 손대지 않는다** |
+| `done` | 작업한 에이전트 | `status`, `completedAt`, `completedBy`, `note`(선택) | 끝남. 결과 요약(갱신 건수·파일)을 `note`/`result`에 남긴다 |
+
+```json
+// 피클이 집었을 때
+{ "status": "processing", "by": "pickle", "claimedAt": "2026-11-27T15:13:02+09:00",
+  "requestedAt": "2026-11-27T06:12:33.123Z", "source": "studio-ui" }
+
+// 피클이 끝냈을 때
+{ "status": "done", "completedBy": "pickle", "completedAt": "2026-11-27T15:21:40+09:00",
+  "note": "rankings.json 12건 갱신", "by": "pickle", "claimedAt": "2026-11-27T15:13:02+09:00",
+  "requestedAt": "2026-11-27T06:12:33.123Z", "source": "studio-ui" }
+```
+
+### 지켜야 할 규칙
+
+1. **읽고 → 상태 확인 → sha 받고 → 쓰기.** 먼저 GET으로 내용과 `sha`를 확인한 뒤 PUT 합니다.
+2. `pending` 이면 `processing`으로 **claim**하고 시작합니다(먼저 쓴 쪽이 주인). `by`에 자기 이름(`pickle`, `muse`)을 적습니다.
+3. `processing` 이면 **건드리지 않습니다.** 다만 `claimedAt`이 **30분 이상** 지난 stale 이면 회수할 수 있고,
+   이때 `note`에 `stale 회수`라고 남깁니다.
+4. `done` 은 새 요청이 올 때까지 그대로 둡니다(지우지 않습니다). 새 `pending`이 오면 다시 집습니다.
+5. PUT이 **409/422**(다른 쪽이 먼저 씀)면 **다시 읽어 한 번만** 재시도합니다(스튜디오와 같은 규칙).
+6. 요청 파일끼리, 그리고 `sync.json`·`rankings.json`과 **서로 덮어쓰지 않습니다**(파일이 다르므로 각자 갱신).
+7. 작업 결과는 요청에 맞는 파일에만 반영합니다: 순위 요청 → `rankings.json`, 키워드 요청 → `studio/recommendations.json`
+   (형식은 위 `recommendations.json` 절). 결과를 만들었으면 요청 파일을 `done`으로 바꿔 남깁니다.
+8. 같은 요청을 두 에이전트가 동시에 집지 않도록, **claim(PUT)이 성공한 쪽만** 작업합니다.
