@@ -11,7 +11,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <!-- 배포할 때마다 이 값을 현재 시각으로 올려 주세요. [새로고침] 버튼이 이 값으로 새 HTML을 판별한다 -->
-<meta name="studio-build" content="2026-11-27T10:20:00+09:00">
+<meta name="studio-build" content="2026-11-27T10:32:00+09:00">
 <title>키워드 스튜디오</title>
 <meta name="description" content="블로그 키워드를 모으고, 경쟁강도를 계산하고, 보관함과 발행까지 관리하는 개인용 키워드 스튜디오.">
 <meta name="theme-color" content="#f3f4f7">
@@ -1793,7 +1793,7 @@ function recSave(i){
   state.kws.push(item);
   save(); refresh(); renderRecs();   /* 추천 카드의 담김·글감 표시도 바로 갱신 */
   toast('“' + it.keyword + '” 보관함에 담았어요' +
-    (hasAnalysis ? ' (블톡 세부 분석까지 함께)' : ''), { action:'키워드 탭 열기', duration:4200, onAction:function(){ setTab('keywords'); } });
+    (hasAnalysis ? ' · 세부 분석 포함' : ''), { action:'키워드 탭 열기', duration:4200, onAction:function(){ setTab('keywords'); } });
 }
 function recRequest(){
   copyText(REC_REQUEST_TEXT).then(function(ok){
