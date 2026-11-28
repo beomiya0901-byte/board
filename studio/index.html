@@ -11,7 +11,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <!-- 배포할 때마다 이 값을 현재 시각으로 올려 주세요. [새로고침] 버튼이 이 값으로 새 HTML을 판별한다 -->
-<meta name="studio-build" content="2026-11-27T15:07:53+09:00">
+<meta name="studio-build" content="2026-11-28T11:17:50+09:00">
 <title>키워드 스튜디오</title>
 <meta name="description" content="블로그 키워드를 모으고, 경쟁강도를 계산하고, 보관함과 발행까지 관리하는 개인용 키워드 스튜디오.">
 <meta name="theme-color" content="#f3f4f7">
@@ -2029,8 +2029,7 @@ function kwCard(k){
 }
 
 /* ── 글감 ─────────────────────────────── */
-var WRITTEN_PAGE = 20;                /* written.json 발행 기록은 처음에 이만큼만 보여준다 */
-var writtenMore = { open:false };
+var DONE_LIMIT = 20;                  /* 발행 완료 목록은 최신 발행 순으로 이만큼만 화면에 띄운다(전체 집계·순위는 그대로) */
 
 /* 발행 완료 목록 = 보관함의 실제 발행글 + written.json posts(중복 제외).
    제목·URL 이 없는 '키워드만 있는 껍데기'는 목록에 띄우지 않고, 그 키워드의 진짜 글은 written.json 카드로 보인다. */
@@ -2064,6 +2063,22 @@ function doneMerged(){
     return true;
   });
   return { local: local, posts: posts, total: local.length + posts.length };
+}
+/* 화면에 띄울 목록 = 보관함 발행글 + written.json 을 최신 발행 순으로 합친 것.
+   집계(done.total)·중복 판정(written.json 전체)은 doneMerged() 그대로 쓰고, 여기서는 표시 순서만 만든다. */
+function doneLatest(done){
+  var list = [];
+  (done.local || []).forEach(function(k){
+    list.push({ at:String(k.publishedAt || k.updatedAt || ''), local:true, item:k });
+  });
+  (done.posts || []).forEach(function(p){
+    list.push({ at:String(p.publishedAt || ''), local:false, item:p });
+  });
+  list.sort(function(a,b){
+    if(a.at !== b.at) return a.at < b.at ? 1 : -1;
+    return (a.local ? 0 : 1) - (b.local ? 0 : 1);   /* 같은 날짜면 보관함 글을 먼저 */
+  });
+  return list;
 }
 function waitKws(){
   var wait = state.kws.filter(function(k){ return k.status === '채택'; });
@@ -2109,18 +2124,21 @@ function htmlDone(done){
       '<p><b>발행 완료</b>로 표시한 글과 written.json 기록이<br>여기에 순위와 함께 모여요.</p>' +
       '<button class="btn primary" data-act="write-seg" data-seg="wait">작성 대기 보기</button></div>';
   }
-  var shown = writtenMore.open ? done.posts : done.posts.slice(0, WRITTEN_PAGE);
-  var rest = done.posts.length - shown.length;
+  var all = doneLatest(done);
+  var capped = all.length > DONE_LIMIT;
+  var shown = capped ? all.slice(0, DONE_LIMIT) : all;
+  var sub = capped
+    ? '최근 ' + DONE_LIMIT + '편만 최신 발행 순으로 보여드려요 · 전체 ' + all.length + '편'
+    : '올린 글의 검색 노출 순위까지 함께 봐요';
   var html = '<div class="section-head" style="margin-top:2px"><div><h2 style="font-size:15px">발행 완료</h2>' +
-    '<p>올린 글의 검색 노출 순위까지 함께 봐요</p></div><span class="count-label">' + done.total + '개</span></div>' +
-    '<div class="write-grid">' + done.local.map(doneCard).join('') + shown.map(writtenCard).join('') + '</div>';
+    '<p>' + sub + '</p></div><span class="count-label">' + done.total + '개</span></div>' +
+    '<div class="write-grid">' + shown.map(function(t){
+      return t.local ? doneCard(t.item) : writtenCard(t.item);
+    }).join('') + '</div>';
   if(!rec.written) html += '<p class="more-note">' +
     (rec.writtenErr ? 'written.json 발행 기록을 불러오지 못했어요' : 'written.json 발행 기록을 불러오는 중…') + '</p>';
-  if(rest > 0){
-    html += '<div class="more-wrap"><button class="btn ghost sm" data-act="written-more">나머지 ' + rest + '편 더 보기</button></div>';
-  }else if(writtenMore.open && done.posts.length > WRITTEN_PAGE){
-    html += '<div class="more-wrap"><button class="btn ghost sm" data-act="written-more">접기</button></div>';
-  }
+  if(capped) html += '<p class="more-note">최근 ' + DONE_LIMIT + '편만 표시하고 있어요 · 나머지 ' +
+    (all.length - DONE_LIMIT) + '편도 순위 집계에는 그대로 들어가요</p>';
   return html;
 }
 /* 작성 대기 카드 = 기본 접힌 슬림 상태, [편집]에서만 입력칸이 펼쳐진다 */
@@ -3363,7 +3381,6 @@ document.addEventListener('click', function(e){
   }
   if(act === 'publish'){ openPublish(id); return; }
   if(act === 'rank-refresh'){ refreshRanks(); return; }
-  if(act === 'written-more'){ writtenMore.open = !writtenMore.open; renderWrite(); return; }
   if(act === 'unpublish'){
     var uk = byId(id); if(!uk) return;
     uk.status = '채택'; uk.url = ''; uk.publishedAt = ''; uk.updatedAt = new Date().toISOString();
